@@ -25,7 +25,6 @@ namespace ProjectManager.BLL.ViewModels
             Start = project.Start;
             End = project.End;
             Priority = project.Priority;
-            Performers = project.Performers;
             Tasks = project.Tasks;
             ManagerId = project.ManagerId;
             Manager = project.Manager;
@@ -40,8 +39,7 @@ namespace ProjectManager.BLL.ViewModels
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
         public uint Priority { get; set; }
-        public List<Employee> Performers { get; set; }
-        public List<Task> Tasks { get; set; }
+        public ICollection<Task> Tasks { get; set; }
         public string ManagerId { get; set; }
         public Employee Manager { get; set; }
     }

@@ -12,9 +12,19 @@ namespace ProjectManager.DAL.Entities
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
         public uint Priority { get; set; }
-        public List<Employee> Performers { get; set; }
-        public List<Task> Tasks { get; set; }
+
+        //public ICollection<Employee> Employees { get; set; }
+
+        public virtual ICollection<Task> Tasks { get; set; }
         public string ManagerId { get; set; }
         public Employee Manager { get; set; }
+
+        internal ICollection<ProjectEmployees> ProjectEmployees { get; set; }
+
+        public Project()
+        {
+            //Tasks = new HashSet<Task>();
+            //Employees = new HashSet<Employee>();
+        }
     }
 }

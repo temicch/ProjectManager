@@ -53,10 +53,8 @@ namespace ProjectManager.BLL.Services
 
         public IEnumerable<ProjectViewModel> GetByEmployee(string employeeId)
         {
-            return DBContext.Employees
-                .FindAsync(employeeId)
-                .Result
-                .Projects
+            return DBContext.ProjectEmployees
+                .Where(x => x.EmployeeId == employeeId)
                 .Select(x => new ProjectViewModel());
         }
 

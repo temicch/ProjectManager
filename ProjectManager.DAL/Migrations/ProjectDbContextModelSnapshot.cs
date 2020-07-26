@@ -212,6 +212,19 @@ namespace ProjectManager.DAL.Migrations
                     b.ToTable("Projects");
                 });
 
+            modelBuilder.Entity("ProjectManager.DAL.Entities.ProjectEmployees", b =>
+                {
+                    b.Property<string>("EmployeeId");
+
+                    b.Property<int>("ProjectId");
+
+                    b.HasKey("EmployeeId", "ProjectId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("ProjectEmployees");
+                });
+
             modelBuilder.Entity("ProjectManager.DAL.Entities.Task", b =>
                 {
                     b.Property<int>("Id")
@@ -226,7 +239,9 @@ namespace ProjectManager.DAL.Migrations
 
                     b.Property<long>("Priority");
 
-                    b.Property<int?>("ProjectId");
+                    b.Property<string>("ProjectId");
+
+                    b.Property<int?>("ProjectId1");
 
                     b.Property<int>("Status");
 
@@ -238,7 +253,7 @@ namespace ProjectManager.DAL.Migrations
 
                     b.HasIndex("PerformerId");
 
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("ProjectId1");
 
                     b.ToTable("Tasks");
                 });
@@ -251,11 +266,7 @@ namespace ProjectManager.DAL.Migrations
 
                     b.Property<string>("LastName");
 
-                    b.Property<int?>("ProjectId");
-
                     b.Property<string>("Surname");
-
-                    b.HasIndex("ProjectId");
 
                     b.ToTable("Employee");
 
@@ -314,6 +325,19 @@ namespace ProjectManager.DAL.Migrations
                         .HasForeignKey("ManagerId");
                 });
 
+            modelBuilder.Entity("ProjectManager.DAL.Entities.ProjectEmployees", b =>
+                {
+                    b.HasOne("ProjectManager.DAL.Entities.Employee", "Employee")
+                        .WithMany("ProjectEmployees")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ProjectManager.DAL.Entities.Project", "Project")
+                        .WithMany("ProjectEmployees")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("ProjectManager.DAL.Entities.Task", b =>
                 {
                     b.HasOne("ProjectManager.DAL.Entities.Employee", "Author")
@@ -321,19 +345,12 @@ namespace ProjectManager.DAL.Migrations
                         .HasForeignKey("AuthorId");
 
                     b.HasOne("ProjectManager.DAL.Entities.Employee", "Performer")
-                        .WithMany()
+                        .WithMany("Tasks")
                         .HasForeignKey("PerformerId");
 
-                    b.HasOne("ProjectManager.DAL.Entities.Project")
+                    b.HasOne("ProjectManager.DAL.Entities.Project", "Project")
                         .WithMany("Tasks")
-                        .HasForeignKey("ProjectId");
-                });
-
-            modelBuilder.Entity("ProjectManager.DAL.Entities.Employee", b =>
-                {
-                    b.HasOne("ProjectManager.DAL.Entities.Project")
-                        .WithMany("Performers")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("ProjectId1");
                 });
 #pragma warning restore 612, 618
         }

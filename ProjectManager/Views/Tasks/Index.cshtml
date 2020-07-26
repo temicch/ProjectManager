@@ -13,9 +13,9 @@
 </div>
 
 <div id="task-items">
-    @for (var n = 0; n < Model.Tasks.Count; n++)
+    @foreach(var task in Model.Tasks)
     {
-        <partial name="_TaskItem" model="Model.Tasks[n]" />
+        <partial name="_TaskItem" model="task" />
     }
 </div>
 
