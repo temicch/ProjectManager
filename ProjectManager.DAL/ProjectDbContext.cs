@@ -8,6 +8,7 @@ namespace ProjectManager.DAL
     {
         public DbSet<Project> Projects { get; set; }
         public DbSet<Task> Tasks { get; set; }
+        public DbSet<Employee> Employees { get; set; }
 
         public ProjectDbContext(DbContextOptions<ProjectDbContext> options)
             : base(options)

@@ -1,14 +1,18 @@
-﻿using ProjectManager.DAL.Entities;
+﻿using ProjectManager.BLL.ViewModels;
+using ProjectManager.DAL.Entities;
 using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ProjectManager.BLL.Services
 {
-    interface ITaskManager
+    public interface ITaskManager
     {
-        IEnumerable<ITask> GetAll(IProject project);
-        IEnumerable<ITask> GetByEmployee(IProject project, IEmployee employee);
-        bool Create(IProject project, ITask task);
-        bool Edit(ITask newTask);
-        bool Remove(string id);
+        IEnumerable<TaskViewModel> GetAll();
+        IEnumerable<TaskViewModel> GetByEmployee(string employeeId);
+        Task<TaskViewModel> Get(int id);
+        Task<int> CreateAsync(ClaimsPrincipal user, TaskViewModel data);
+        Task<int> EditAsync(TaskViewModel task);
+        Task<bool> Remove(int id);
     }
 }

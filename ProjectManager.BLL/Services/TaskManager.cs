@@ -1,35 +1,71 @@
-﻿using ProjectManager.DAL.Entities;
+﻿using Microsoft.AspNetCore.Authorization;
+using ProjectManager.BLL.Utils;
+using ProjectManager.BLL.ViewModels;
+using ProjectManager.DAL;
+using ProjectManager.DAL.Entities;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Security.Claims;
 
 namespace ProjectManager.BLL.Services
 {
-    class TaskManager : ITaskManager
+    public class TaskManager : ITaskManager
     {
-        public bool Create(IProject project, ITask task)
+        private ProjectDbContext DBContext { get; }
+
+        public TaskManager(ProjectDbContext dbContext)
         {
-            throw new NotImplementedException();
+            DBContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        }
+        [Authorize(Roles = Roles.Leader)]
+        [Authorize(Roles = Roles.Manager)]
+        public async System.Threading.Tasks.Task<int> CreateAsync(ClaimsPrincipal user, TaskViewModel data)
+        {
+            Task task = (Task)(ITask)data;
+
+            task.AuthorId = user.GetLoggedInUserId<string>();
+
+            await DBContext.Tasks.AddAsync(task);
+            await DBContext.SaveChangesAsync();
+
+            return task.Id;
         }
 
-        public bool Edit(ITask newTask)
+        [Authorize(Roles = Roles.Leader)]
+        [Authorize(Roles = Roles.Manager)]
+        public async System.Threading.Tasks.Task<int> EditAsync(TaskViewModel task)
         {
-            throw new NotImplementedException();
+            DBContext.Tasks.Update((Task)(ITask)task);
+            await DBContext.SaveChangesAsync();
+
+            return task.Id;
         }
 
-        public IEnumerable<ITask> GetAll(IProject project)
+        [Authorize(Roles = Roles.Leader)]
+        [Authorize(Roles = Roles.Manager)]
+        public IEnumerable<TaskViewModel> GetAll()
         {
-            throw new NotImplementedException();
+            return DBContext.Tasks.Select(x => new TaskViewModel(x));
         }
 
-        public IEnumerable<ITask> GetByEmployee(IProject project, IEmployee employee)
+        public IEnumerable<TaskViewModel> GetByEmployee(string employeeId)
         {
-            throw new NotImplementedException();
+            return DBContext.Tasks.Where(x => x.Performer.Id == employeeId).Select(x => new TaskViewModel(x));
         }
 
-        public bool Remove(string id)
+        [Authorize(Roles = Roles.Leader)]
+        [Authorize(Roles = Roles.Manager)]
+        public async System.Threading.Tasks.Task<bool> Remove(int id)
         {
-            throw new NotImplementedException();
+            DBContext.Tasks.Remove(DBContext.Tasks.Where(x => x.Id == id).FirstOrDefault());
+            await DBContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async System.Threading.Tasks.Task<TaskViewModel> Get(int id)
+        {
+            return new TaskViewModel(await DBContext.Tasks.FindAsync(id));
         }
     }
 }

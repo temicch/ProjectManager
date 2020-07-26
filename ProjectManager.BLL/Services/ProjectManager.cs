@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using ProjectManager.BLL.Utils;
+using ProjectManager.BLL.ViewModels;
 using ProjectManager.DAL;
 using ProjectManager.DAL.Entities;
 using System;
@@ -22,7 +23,7 @@ namespace ProjectManager.BLL.Services
         [Authorize(Roles = Roles.Manager)]
         public async Task<int> CreateAsync(ClaimsPrincipal user, ProjectViewModel data)
         {
-            Project project = data;
+            Project project = (Project)(IProject)data;
 
             project.ManagerId = user.GetLoggedInUserId<string>();
 
@@ -36,7 +37,7 @@ namespace ProjectManager.BLL.Services
         [Authorize(Roles = Roles.Manager)]
         public async Task<int> EditAsync(ProjectViewModel project)
         {
-            DBContext.Projects.Update(project);
+            DBContext.Projects.Update((Project)(IProject)project);
             await DBContext.SaveChangesAsync();
 
             return project.Id;
@@ -44,20 +45,39 @@ namespace ProjectManager.BLL.Services
 
         [Authorize(Roles = Roles.Leader)]
         [Authorize(Roles = Roles.Manager)]
-        public IEnumerable<IProject> GetAll()
+        public IEnumerable<ProjectViewModel> GetAll()
         {
-            return DBContext.Projects;
+            return DBContext.Projects
+                .Select(x => new ProjectViewModel(x));
         }
 
-        public IEnumerable<IProject> GetByEmployee(IEmployee employee)
+        public IEnumerable<ProjectViewModel> GetByEmployee(string employeeId)
         {
-            return DBContext.Projects.Where(x => x.Performers.Contains(employee));
+            return DBContext.Employees
+                .FindAsync(employeeId)
+                .Result
+                .Projects
+                .Select(x => new ProjectViewModel());
         }
 
-        public bool Remove(IProject project)
+        [Authorize(Roles = Roles.Leader)]
+        [Authorize(Roles = Roles.Manager)]
+        public async Task<bool> Remove(int id)
         {
-            DBContext.Projects.Remove(project as Project);
+            DBContext.Projects
+                .Remove(DBContext.Projects
+                    .Where(x => x.Id == id)
+                    .FirstOrDefault()
+                );
+            await DBContext.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<ProjectViewModel> Get(int id)
+        {
+            return new ProjectViewModel(await DBContext.Projects
+                .FindAsync(id)
+                );
         }
     }
 }

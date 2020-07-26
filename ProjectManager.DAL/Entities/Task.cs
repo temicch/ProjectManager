@@ -11,5 +11,7 @@
         public Employee Author { get; set; }
         public string PerformerId { get; set; }
         public Employee Performer { get; set; }
+        public string ProjectId { get; set; }
+        public Project Project { get; set; }
     }
 }

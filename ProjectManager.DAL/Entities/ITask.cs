@@ -13,5 +13,7 @@ namespace ProjectManager.DAL.Entities
         TaskStatus Status { get; }
         string Comment { get; }
         uint Priority { get; }
+        string ProjectId { get; }
+        Project Project { get; }
     }
 }
