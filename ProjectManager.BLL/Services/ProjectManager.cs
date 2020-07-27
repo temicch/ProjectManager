@@ -73,9 +73,8 @@ namespace ProjectManager.BLL.Services
 
         public async Task<ProjectViewModel> Get(int id)
         {
-            return new ProjectViewModel(await DBContext.Projects
-                .FindAsync(id)
-                );
+            var project = await DBContext.Projects.FindAsync(id);
+            return project == null ? null : new ProjectViewModel(project);
         }
     }
 }

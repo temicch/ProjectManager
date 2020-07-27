@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ProjectManager.Models;
 
-namespace TaskBud.Website.Controllers
+namespace ProjectManager.Controllers
 {
     public class SharedController : Controller
     {

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectManager.DAL;
 using ProjectManager.DAL.Entities;
+using ProjectManager.BLL.Services;
 
 namespace ProjectManager
 {
@@ -23,12 +24,14 @@ namespace ProjectManager
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddLogging();
+
             services.AddDbContext<ProjectDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<Employee, IdentityRole<int>>()
-                .AddEntityFrameworkStores<ProjectDbContext>()
-                .AddDefaultTokenProviders();
+                .AddEntityFrameworkStores<ProjectDbContext>();
+                //.AddDefaultTokenProviders();
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -48,6 +51,9 @@ namespace ProjectManager
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddTransient<ITaskManager, TaskManager>();
+            services.AddTransient<BLL.Services.IProjectManager, BLL.Services.ProjectManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

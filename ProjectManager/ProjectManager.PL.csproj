@@ -15,8 +15,4 @@
     <ProjectReference Include="..\ProjectManager.BLL\ProjectManager.BLL.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Areas\Identity\Services\" />
-  </ItemGroup>
-
 </Project>

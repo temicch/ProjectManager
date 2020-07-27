@@ -13,9 +13,12 @@
 </div>
 
 <div id="task-items">
-    @foreach(var task in Model.Tasks)
+    @if (Model != null && Model.TasksViewModels != null && Model.TasksViewModels.Count != 0)
     {
-        <partial name="_TaskItem" model="task" />
+        foreach (var task in Model.TasksViewModels)
+        {
+            <partial name="_TaskItem" model="task" />
+        }
     }
 </div>
 

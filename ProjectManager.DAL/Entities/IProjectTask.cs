@@ -2,7 +2,7 @@
 
 namespace ProjectManager.DAL.Entities
 {
-    public interface ITask
+    public interface IProjectTask
     {
         int Id { get; }
         string Title { get; }

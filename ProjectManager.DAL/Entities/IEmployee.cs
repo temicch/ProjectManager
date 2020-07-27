@@ -8,6 +8,6 @@ namespace ProjectManager.DAL.Entities
         string LastName { get; }
         string Surname { get; }
         string Email { get; }
-        ICollection<Task> Tasks { get; }
+        ICollection<ProjectTask> Tasks { get; }
     }
 }

@@ -29,7 +29,7 @@ namespace ProjectManager.BLL.ViewModels
             Manager = project.Manager;
         }
 
-        public ICollection<TaskViewModel> TasksViewModels { get; set; }
+        public ICollection<ProjectTaskViewModel> TasksViewModels { get; set; } = new List<ProjectTaskViewModel>();
 
         public int Id { get; set; }
         public string Title { get; set; }
@@ -38,7 +38,7 @@ namespace ProjectManager.BLL.ViewModels
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public uint Priority { get; set; }
-        public ICollection<Task> Tasks { get; set; }
+        public ICollection<ProjectTask> Tasks { get; set; }
         public Employee Manager { get; set; }
     }
 }

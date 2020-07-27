@@ -12,7 +12,7 @@ namespace ProjectManager.DAL.Entities
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public uint Priority { get; set; }
-        public ICollection<Task> Tasks { get; set; }
+        public ICollection<ProjectTask> Tasks { get; set; }
         public Employee Manager { get; set; }
 
         internal ICollection<ProjectEmployees> ProjectEmployees { get; set; }

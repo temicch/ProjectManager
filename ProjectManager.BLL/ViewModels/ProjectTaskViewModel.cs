@@ -3,17 +3,17 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ProjectManager.BLL.ViewModels
 {
-    public class TaskViewModel: ITask
+    public class ProjectTaskViewModel: IProjectTask
     {
-        public TaskViewModel()
+        public ProjectTaskViewModel()
         {
 
         }
-        public TaskViewModel(int Id)
+        public ProjectTaskViewModel(int Id)
         {
             this.Id = Id;
         }
-        public TaskViewModel(ITask task)
+        public ProjectTaskViewModel(IProjectTask task)
         {
             Id = task.Id;
             Title = task.Title;

@@ -20,9 +20,9 @@ namespace ProjectManager.BLL.Services
         }
         [Authorize(Roles = Roles.Leader)]
         [Authorize(Roles = Roles.Manager)]
-        public async System.Threading.Tasks.Task<int> CreateAsync(ClaimsPrincipal user, TaskViewModel data)
+        public async System.Threading.Tasks.Task<int> CreateAsync(ClaimsPrincipal user, ProjectTaskViewModel data)
         {
-            Task task = (Task)(ITask)data;
+            ProjectTask task = (ProjectTask)(IProjectTask)data;
 
             task.Author.Id = user.GetLoggedInUserId<int>();
 
@@ -34,9 +34,9 @@ namespace ProjectManager.BLL.Services
 
         [Authorize(Roles = Roles.Leader)]
         [Authorize(Roles = Roles.Manager)]
-        public async System.Threading.Tasks.Task<int> EditAsync(TaskViewModel task)
+        public async System.Threading.Tasks.Task<int> EditAsync(ProjectTaskViewModel task)
         {
-            DBContext.Tasks.Update((Task)(ITask)task);
+            DBContext.Tasks.Update((ProjectTask)(IProjectTask)task);
             await DBContext.SaveChangesAsync();
 
             return task.Id;
@@ -44,14 +44,14 @@ namespace ProjectManager.BLL.Services
 
         [Authorize(Roles = Roles.Leader)]
         [Authorize(Roles = Roles.Manager)]
-        public IEnumerable<TaskViewModel> GetAll()
+        public IEnumerable<ProjectTaskViewModel> GetAll()
         {
-            return DBContext.Tasks.Select(x => new TaskViewModel(x));
+            return DBContext.Tasks.Select(x => new ProjectTaskViewModel(x));
         }
 
-        public IEnumerable<TaskViewModel> GetByEmployee(int employeeId)
+        public IEnumerable<ProjectTaskViewModel> GetByEmployee(int employeeId)
         {
-            return DBContext.Tasks.Where(x => x.Performer.Id == employeeId).Select(x => new TaskViewModel(x));
+            return DBContext.Tasks.Where(x => x.Performer.Id == employeeId).Select(x => new ProjectTaskViewModel(x));
         }
 
         [Authorize(Roles = Roles.Leader)]
@@ -63,9 +63,9 @@ namespace ProjectManager.BLL.Services
             return true;
         }
 
-        public async System.Threading.Tasks.Task<TaskViewModel> Get(int id)
+        public async System.Threading.Tasks.Task<ProjectTaskViewModel> Get(int id)
         {
-            return new TaskViewModel(await DBContext.Tasks.FindAsync(id));
+            return new ProjectTaskViewModel(await DBContext.Tasks.FindAsync(id));
         }
     }
 }

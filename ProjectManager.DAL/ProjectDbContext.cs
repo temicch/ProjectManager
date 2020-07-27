@@ -8,7 +8,7 @@ namespace ProjectManager.DAL
     public class ProjectDbContext : IdentityDbContext<Employee, IdentityRole<int>, int>
     {
         public DbSet<Project> Projects { get; set; }
-        public DbSet<Task> Tasks { get; set; }
+        public DbSet<ProjectTask> Tasks { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<ProjectEmployees> ProjectEmployees { get; set; }
 

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectManager.BLL.Services;
 using ProjectManager.BLL.ViewModels;
 
-namespace TaskBud.Website.Controllers
+namespace ProjectManager.Controllers
 {
     [Authorize]
     [Route("tasks")]
@@ -25,7 +25,7 @@ namespace TaskBud.Website.Controllers
         public IActionResult Index(int projectId)
         {
             var project = ProjectManager.Get(projectId).Result;
-            var task = project.Tasks.Select(x => new TaskViewModel(x));
+            var task = project?.Tasks?.Select(x => new ProjectTaskViewModel(x));
 
             return View(task);
         }
@@ -45,7 +45,7 @@ namespace TaskBud.Website.Controllers
         //}
 
         [HttpPost("create")]
-        public async Task<IActionResult> Create(TaskViewModel writeData)
+        public async Task<IActionResult> Create(ProjectTaskViewModel writeData)
         {
             if (ModelState.IsValid)
             {
@@ -67,7 +67,7 @@ namespace TaskBud.Website.Controllers
         }
 
         [HttpPost("{id}/update")]
-        public async Task<IActionResult> Update(TaskViewModel writeData)
+        public async Task<IActionResult> Update(ProjectTaskViewModel writeData)
         {
             if (ModelState.IsValid)
             {

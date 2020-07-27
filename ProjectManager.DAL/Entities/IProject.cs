@@ -10,7 +10,7 @@ namespace ProjectManager.DAL.Entities
         string Title { get; }
         string CustomerCompany { get; }
         string PerformerCompany { get; }
-        ICollection<Task> Tasks { get; }
+        ICollection<ProjectTask> Tasks { get; }
         Employee Manager { get; }
         DateTime StartDate { get; }
         DateTime EndDate { get; }

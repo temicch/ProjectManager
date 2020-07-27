@@ -12,7 +12,7 @@ namespace ProjectManager.DAL.Entities
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Surname { get; set; }
-        public ICollection<Task> Tasks { get; set; }
+        public ICollection<ProjectTask> Tasks { get; set; }
 
         internal ICollection<ProjectEmployees> ProjectEmployees { get; set; }
     }

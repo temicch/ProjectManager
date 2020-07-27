@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TaskBud - @ViewData["Title"]</title>
+    <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" type="text/css"/>
     <link rel="stylesheet" href="~/css/site.css" type="text/css"/>
     <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" type="text/css"/>
@@ -28,9 +28,9 @@
                             <a class="nav-link text-dark dropdown-toggle" href="#" id="tasks-Dropdown" role="button" data-toggle="dropdown">
                                 Tasks
                             </a>
-                            <div class="dropdown-menu" aria-labelledby="tasks-Dropdown">
+                            @*<div class="dropdown-menu" aria-labelledby="tasks-Dropdown">
                                 @await Component.InvokeAsync("TaskGroupList")
-                            </div>
+                            </div>*@
                         </li>
 
                         @if (User.IsInRole("Administrator"))
