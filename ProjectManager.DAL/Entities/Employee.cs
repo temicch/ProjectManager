@@ -5,14 +5,20 @@ namespace ProjectManager.DAL.Entities
 {
     public class Employee : IdentityUser<int>, IEmployee
     {
-        public Employee()
+        public Employee(): base()
         {
-            //Tasks = new HashSet<Task>();
         }
+
+        public Employee(string userName): base(userName)
+        {
+        }
+
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Surname { get; set; }
         public ICollection<ProjectTask> Tasks { get; set; }
+
+        public string AvatarUrl { get; set; }
 
         internal ICollection<ProjectEmployees> ProjectEmployees { get; set; }
     }

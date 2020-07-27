@@ -41,32 +41,34 @@ namespace ProjectManager.Areas.Identity.Pages.Account
         {
             [Required]
             [DataType(DataType.Text)]
-            [Display(Name = "User Name")]
-            public string UserName { get; set; }
-
+            [MinLength(3)]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
             [Required]
             [DataType(DataType.Text)]
-            [Display(Name = "Invitation Code")]
-            public string InvitationCode { get; set; }
+            [MinLength(3)]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+            [DataType(DataType.Text)]
+            [MinLength(3)]
+            [Display(Name = "Surname (Optional)")]
+            public string Surname { get; set; }
+
+            [Required]
+            [DataType(DataType.EmailAddress)]
+            [Display(Name = "Email")]
+            public string Email { get; set; }
 
             [Required]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
-
-            [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-            public string ConfirmPassword { get; set; }
         }
 
-        public async System.Threading.Tasks.Task OnGetAsync(string code = null, string returnUrl = null)
+        public async Task OnGetAsync(string code = null, string returnUrl = null)
         {
             ReturnUrl = returnUrl;
-            Input = new InputModel
-            {
-                InvitationCode = code
-            };
+            Input = new InputModel();
             ExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
@@ -77,7 +79,14 @@ namespace ProjectManager.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = new Employee { UserName = Input.UserName };
+                var user = new Employee 
+                { 
+                    UserName = Input.Email, 
+                    Email = Input.Email, 
+                    LastName = Input.LastName, 
+                    FirstName = Input.FirstName, 
+                    Surname = Input.Surname 
+                };
                 var result = await UserManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

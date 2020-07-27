@@ -2,22 +2,47 @@
 @inject SignInManager<Employee> SignInManager
 @inject UserManager<Employee> UserManager
 
+@{ 
+    var user = UserManager.GetUserAsync(User).Result;
+    var userAvatarUrl = user?.AvatarUrl;
+
+    var userLastName = user?.LastName ?? string.Empty;
+    var userFirstName = user?.FirstName ?? string.Empty;
+    var userTitle = $"{userLastName} {userFirstName}".Trim();
+    if (string.IsNullOrEmpty(userTitle))
+    {
+        userTitle = user?.Email ?? string.Empty;
+    }
+    if (string.IsNullOrEmpty(userAvatarUrl))
+    {
+        userAvatarUrl = "https://image.flaticon.com/icons/svg/847/847969.svg";
+    }
+}
+
 <ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{
-    <li class="nav-item">
-        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><i class="fa fa-fw fa-user"></i>Profile - @User.Identity.Name</a>
-    </li>
-    <li class="nav-item">
-        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Tasks", new { area = "" })">
-            <button  type="submit" class="nav-link btn btn-link text-dark"><i class="fa fa-fw fa-door-closed"></i>Logout</button>
-        </form>
-    </li>
-}
-else
-{
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login"><i class="fa fa-fw fa-door-closed"></i>Login</a>
-    </li>
-}
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item dropdown no-arrow">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <img class="img-profile rounded-circle fas fa-cogs fa-sm fa-fw mr-2" src="@userAvatarUrl">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">@userTitle</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Profile">
+                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Profile
+                </a>
+                <div class="dropdown-divider"></div>
+                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout">
+                    <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>Logout</button>
+                </form>
+            </div>
+        </li> 
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login"><i class="fas fa-sign-in-alt fa-sm fa-fw mr-2 text-gray-400"></i>Login</a>
+        </li>
+    }
 </ul>

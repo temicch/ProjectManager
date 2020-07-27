@@ -16,9 +16,5 @@ namespace ProjectManager.DAL.Entities
         public Employee Manager { get; set; }
 
         internal ICollection<ProjectEmployees> ProjectEmployees { get; set; }
-
-        public Project()
-        {
-        }
     }
 }

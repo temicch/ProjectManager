@@ -3,13 +3,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using ProjectManager.BLL.Services;
 using ProjectManager.BLL.ViewModels;
+using ProjectManager.DAL.Entities;
 
 namespace ProjectManager.Controllers
 {
     [Authorize]
-    [Route("tasks")]
     public class TasksController : Controller
     {
         private ITaskManager TaskManager { get; }
@@ -24,10 +25,12 @@ namespace ProjectManager.Controllers
         [HttpGet("index")]
         public IActionResult Index(int projectId)
         {
-            var project = ProjectManager.Get(projectId).Result;
-            var task = project?.Tasks?.Select(x => new ProjectTaskViewModel(x));
+            var project = ProjectManager.GetAll();
+            var task = project?.Select(x => new ProjectViewModel(x));
 
-            return View(task);
+            var newList = task.Concat(new[] { new ProjectViewModel(new DAL.Entities.Project() {Tasks = new System.Collections.Generic.List<ProjectTask>() { new ProjectTask(), new ProjectTask() } }) }).Concat(new[] { new ProjectViewModel(new DAL.Entities.Project()) }).ToList();
+
+            return View(newList);
         }
 
         [HttpGet("{taskId}")]
@@ -37,12 +40,12 @@ namespace ProjectManager.Controllers
             return PartialView("_TaskItem", readData);
         }
 
-        //[HttpGet("create")]
-        //public IActionResult Create(string projectId)
-        //{
-        //    var data = new TaskViewModel{ ProjectId = projectId };
-        //    return View(data);
-        //}
+        [HttpGet("create")]
+        public IActionResult Create(string projectId)
+        {
+            var data = new ProjectViewModel();
+            return View(data);
+        }
 
         [HttpPost("create")]
         public async Task<IActionResult> Create(ProjectTaskViewModel writeData)

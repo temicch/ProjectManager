@@ -7,7 +7,6 @@ namespace ProjectManager.BLL.ViewModels
     {
         public ProjectTaskViewModel()
         {
-
         }
         public ProjectTaskViewModel(int Id)
         {
@@ -15,14 +14,16 @@ namespace ProjectManager.BLL.ViewModels
         }
         public ProjectTaskViewModel(IProjectTask task)
         {
-            Id = task.Id;
-            Title = task.Title;
-            Author = task.Author;
-            Performer = task.Performer;
-            Status = task.Status;
-            Comment = task.Comment;
-            Priority = task.Priority;
-            Project = task.Project;
+            if (task == null)
+                return;
+            Id = task?.Id ?? 0;
+            Title = task?.Title;
+            Author = task?.Author;
+            Performer = task?.Performer;
+            Status = task?.Status ?? TaskStatus.ToDo;
+            Comment = task?.Comment;
+            Priority = task?.Priority ?? 0;
+            Project = task?.Project;
         }
 
         public int Id { get; private set; }
@@ -35,13 +36,10 @@ namespace ProjectManager.BLL.ViewModels
         public Employee Performer { get; set; }
         [Required]
         public TaskStatus Status { get; set; }
-
         public string Comment { get; set; }
         [Required]
         public uint Priority { get; set; }
         [Required]
         public Project Project { get; set; }
-
-        
     }
 }

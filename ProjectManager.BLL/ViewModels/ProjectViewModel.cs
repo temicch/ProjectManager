@@ -1,15 +1,15 @@
-﻿using ProjectManager.BLL.ViewModels;
-using ProjectManager.DAL.Entities;
+﻿using ProjectManager.DAL.Entities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ProjectManager.BLL.ViewModels
 {
     public class ProjectViewModel : IProject
     {
+        private IProject project;
         public ProjectViewModel()
         {
-
         }
         public ProjectViewModel(int Id)
         {
@@ -18,19 +18,20 @@ namespace ProjectManager.BLL.ViewModels
 
         public ProjectViewModel(IProject project)
         {
-            Id = project.Id;
-            Title = project.Title;
-            CustomerCompany = project.CustomerCompany;
-            PerformerCompany = project.PerformerCompany;
-            StartDate = project.StartDate;
-            EndDate = project.EndDate;
-            Priority = project.Priority;
-            Tasks = project.Tasks;
-            Manager = project.Manager;
+            if (project == null)
+                return;
+            Id = project?.Id ?? 0;
+            Title = project?.Title;
+            CustomerCompany = project?.CustomerCompany;
+            PerformerCompany = project?.PerformerCompany;
+            Tasks = project?.Tasks;
+            Manager = project?.Manager;
+            StartDate = project?.StartDate ?? DateTime.Now;
+            EndDate = project?.EndDate ?? DateTime.Now;
+            Priority = project?.Priority ?? 0;
         }
 
-        public ICollection<ProjectTaskViewModel> TasksViewModels { get; set; } = new List<ProjectTaskViewModel>();
-
+        public ICollection<ProjectTaskViewModel> TasksViewModels => project?.Tasks?.Select(x => new ProjectTaskViewModel(x))?.ToList();
         public int Id { get; set; }
         public string Title { get; set; }
         public string CustomerCompany { get; set; }
@@ -40,5 +41,5 @@ namespace ProjectManager.BLL.ViewModels
         public uint Priority { get; set; }
         public ICollection<ProjectTask> Tasks { get; set; }
         public Employee Manager { get; set; }
-    }
+        }
 }
