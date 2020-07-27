@@ -37,12 +37,12 @@ namespace TaskBud.Website.Controllers
             return PartialView("_TaskItem", readData);
         }
 
-        [HttpGet("create")]
-        public IActionResult Create(string projectId)
-        {
-            var data = new TaskViewModel{ ProjectId = projectId };
-            return View(data);
-        }
+        //[HttpGet("create")]
+        //public IActionResult Create(string projectId)
+        //{
+        //    var data = new TaskViewModel{ ProjectId = projectId };
+        //    return View(data);
+        //}
 
         [HttpPost("create")]
         public async Task<IActionResult> Create(TaskViewModel writeData)

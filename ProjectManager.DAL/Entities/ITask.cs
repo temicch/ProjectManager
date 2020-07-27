@@ -6,14 +6,11 @@ namespace ProjectManager.DAL.Entities
     {
         int Id { get; }
         string Title { get; }
-        string AuthorId { get; }
         Employee Author { get; }
-        string PerformerId { get; }
         Employee Performer { get; }
         TaskStatus Status { get; }
         string Comment { get; }
         uint Priority { get; }
-        string ProjectId { get; }
         Project Project { get; }
     }
 }

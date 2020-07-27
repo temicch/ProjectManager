@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.DAL.Entities;
 
 namespace ProjectManager.DAL
 {
-    public partial class ProjectDbContext : IdentityDbContext
+    public class ProjectDbContext : IdentityDbContext<Employee, IdentityRole<int>, int>
     {
         public DbSet<Project> Projects { get; set; }
         public DbSet<Task> Tasks { get; set; }

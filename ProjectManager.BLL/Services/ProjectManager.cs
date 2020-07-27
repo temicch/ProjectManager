@@ -25,7 +25,7 @@ namespace ProjectManager.BLL.Services
         {
             Project project = (Project)(IProject)data;
 
-            project.ManagerId = user.GetLoggedInUserId<string>();
+            project.Manager.Id = user.GetLoggedInUserId<int>();
 
             await DBContext.Projects.AddAsync(project);
             await DBContext.SaveChangesAsync();
@@ -51,7 +51,7 @@ namespace ProjectManager.BLL.Services
                 .Select(x => new ProjectViewModel(x));
         }
 
-        public IEnumerable<ProjectViewModel> GetByEmployee(string employeeId)
+        public IEnumerable<ProjectViewModel> GetByEmployee(int employeeId)
         {
             return DBContext.ProjectEmployees
                 .Where(x => x.EmployeeId == employeeId)

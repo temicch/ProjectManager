@@ -3,17 +3,16 @@ using System.Collections.Generic;
 
 namespace ProjectManager.DAL.Entities
 {
-    public class Employee : IdentityUser, IEmployee
+    public class Employee : IdentityUser<int>, IEmployee
     {
         public Employee()
         {
-            Tasks = new HashSet<Task>();
+            //Tasks = new HashSet<Task>();
         }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Surname { get; set; }
-        //public virtual ICollection<Project> Projects { get; set; }
-        public virtual ICollection<Task> Tasks { get; set; }
+        public ICollection<Task> Tasks { get; set; }
 
         internal ICollection<ProjectEmployees> ProjectEmployees { get; set; }
     }

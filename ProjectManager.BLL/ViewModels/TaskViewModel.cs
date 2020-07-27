@@ -17,14 +17,11 @@ namespace ProjectManager.BLL.ViewModels
         {
             Id = task.Id;
             Title = task.Title;
-            AuthorId = task.AuthorId;
             Author = task.Author;
-            PerformerId = task.PerformerId;
             Performer = task.Performer;
             Status = task.Status;
             Comment = task.Comment;
             Priority = task.Priority;
-            ProjectId = task.ProjectId;
             Project = task.Project;
         }
 
@@ -33,11 +30,7 @@ namespace ProjectManager.BLL.ViewModels
         [StringLength(maximumLength: 100, MinimumLength = 3)]
         public string Title { get; set; }
         [Required]
-        public string AuthorId { get; set; }
-        [Required]
         public Employee Author { get; set; }
-        [Required]
-        public string PerformerId { get; set; }
         [Required]
         public Employee Performer { get; set; }
         [Required]
@@ -46,8 +39,6 @@ namespace ProjectManager.BLL.ViewModels
         public string Comment { get; set; }
         [Required]
         public uint Priority { get; set; }
-        [Required]
-        public string ProjectId { get; set; }
         [Required]
         public Project Project { get; set; }
 

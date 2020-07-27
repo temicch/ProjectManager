@@ -22,11 +22,10 @@ namespace ProjectManager.BLL.ViewModels
             Title = project.Title;
             CustomerCompany = project.CustomerCompany;
             PerformerCompany = project.PerformerCompany;
-            Start = project.Start;
-            End = project.End;
+            StartDate = project.StartDate;
+            EndDate = project.EndDate;
             Priority = project.Priority;
             Tasks = project.Tasks;
-            ManagerId = project.ManagerId;
             Manager = project.Manager;
         }
 
@@ -36,11 +35,10 @@ namespace ProjectManager.BLL.ViewModels
         public string Title { get; set; }
         public string CustomerCompany { get; set; }
         public string PerformerCompany { get; set; }
-        public DateTime Start { get; set; }
-        public DateTime End { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
         public uint Priority { get; set; }
         public ICollection<Task> Tasks { get; set; }
-        public string ManagerId { get; set; }
         public Employee Manager { get; set; }
     }
 }

@@ -24,7 +24,7 @@ namespace ProjectManager.BLL.Services
         {
             Task task = (Task)(ITask)data;
 
-            task.AuthorId = user.GetLoggedInUserId<string>();
+            task.Author.Id = user.GetLoggedInUserId<int>();
 
             await DBContext.Tasks.AddAsync(task);
             await DBContext.SaveChangesAsync();
@@ -49,7 +49,7 @@ namespace ProjectManager.BLL.Services
             return DBContext.Tasks.Select(x => new TaskViewModel(x));
         }
 
-        public IEnumerable<TaskViewModel> GetByEmployee(string employeeId)
+        public IEnumerable<TaskViewModel> GetByEmployee(int employeeId)
         {
             return DBContext.Tasks.Where(x => x.Performer.Id == employeeId).Select(x => new TaskViewModel(x));
         }

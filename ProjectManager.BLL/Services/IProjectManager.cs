@@ -8,7 +8,7 @@ namespace ProjectManager.BLL.Services
     public interface IProjectManager
     {
         IEnumerable<ProjectViewModel> GetAll();
-        IEnumerable<ProjectViewModel> GetByEmployee(string employeeId);
+        IEnumerable<ProjectViewModel> GetByEmployee(int employeeId);
         Task<ProjectViewModel> Get(int id);
         Task<int> CreateAsync(ClaimsPrincipal user, ProjectViewModel data);
         Task<int> EditAsync(ProjectViewModel task);

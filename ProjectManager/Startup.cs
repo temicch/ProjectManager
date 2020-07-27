@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectManager.DAL;
+using ProjectManager.DAL.Entities;
 
 namespace ProjectManager
 {
@@ -25,7 +26,7 @@ namespace ProjectManager
             services.AddDbContext<ProjectDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<Employee, IdentityRole<int>>()
                 .AddEntityFrameworkStores<ProjectDbContext>()
                 .AddDefaultTokenProviders();
 
