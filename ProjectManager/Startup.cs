@@ -11,6 +11,7 @@ using ProjectManager.DAL.Entities;
 using ProjectManager.BLL.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
+using AutoMapper;
 
 namespace ProjectManager
 {
@@ -56,9 +57,12 @@ namespace ProjectManager
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            services.AddAutoMapper(typeof(MappingProfile));
+
             services.AddTransient<DBMigrator>();
             services.AddTransient<ITaskManager, TaskManager>();
             services.AddTransient<IProjectManager, BLL.Services.ProjectManager>();
+            services.AddTransient<IEmployeeManager, EmployeeManager>();
 
         }
 

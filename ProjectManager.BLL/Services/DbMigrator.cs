@@ -25,17 +25,16 @@ namespace ProjectManager.BLL.Services
         {
             await DbContext.Database.MigrateAsync(cancellationToken);
 
-            _ = await TryAddUserRole(Roles.Leader, cancellationToken);
-            _ = await TryAddUserRole(Roles.Manager, cancellationToken);
-            _ = await TryAddUserRole(Roles.Employee, cancellationToken);
-            await DbContext.SaveChangesAsync(cancellationToken);
+            await TryAddUserRole(Roles.Leader);
+            await TryAddUserRole(Roles.Manager);
+            await TryAddUserRole(Roles.Employee);
 
-            _ = await TryAddAdminUser(cancellationToken);
+            await TryAddAdminUser();
 
             await DbContext.SaveChangesAsync(cancellationToken);
         }
 
-        private async Task<IdentityRole<int>> TryAddUserRole(string role, CancellationToken cancellationToken)
+        private async Task<IdentityRole<int>> TryAddUserRole(string role)
         {
             var roleEntity = await RoleManager.FindByNameAsync(role);
 
@@ -49,7 +48,7 @@ namespace ProjectManager.BLL.Services
             return roleEntity;
         }
 
-        private async Task<Employee> TryAddAdminUser(CancellationToken cancellationToken)
+        private async Task<Employee> TryAddAdminUser()
         {
             var admin = await UserManager.FindByNameAsync("Admin");
             if (admin == null)
@@ -57,7 +56,9 @@ namespace ProjectManager.BLL.Services
                 admin = new Employee("Admin")
                 {
                     Email = "admin@admin.admin",
-                    EmailConfirmed = true,
+                    EmailConfirmed = true, 
+                    FirstName = "Admin", 
+                    LastName = "Adminskiy"
                 };
                 var user = await UserManager.CreateAsync(admin, "adminPassword");
                 _ = await UserManager.AddToRoleAsync(admin, Roles.Leader);

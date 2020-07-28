@@ -20,6 +20,12 @@ namespace ProjectManager.DAL.Entities
 
         public string AvatarUrl { get; set; }
 
+        public ICollection<Project> Projects { get; set; }
+
+        public ICollection<Project> ManagedProjects { get; set; }
+
+        public ICollection<ProjectTask> TasksAuthor { get; set; }
+
         internal ICollection<ProjectEmployees> ProjectEmployees { get; set; }
     }
 }

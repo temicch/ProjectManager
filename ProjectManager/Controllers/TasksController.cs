@@ -15,22 +15,28 @@ namespace ProjectManager.Controllers
     {
         private ITaskManager TaskManager { get; }
         private IProjectManager ProjectManager { get; }
+        public IEmployeeManager EmployeeManager { get; }
 
-        public TasksController(ITaskManager taskManager, IProjectManager projectManager)
+        public TasksController(
+            ITaskManager taskManager, 
+            IProjectManager projectManager,
+            IEmployeeManager employeeManager)
         {
             TaskManager = taskManager ?? throw new ArgumentNullException(nameof(taskManager));
             ProjectManager = projectManager ?? throw new ArgumentNullException(nameof(taskManager));
+            EmployeeManager = employeeManager;
         }
 
         [HttpGet("index")]
-        public IActionResult Index(int projectId)
+        public async Task<IActionResult> Index(int projectId)
         {
-            var project = ProjectManager.GetAll();
-            var task = project?.Select(x => new ProjectViewModel(x));
+            var list = await EmployeeManager.Get(1);
 
-            var newList = task.Concat(new[] { new ProjectViewModel(new DAL.Entities.Project() {Tasks = new System.Collections.Generic.List<ProjectTask>() { new ProjectTask(), new ProjectTask() } }) }).Concat(new[] { new ProjectViewModel(new DAL.Entities.Project()) }).ToList();
+            var projectsViewModels = (await ProjectManager.GetAll()).ToList();
 
-            return View(newList);
+            //var id = await ProjectManager.CreateAsync(User, new ProjectViewModel() { CustomerCompany = "Sibers", EndDate = DateTime.Now, StartDate = DateTime.Now, PerformerCompany = "Fin Pack", Priority = 300, Title = "Make DB" });
+
+            return View(projectsViewModels);
         }
 
         [HttpGet("{taskId}")]

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ProjectManager.DAL.Entities
+﻿namespace ProjectManager.DAL.Entities
 {
     public class ProjectTask : IProjectTask
     {

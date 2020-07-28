@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using ProjectManager.BLL.ViewModels;
 using ProjectManager.DAL;
 using ProjectManager.DAL.Entities;
@@ -10,19 +12,21 @@ using System.Threading.Tasks;
 
 namespace ProjectManager.BLL.Services
 {
-    class EmployeeManager: IEmployeeManager
+    public class EmployeeManager: IEmployeeManager
     {
         private ProjectDbContext DBContext { get; }
+        private IMapper Mapper { get; }
 
-        public EmployeeManager(ProjectDbContext dbContext)
+        public EmployeeManager(IMapper mapper, ProjectDbContext dbContext)
         {
             DBContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            Mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         [Authorize(Roles = Roles.Leader)]
         public async Task<int> CreateAsync(ClaimsPrincipal user, EmployeeViewModel data)
         {
-            Employee employee = (Employee)(IEmployee)data;
+            Employee employee = Mapper.Map<Employee>(data);
 
             await DBContext.Employees.AddAsync(employee);
             await DBContext.SaveChangesAsync();
@@ -33,17 +37,21 @@ namespace ProjectManager.BLL.Services
         [Authorize(Roles = Roles.Leader)]
         public async Task<int> EditAsync(EmployeeViewModel employee)
         {
-            DBContext.Employees.Update((Employee)(IEmployee)employee);
+            DBContext.Employees.Update(Mapper.Map<Employee>(employee));
             await DBContext.SaveChangesAsync();
 
             return employee.Id;
         }
 
         [Authorize(Roles = Roles.Leader)]
-        public IEnumerable<EmployeeViewModel> GetAll()
+        public async Task<IEnumerable<EmployeeViewModel>> GetAll()
         {
-            return DBContext.Employees
-                .Select(x => new EmployeeViewModel(/*x*/));
+            await DBContext
+                .Employees
+                .LoadAsync();
+            return DBContext
+                .Employees
+                .Select(x => Mapper.Map<EmployeeViewModel>(x));
         }
 
         [Authorize(Roles = Roles.Leader)]
@@ -60,8 +68,9 @@ namespace ProjectManager.BLL.Services
 
         public async Task<EmployeeViewModel> Get(int id)
         {
+            await DBContext.Employees.LoadAsync();
             var employee = await DBContext.Employees.FindAsync(id);
-            return employee == null ? null : new EmployeeViewModel(/*employee*/);
+            return employee == null ? null : Mapper.Map<EmployeeViewModel>(employee);
         }
     }
 }

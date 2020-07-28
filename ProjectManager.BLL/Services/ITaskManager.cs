@@ -8,8 +8,8 @@ namespace ProjectManager.BLL.Services
 {
     public interface ITaskManager
     {
-        IEnumerable<ProjectTaskViewModel> GetAll();
-        IEnumerable<ProjectTaskViewModel> GetByEmployee(int employeeId);
+        Task<IEnumerable<ProjectTaskViewModel>> GetAll();
+        Task<IEnumerable<ProjectTaskViewModel>> GetByEmployee(int employeeId);
         Task<ProjectTaskViewModel> Get(int id);
         Task<int> CreateAsync(ClaimsPrincipal user, ProjectTaskViewModel data);
         Task<int> EditAsync(ProjectTaskViewModel task);

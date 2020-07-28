@@ -9,6 +9,9 @@ namespace ProjectManager.DAL.Entities
         string Surname { get; }
         string Email { get; }
         ICollection<ProjectTask> Tasks { get; }
+        ICollection<ProjectTask> TasksAuthor { get; }
+        ICollection<Project> Projects { get; }
+        ICollection<Project> ManagedProjects { get; }
         string AvatarUrl { get; }
     }
 }

@@ -10,7 +10,7 @@ namespace ProjectManager.BLL.ViewModels
         public string LastName { get; set; }
         public string Surname { get; set; }
         public string Email { get; set; }
-        public ICollection<ProjectTask> Tasks { get; set; }
+        public ICollection<ProjectTaskViewModel> Tasks { get; set; }
         public string AvatarUrl { get; set; }
     }
 }

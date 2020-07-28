@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using ProjectManager.BLL.Utils;
 using ProjectManager.BLL.ViewModels;
 using ProjectManager.DAL;
@@ -7,22 +9,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ProjectManager.BLL.Services
 {
     public class TaskManager : ITaskManager
     {
+        private IMapper Mapper { get; }
         private ProjectDbContext DBContext { get; }
 
-        public TaskManager(ProjectDbContext dbContext)
+        public TaskManager(IMapper mapper, ProjectDbContext dbContext)
         {
+            Mapper = mapper ?? throw new ArgumentNullException(nameof(dbContext));
             DBContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
+
         [Authorize(Roles = Roles.Leader)]
         [Authorize(Roles = Roles.Manager)]
-        public async System.Threading.Tasks.Task<int> CreateAsync(ClaimsPrincipal user, ProjectTaskViewModel data)
+        public async Task<int> CreateAsync(ClaimsPrincipal user, ProjectTaskViewModel data)
         {
-            ProjectTask task = (ProjectTask)(IProjectTask)data;
+            ProjectTask task = Mapper.Map<ProjectTask>(data);
 
             task.Author.Id = user.GetLoggedInUserId<int>();
 
@@ -34,9 +40,9 @@ namespace ProjectManager.BLL.Services
 
         [Authorize(Roles = Roles.Leader)]
         [Authorize(Roles = Roles.Manager)]
-        public async System.Threading.Tasks.Task<int> EditAsync(ProjectTaskViewModel task)
+        public async Task<int> EditAsync(ProjectTaskViewModel task)
         {
-            DBContext.Tasks.Update((ProjectTask)(IProjectTask)task);
+            DBContext.Tasks.Update(Mapper.Map<ProjectTask>(task));
             await DBContext.SaveChangesAsync();
 
             return task.Id;
@@ -44,28 +50,31 @@ namespace ProjectManager.BLL.Services
 
         [Authorize(Roles = Roles.Leader)]
         [Authorize(Roles = Roles.Manager)]
-        public IEnumerable<ProjectTaskViewModel> GetAll()
+        public async Task<IEnumerable<ProjectTaskViewModel>> GetAll()
         {
-            return DBContext.Tasks.Select(x => new ProjectTaskViewModel(x));
+            await DBContext.Tasks.LoadAsync();
+            return DBContext.Tasks.Select(x => Mapper.Map<ProjectTaskViewModel>(x));
         }
 
-        public IEnumerable<ProjectTaskViewModel> GetByEmployee(int employeeId)
+        public async Task<IEnumerable<ProjectTaskViewModel>> GetByEmployee(int employeeId)
         {
-            return DBContext.Tasks.Where(x => x.Performer.Id == employeeId).Select(x => new ProjectTaskViewModel(x));
+            await DBContext.Tasks.LoadAsync();
+            return DBContext.Tasks.Where(x => x.Performer.Id == employeeId).Select(x => Mapper.Map<ProjectTaskViewModel>(x));
         }
 
         [Authorize(Roles = Roles.Leader)]
         [Authorize(Roles = Roles.Manager)]
-        public async System.Threading.Tasks.Task<bool> Remove(int id)
+        public async Task<bool> Remove(int id)
         {
             DBContext.Tasks.Remove(DBContext.Tasks.Where(x => x.Id == id).FirstOrDefault());
             await DBContext.SaveChangesAsync();
             return true;
         }
 
-        public async System.Threading.Tasks.Task<ProjectTaskViewModel> Get(int id)
+        public async Task<ProjectTaskViewModel> Get(int id)
         {
-            return new ProjectTaskViewModel(await DBContext.Tasks.FindAsync(id));
+            await DBContext.Tasks.LoadAsync();
+            return Mapper.Map<ProjectTaskViewModel>(await DBContext.Tasks.FindAsync(id));
         }
     }
 }
