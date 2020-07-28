@@ -7,23 +7,22 @@ namespace ProjectManager.DAL
 {
     public class ProjectDbContext : IdentityDbContext<Employee, IdentityRole<int>, int>
     {
+        public ProjectDbContext(DbContextOptions<ProjectDbContext> options)
+            : base(options)
+        {
+        }
+
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectTask> Tasks { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<ProjectEmployees> ProjectEmployees { get; set; }
-
-        public ProjectDbContext(DbContextOptions<ProjectDbContext> options)
-            : base(options)
-        {
-            
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<ProjectEmployees>()
-                .HasKey(t => new { t.EmployeeId, t.ProjectId });
+                .HasKey(t => new {t.EmployeeId, t.ProjectId});
 
             modelBuilder.Entity<ProjectEmployees>()
                 .HasOne(sc => sc.Employee)

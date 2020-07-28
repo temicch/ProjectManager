@@ -5,13 +5,15 @@ namespace ProjectManager.DAL.Entities
 {
     public class Employee : IdentityUser<int>, IEmployee, IBaseEntity
     {
-        public Employee(): base()
+        public Employee() : base()
         {
         }
 
-        public Employee(string userName): base(userName)
+        public Employee(string userName) : base(userName)
         {
         }
+
+        internal ICollection<ProjectEmployees> ProjectEmployees { get; set; }
 
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -20,6 +22,5 @@ namespace ProjectManager.DAL.Entities
         public string AvatarUrl { get; set; }
         public ICollection<Project> ManagedProjects { get; set; }
         public ICollection<ProjectTask> TasksAuthor { get; set; }
-        internal ICollection<ProjectEmployees> ProjectEmployees { get; set; }
     }
 }

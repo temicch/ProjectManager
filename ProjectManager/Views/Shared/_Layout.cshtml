@@ -1,8 +1,8 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" type="text/css"/>
     <link rel="stylesheet" href="~/css/site.css" type="text/css"/>
@@ -10,18 +10,18 @@
     <link rel="stylesheet" href="~/lib/jqueryui/themes/flick/jquery-ui.css" type="text/css"/>
 </head>
 <body>
-    <header class="sticky-top">
-        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-            <div class="container">
-                <button class="navbar-toggler pb-0 pt-0 pl-1 pr-1" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" asp-route-taskGroupId="">Project Manager</a>
+<header class="sticky-top">
+    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+        <div class="container">
+            <button class="navbar-toggler pb-0 pt-0 pl-1 pr-1" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" asp-route-taskGroupId="">Project Manager</a>
 
-                <div class="navbar-collapse collapse d-sm-inline-flex">
-                    <ul class="navbar-nav flex-grow-1">
-                        @*@if (User.Identity.IsAuthenticated)
+            <div class="navbar-collapse collapse d-sm-inline-flex">
+                <ul class="navbar-nav flex-grow-1">
+                    @*@if (User.Identity.IsAuthenticated)
                     {
         <li class="nav-item dropdown">
             <a class="nav-link text-dark dropdown-toggle" href="#" id="tasks-Dropdown" role="button" data-toggle="dropdown">
@@ -43,35 +43,35 @@
             </div>
         </li>}
                     }*@
-                        <partial name="_NavPartial" />
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="sticky-footer bg-white">
-        <div class="container my-auto">
-            <div class="copyright text-center my-auto">
-                <span>temicch &copy; Project Manager 2020</span>
+                    <partial name="_NavPartial"/>
+                </ul>
+                <partial name="_LoginPartial"/>
             </div>
         </div>
-    </footer>
+    </nav>
+</header>
+<div class="container">
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/jqueryui/jquery-ui.min.js"></script>
-    <script src="~/lib/jqueryui-touch-punch/jquery.ui.touch-punch.min.js"></script>
-    <script src="~/js/swipeable.js" asp-append-version="true"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+<footer class="sticky-footer bg-white">
+    <div class="container my-auto">
+        <div class="copyright text-center my-auto">
+            <span>temicch &copy; Project Manager 2020</span>
+        </div>
+    </div>
+</footer>
 
-    @RenderSection("Scripts", required: false)
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jqueryui/jquery-ui.min.js"></script>
+<script src="~/lib/jqueryui-touch-punch/jquery.ui.touch-punch.min.js"></script>
+<script src="~/js/swipeable.js" asp-append-version="true"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+@RenderSection("Scripts", required: false)
 </body>
 </html>
 

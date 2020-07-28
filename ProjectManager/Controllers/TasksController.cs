@@ -13,12 +13,8 @@ namespace ProjectManager.Controllers
     [Authorize]
     public class TasksController : Controller
     {
-        private ITaskManager TaskManager { get; }
-        private IProjectManager ProjectManager { get; }
-        public IEmployeeManager EmployeeManager { get; }
-
         public TasksController(
-            ITaskManager taskManager, 
+            ITaskManager taskManager,
             IProjectManager projectManager,
             IEmployeeManager employeeManager)
         {
@@ -27,20 +23,24 @@ namespace ProjectManager.Controllers
             EmployeeManager = employeeManager ?? throw new ArgumentNullException(nameof(employeeManager));
         }
 
+        private ITaskManager TaskManager { get; }
+        private IProjectManager ProjectManager { get; }
+        public IEmployeeManager EmployeeManager { get; }
+
         [HttpGet("index")]
         public async Task<IActionResult> Index(int projectId)
         {
             //var list = await EmployeeManager.Get(1);
             var projectsViewModels = ProjectManager.GetAll();
 
-            var id = await ProjectManager.CreateAsync(User, new ProjectViewModel() 
-            { 
-                CustomerCompany = "Sibers", 
-                EndDate = DateTime.Now, 
-                StartDate = DateTime.Now, 
-                PerformerCompany = "Fin Pack", 
-                Priority = 300, 
-                Title = "Make DB" 
+            var id = await ProjectManager.CreateAsync(User, new ProjectViewModel()
+            {
+                CustomerCompany = "Sibers",
+                EndDate = DateTime.Now,
+                StartDate = DateTime.Now,
+                PerformerCompany = "Fin Pack",
+                Priority = 300,
+                Title = "Make DB"
             });
 
             return View(projectsViewModels);
@@ -67,7 +67,7 @@ namespace ProjectManager.Controllers
             {
                 await TaskManager.CreateAsync(User, writeData);
 
-                return RedirectToAction("Index", new { writeData.Id });
+                return RedirectToAction("Index", new {writeData.Id});
             }
             else
             {
@@ -89,7 +89,7 @@ namespace ProjectManager.Controllers
             {
                 await TaskManager.EditAsync(writeData);
 
-                return RedirectToAction("Index", new { writeData.Id });
+                return RedirectToAction("Index", new {writeData.Id});
             }
             else
             {

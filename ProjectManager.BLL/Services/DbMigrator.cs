@@ -9,20 +9,21 @@ using System.Threading.Tasks;
 namespace ProjectManager.BLL.Services
 {
     /// <summary>
-    /// Class for initial database initialization. Roles and several stub users will be generated.
+    ///     Class for initial database initialization. Roles and several stub users will be generated.
     /// </summary>
     public class DBMigrator
     {
-        private ProjectDbContext DbContext { get; }
-        private UserManager<Employee> UserManager { get; }
-        private RoleManager<IdentityRole<int>> RoleManager { get; }
-
-        public DBMigrator(ProjectDbContext dbContext, UserManager<Employee> userManager, RoleManager<IdentityRole<int>> roleManager)
+        public DBMigrator(ProjectDbContext dbContext, UserManager<Employee> userManager,
+            RoleManager<IdentityRole<int>> roleManager)
         {
             DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             UserManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             RoleManager = roleManager ?? throw new ArgumentNullException(nameof(roleManager));
         }
+
+        private ProjectDbContext DbContext { get; }
+        private UserManager<Employee> UserManager { get; }
+        private RoleManager<IdentityRole<int>> RoleManager { get; }
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {

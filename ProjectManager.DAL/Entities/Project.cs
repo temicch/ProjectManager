@@ -5,6 +5,7 @@ namespace ProjectManager.DAL.Entities
 {
     public class Project : IProject, IBaseEntity
     {
+        internal ICollection<ProjectEmployees> ProjectEmployees { get; set; }
         public int Id { get; set; }
         public string Title { get; set; }
         public string CustomerCompany { get; set; }
@@ -14,7 +15,5 @@ namespace ProjectManager.DAL.Entities
         public uint Priority { get; set; }
         public ICollection<ProjectTask> Tasks { get; set; }
         public Employee Manager { get; set; }
-
-        internal ICollection<ProjectEmployees> ProjectEmployees { get; set; }
     }
 }

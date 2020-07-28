@@ -12,7 +12,7 @@ using ProjectManager.BLL.Services;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using ProjectManager.DAL.Repositories;
-using ProjectManager.PL.Configuration;
+using ProjectManager.Configuration;
 
 namespace ProjectManager.PL
 {
@@ -66,13 +66,11 @@ namespace ProjectManager.PL
             services.AddTransient<BaseRepository<Employee>, EmployeeRepository>();
             services.AddTransient<BaseRepository<Project>, ProjectRepository>();
             services.AddTransient<BaseRepository<ProjectTask>, TaskRepository>();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
         {
-
             // Auto migrate EFCore Database
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {

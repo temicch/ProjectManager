@@ -13,14 +13,14 @@ namespace ProjectManager.BLL.Services
 {
     public class TaskManager : ITaskManager
     {
-        private IMapper Mapper { get; }
-        private BaseRepository<ProjectTask> Repository { get; }
-
         public TaskManager(IMapper mapper, BaseRepository<ProjectTask> repository)
         {
             Mapper = mapper ?? throw new ArgumentNullException(nameof(repository));
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
+
+        private IMapper Mapper { get; }
+        private BaseRepository<ProjectTask> Repository { get; }
 
         [Authorize(Roles = Roles.Leader)]
         [Authorize(Roles = Roles.Manager)]
@@ -37,9 +37,6 @@ namespace ProjectManager.BLL.Services
         [Authorize(Roles = Roles.Manager)]
         public async Task<int> EditAsync(ProjectTaskViewModel task)
         {
-            //TaskRepository.Tasks.Update(Mapper.Map<ProjectTask>(task));
-            //await TaskRepository.SaveChangesAsync();
-
             await Repository.UpdateAsync(Mapper.Map<ProjectTask>(task));
 
             return task.Id;
@@ -64,9 +61,6 @@ namespace ProjectManager.BLL.Services
         [Authorize(Roles = Roles.Manager)]
         public async Task<bool> Remove(int id)
         {
-            //Repository.Tasks.Remove(await Repository.Tasks.Where(x => x.Id == id).FirstOrDefaultAsync());
-            //await Repository.SaveChangesAsync();
-
             await Repository.RemoveAsync(id);
 
             return true;
@@ -76,10 +70,6 @@ namespace ProjectManager.BLL.Services
         {
             var task = await Repository.GetAsync(id);
             return task == null ? null : Mapper.Map<ProjectTaskViewModel>(task);
-
-            //return Mapper.Map<ProjectTaskViewModel>(await GetAllQuery()
-            //    .Where(x => x.Id == id)
-            //    .FirstOrDefaultAsync());
         }
     }
 }

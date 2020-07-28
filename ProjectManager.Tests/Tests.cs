@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using ProjectManager.BLL.Services;
 
 namespace ProjectManager.Tests
 {

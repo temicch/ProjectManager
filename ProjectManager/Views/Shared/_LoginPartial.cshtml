@@ -2,7 +2,7 @@
 @inject SignInManager<Employee> SignInManager
 @inject UserManager<Employee> UserManager
 
-@{ 
+@{
     var user = UserManager.GetUserAsync(User).Result;
     var userAvatarUrl = user?.AvatarUrl;
 
@@ -37,7 +37,7 @@
                     <button type="submit" class="dropdown-item"><i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>Logout</button>
                 </form>
             </div>
-        </li> 
+        </li>
     }
     else
     {

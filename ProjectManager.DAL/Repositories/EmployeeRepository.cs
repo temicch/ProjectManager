@@ -6,7 +6,7 @@ namespace ProjectManager.DAL.Repositories
 {
     public class EmployeeRepository : BaseRepository<Employee>
     {
-        public EmployeeRepository(ProjectDbContext projectDbContext): base(projectDbContext)
+        public EmployeeRepository(ProjectDbContext projectDbContext) : base(projectDbContext)
         {
             DbSet = ProjectDbContext.Employees;
         }

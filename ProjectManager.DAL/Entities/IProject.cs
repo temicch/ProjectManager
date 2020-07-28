@@ -6,36 +6,44 @@ namespace ProjectManager.DAL.Entities
     public interface IProject
     {
         int Id { get; }
+
         /// <summary>
-        /// Project Title
+        ///     Project Title
         /// </summary>
         string Title { get; }
+
         /// <summary>
-        /// Customer Company
+        ///     Customer Company
         /// </summary>
         string CustomerCompany { get; }
+
         /// <summary>
-        /// Performer Company
+        ///     Performer Company
         /// </summary>
         string PerformerCompany { get; }
+
         /// <summary>
-        /// Project tasks
+        ///     Project tasks
         /// </summary>
         ICollection<ProjectTask> Tasks { get; }
+
         /// <summary>
-        /// Project manager
+        ///     Project manager
         /// </summary>
         Employee Manager { get; }
+
         /// <summary>
-        /// Project start date
+        ///     Project start date
         /// </summary>
         DateTime StartDate { get; }
+
         /// <summary>
-        /// Project completion date
+        ///     Project completion date
         /// </summary>
         DateTime EndDate { get; }
+
         /// <summary>
-        /// Project priority
+        ///     Project priority
         /// </summary>
         uint Priority { get; }
     }

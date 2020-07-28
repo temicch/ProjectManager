@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 
 namespace ProjectManager.DAL.Repositories
 {
-    public abstract class BaseRepository<T> : IRepository<T> where T: class, IBaseEntity
+    public abstract class BaseRepository<T> : IRepository<T> where T : class, IBaseEntity
     {
-        public ProjectDbContext ProjectDbContext { get; protected set; }
-        protected DbSet<T> DbSet { get; set; }
-
         public BaseRepository(ProjectDbContext projectDbContext)
         {
             ProjectDbContext = projectDbContext;
         }
+
+        public ProjectDbContext ProjectDbContext { get; protected set; }
+        protected DbSet<T> DbSet { get; set; }
 
         public virtual async Task<int> AddAsync(T newEntity)
         {

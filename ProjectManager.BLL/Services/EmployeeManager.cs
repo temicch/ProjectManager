@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
 using ProjectManager.BLL.ViewModels;
 using ProjectManager.DAL.Entities;
 using ProjectManager.DAL.Repositories;
@@ -12,16 +11,16 @@ using System.Threading.Tasks;
 
 namespace ProjectManager.BLL.Services
 {
-    public class EmployeeManager: IEmployeeManager
+    public class EmployeeManager : IEmployeeManager
     {
-        private BaseRepository<Employee> Repository { get; }
-        private IMapper Mapper { get; }
-
         public EmployeeManager(IMapper mapper, BaseRepository<Employee> repository)
         {
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
             Mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
+
+        private BaseRepository<Employee> Repository { get; }
+        private IMapper Mapper { get; }
 
         [Authorize(Roles = Roles.Leader)]
         public async Task<int> CreateAsync(ClaimsPrincipal user, EmployeeViewModel data)

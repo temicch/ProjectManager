@@ -5,32 +5,39 @@ namespace ProjectManager.DAL.Entities
     public interface IProjectTask
     {
         int Id { get; }
+
         /// <summary>
-        /// Task title
+        ///     Task title
         /// </summary>
         string Title { get; }
+
         /// <summary>
-        /// Task Author
+        ///     Task Author
         /// </summary>
         Employee Author { get; }
+
         /// <summary>
-        /// Task performer employee
+        ///     Task performer employee
         /// </summary>
         Employee Performer { get; }
+
         /// <summary>
-        /// Task status
+        ///     Task status
         /// </summary>
         TaskStatus Status { get; }
+
         /// <summary>
-        /// Comment
+        ///     Comment
         /// </summary>
         string Comment { get; }
+
         /// <summary>
-        /// Task priority
+        ///     Task priority
         /// </summary>
         uint Priority { get; }
+
         /// <summary>
-        /// Project task
+        ///     Project task
         /// </summary>
         Project Project { get; }
     }

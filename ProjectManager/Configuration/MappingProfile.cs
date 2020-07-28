@@ -2,13 +2,13 @@
 using ProjectManager.BLL.ViewModels;
 using ProjectManager.DAL.Entities;
 
-namespace ProjectManager.PL.Configuration
+namespace ProjectManager.Configuration
 {
     public class MappingProfile : Profile
     {
         public MappingProfile()
         {
-            CreateMap<Employee, EmployeeViewModel>().ReverseMap(); 
+            CreateMap<Employee, EmployeeViewModel>().ReverseMap();
             CreateMap<ProjectViewModel, Project>().ReverseMap();
             CreateMap<ProjectTask, ProjectTaskViewModel>().ReverseMap();
         }
