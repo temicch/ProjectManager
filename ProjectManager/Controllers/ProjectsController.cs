@@ -1,36 +1,26 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis;
 using ProjectManager.BLL.Services;
 using ProjectManager.BLL.ViewModels;
-using ProjectManager.DAL.Entities;
 
 namespace ProjectManager.Controllers
 {
     [Authorize]
-    public class TasksController : Controller
+    [Route("projects")]
+    public class ProjectsController : Controller
     {
-        public TasksController(
-            ITaskManager taskManager,
-            IProjectManager projectManager,
-            IEmployeeManager employeeManager)
+        public ProjectsController(IProjectManager projectManager)
         {
-            TaskManager = taskManager ?? throw new ArgumentNullException(nameof(taskManager));
             ProjectManager = projectManager ?? throw new ArgumentNullException(nameof(projectManager));
-            EmployeeManager = employeeManager ?? throw new ArgumentNullException(nameof(employeeManager));
         }
 
-        private ITaskManager TaskManager { get; }
         private IProjectManager ProjectManager { get; }
-        public IEmployeeManager EmployeeManager { get; }
 
         [HttpGet("index")]
         public async Task<IActionResult> Index(int projectId)
         {
-            //var list = await EmployeeManager.Get(1);
             var projectsViewModels = ProjectManager.GetAll();
 
             //var id = await ProjectManager.CreateAsync(User, new ProjectViewModel()
@@ -47,25 +37,25 @@ namespace ProjectManager.Controllers
         }
 
         [HttpGet("{taskId}")]
-        public IActionResult Read(int taskId)
+        public IActionResult Read(int projectId)
         {
-            var readData = TaskManager.Get(taskId);
-            return PartialView("_TaskItem", readData);
+            var readData = ProjectManager.Get(projectId).Result;
+            return PartialView("_ProjectItem", readData);
         }
 
         [HttpGet("create")]
-        public IActionResult Create(string projectId)
+        public IActionResult Create()
         {
             var data = new ProjectViewModel();
             return View(data);
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> Create(ProjectTaskViewModel writeData)
+        public async Task<IActionResult> Create(ProjectViewModel writeData)
         {
             if (ModelState.IsValid)
             {
-                await TaskManager.CreateAsync(User, writeData);
+                await ProjectManager.CreateAsync(User, writeData);
 
                 return RedirectToAction("Index", new {writeData.Id});
             }
@@ -78,16 +68,16 @@ namespace ProjectManager.Controllers
         [HttpGet("{id}/update")]
         public async Task<IActionResult> Update(int id)
         {
-            var data = await TaskManager.Get(id);
+            var data = await ProjectManager.Get(id);
             return View(data);
         }
 
         [HttpPost("{id}/update")]
-        public async Task<IActionResult> Update(ProjectTaskViewModel writeData)
+        public async Task<IActionResult> Update(ProjectViewModel writeData)
         {
             if (ModelState.IsValid)
             {
-                await TaskManager.EditAsync(writeData);
+                await ProjectManager.EditAsync(writeData);
 
                 return RedirectToAction("Index", new {writeData.Id});
             }

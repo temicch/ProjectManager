@@ -1,0 +1,46 @@
+﻿@model ProjectManager.BLL.ViewModels.EmployeeViewModel
+
+@{
+
+}
+
+<style>
+</style>
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            @if (User.IsInRole(ProjectManager.BLL.Roles.Leader))
+            {
+                <a class="btn btn-sm btn-success" asp-controller="Employees" asp-action="Edit" asp-route-id="@Model.Id"><i class="fas fa-edit"></i></a>
+                <a class="btn btn-sm btn-danger" asp-controller="Employees" asp-action="Delete" asp-route-id="@Model.Id"><i class="fa fa-times"></i></a>
+            }
+            @Html.DisplayFor(model => model.LastName) @Html.DisplayFor(model => model.FirstName)
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-3 col-lg-3 " align="center"> <img src="@Html.DisplayFor(model => model.AvatarUrl)"> </div>
+
+            <div class=" col-md-9 col-lg-9 ">
+                <table class="table table-user-information">
+                    <tbody>
+                        <tr>
+                            <td>@Html.DisplayNameFor(model => model.LastName):</td>
+                            <td>@Html.DisplayFor(model => model.LastName)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(model => model.FirstName):</td>
+                            <td>@Html.DisplayFor(model => model.FirstName)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(model => model.Email):</td>
+                            <td><a href="mailto:@Html.DisplayFor(model => model.Email)">@Html.DisplayFor(model => model.Email)</a></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

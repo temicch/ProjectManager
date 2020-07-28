@@ -21,28 +21,6 @@
 
             <div class="navbar-collapse collapse d-sm-inline-flex">
                 <ul class="navbar-nav flex-grow-1">
-                    @*@if (User.Identity.IsAuthenticated)
-                    {
-        <li class="nav-item dropdown">
-            <a class="nav-link text-dark dropdown-toggle" href="#" id="tasks-Dropdown" role="button" data-toggle="dropdown">
-                Tasks
-            </a>
-            <div class="dropdown-menu" aria-labelledby="tasks-Dropdown">
-                    @await Component.InvokeAsync("TaskGroupList")
-                </div>
-        </li>
-
-                        @if (User.IsInRole(ProjectManager.BLL.Roles.Leader))
-                        {
-        <li class="nav-item dropdown">
-            <a class="nav-link text-dark dropdown-toggle" href="#" id="admin-Dropdown" role="button" data-toggle="dropdown">
-                Admin
-            </a>
-            <div class="dropdown-menu" aria-labelledby="admin-Dropdown">
-                <a class="dropdown-item text-dark" asp-area="" asp-controller="Invitations" asp-action="Index">Invitations</a>
-            </div>
-        </li>}
-                    }*@
                     <partial name="_NavPartial"/>
                 </ul>
                 <partial name="_LoginPartial"/>
