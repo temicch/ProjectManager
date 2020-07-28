@@ -2,7 +2,7 @@
 using ProjectManager.BLL.ViewModels;
 using ProjectManager.DAL.Entities;
 
-namespace ProjectManager
+namespace ProjectManager.PL.Configuration
 {
     public class MappingProfile : Profile
     {

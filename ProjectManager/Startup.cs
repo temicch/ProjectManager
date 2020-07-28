@@ -10,11 +10,11 @@ using ProjectManager.DAL;
 using ProjectManager.DAL.Entities;
 using ProjectManager.BLL.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Rewrite;
 using AutoMapper;
 using ProjectManager.DAL.Repositories;
+using ProjectManager.PL.Configuration;
 
-namespace ProjectManager
+namespace ProjectManager.PL
 {
     public class Startup
     {
