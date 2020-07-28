@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.BLL.ViewModels;
-using ProjectManager.DAL;
 using ProjectManager.DAL.Entities;
+using ProjectManager.DAL.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +14,12 @@ namespace ProjectManager.BLL.Services
 {
     public class EmployeeManager: IEmployeeManager
     {
-        private ProjectDbContext DBContext { get; }
+        private BaseRepository<Employee> Repository { get; }
         private IMapper Mapper { get; }
 
-        public EmployeeManager(IMapper mapper, ProjectDbContext dbContext)
+        public EmployeeManager(IMapper mapper, BaseRepository<Employee> repository)
         {
-            DBContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            Repository = repository ?? throw new ArgumentNullException(nameof(repository));
             Mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
@@ -28,8 +28,7 @@ namespace ProjectManager.BLL.Services
         {
             Employee employee = Mapper.Map<Employee>(data);
 
-            await DBContext.Employees.AddAsync(employee);
-            await DBContext.SaveChangesAsync();
+            await Repository.AddAsync(employee);
 
             return employee.Id;
         }
@@ -37,39 +36,29 @@ namespace ProjectManager.BLL.Services
         [Authorize(Roles = Roles.Leader)]
         public async Task<int> EditAsync(EmployeeViewModel employee)
         {
-            DBContext.Employees.Update(Mapper.Map<Employee>(employee));
-            await DBContext.SaveChangesAsync();
+            await Repository.UpdateAsync(Mapper.Map<Employee>(employee));
 
             return employee.Id;
         }
 
         [Authorize(Roles = Roles.Leader)]
-        public async Task<IEnumerable<EmployeeViewModel>> GetAll()
+        public IEnumerable<EmployeeViewModel> GetAll()
         {
-            await DBContext
-                .Employees
-                .LoadAsync();
-            return DBContext
-                .Employees
+            return Repository
+                .GetAll()
                 .Select(x => Mapper.Map<EmployeeViewModel>(x));
         }
 
         [Authorize(Roles = Roles.Leader)]
         public async Task<bool> Remove(int id)
         {
-            DBContext.Projects
-                .Remove(DBContext.Projects
-                    .Where(x => x.Id == id)
-                    .FirstOrDefault()
-                );
-            await DBContext.SaveChangesAsync();
+            await Repository.RemoveAsync(id);
             return true;
         }
 
         public async Task<EmployeeViewModel> Get(int id)
         {
-            await DBContext.Employees.LoadAsync();
-            var employee = await DBContext.Employees.FindAsync(id);
+            var employee = await Repository.GetAsync(id);
             return employee == null ? null : Mapper.Map<EmployeeViewModel>(employee);
         }
     }

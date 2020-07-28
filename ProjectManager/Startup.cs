@@ -12,6 +12,7 @@ using ProjectManager.BLL.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
 using AutoMapper;
+using ProjectManager.DAL.Repositories;
 
 namespace ProjectManager
 {
@@ -24,10 +25,8 @@ namespace ProjectManager
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddLogging();
 
             services.AddDbContext<ProjectDbContext>(options =>
@@ -63,6 +62,10 @@ namespace ProjectManager
             services.AddTransient<ITaskManager, TaskManager>();
             services.AddTransient<IProjectManager, BLL.Services.ProjectManager>();
             services.AddTransient<IEmployeeManager, EmployeeManager>();
+
+            services.AddTransient<BaseRepository<Employee>, EmployeeRepository>();
+            services.AddTransient<BaseRepository<Project>, ProjectRepository>();
+            services.AddTransient<BaseRepository<ProjectTask>, TaskRepository>();
 
         }
 

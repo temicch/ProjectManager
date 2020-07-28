@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace ProjectManager.BLL.Services
 {
+    /// <summary>
+    /// Class for initial database initialization. Roles and several stub users will be generated.
+    /// </summary>
     public class DBMigrator
     {
         private ProjectDbContext DbContext { get; }
@@ -29,8 +32,40 @@ namespace ProjectManager.BLL.Services
             await TryAddUserRole(Roles.Manager);
             await TryAddUserRole(Roles.Employee);
 
-            await TryAddAdminUser();
+            await TryAddUser(
+                new Employee("admin@email.com")
+                {
+                    Email = "admin@email.com",
+                    EmailConfirmed = true,
+                    FirstName = "Admin",
+                    LastName = "Hard"
+                },
+                "adminPassword",
+                Roles.Leader);
+            await DbContext.SaveChangesAsync(cancellationToken);
 
+            await TryAddUser(
+                new Employee("manager@email.com")
+                {
+                    Email = "manager@email.com",
+                    EmailConfirmed = true,
+                    FirstName = "Manager",
+                    LastName = "Middle"
+                },
+                "adminPassword",
+                Roles.Leader);
+            await DbContext.SaveChangesAsync(cancellationToken);
+
+            await TryAddUser(
+                new Employee("employee@email.com")
+                {
+                    Email = "employee@email.com",
+                    EmailConfirmed = true,
+                    FirstName = "Employee",
+                    LastName = "Simple"
+                },
+                "adminPassword",
+                Roles.Leader);
             await DbContext.SaveChangesAsync(cancellationToken);
         }
 
@@ -41,30 +76,22 @@ namespace ProjectManager.BLL.Services
             if (roleEntity == null)
             {
                 roleEntity = new IdentityRole<int>(role);
-                var task = await RoleManager.CreateAsync(roleEntity);
-                
+                await RoleManager.CreateAsync(roleEntity);
             }
 
             return roleEntity;
         }
 
-        private async Task<Employee> TryAddAdminUser()
+        private async Task<Employee> TryAddUser(Employee employee, string password, string role)
         {
-            var admin = await UserManager.FindByNameAsync("Admin");
-            if (admin == null)
+            var userEntity = await UserManager.FindByEmailAsync(employee.Email);
+            if (userEntity == null)
             {
-                admin = new Employee("Admin")
-                {
-                    Email = "admin@admin.admin",
-                    EmailConfirmed = true, 
-                    FirstName = "Admin", 
-                    LastName = "Adminskiy"
-                };
-                var user = await UserManager.CreateAsync(admin, "adminPassword");
-                _ = await UserManager.AddToRoleAsync(admin, Roles.Leader);
+                await UserManager.CreateAsync(employee, password);
+                await UserManager.AddToRoleAsync(employee, role);
             }
 
-            return admin;
+            return userEntity;
         }
     }
 }

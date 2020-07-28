@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using ProjectManager.BLL.Utils;
 using ProjectManager.BLL.ViewModels;
 using ProjectManager.DAL;
 using ProjectManager.DAL.Entities;
+using ProjectManager.DAL.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,15 +17,15 @@ namespace ProjectManager.BLL.Services
     public class ProjectManager : IProjectManager
     {
         private IMapper Mapper { get; }
-        private ProjectDbContext DBContext { get; }
+        private BaseRepository<Project> Repository { get; }
         private UserManager<Employee> UserManager { get; }
 
         public ProjectManager(IMapper mapper, 
-            ProjectDbContext dbContext, 
+            BaseRepository<Project> repository, 
             UserManager<Employee> userManager)
         {
-            Mapper = mapper ?? throw new ArgumentNullException(nameof(dbContext));
-            DBContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            Mapper = mapper ?? throw new ArgumentNullException(nameof(repository));
+            Repository = repository ?? throw new ArgumentNullException(nameof(repository));
             UserManager = userManager;
         }
         [Authorize(Roles = Roles.Leader)]
@@ -36,11 +36,13 @@ namespace ProjectManager.BLL.Services
 
             //var userId = user.GetLoggedInUserId<int>();
             //var user = 
-            
+
             //project.Manager.Id = user.GetLoggedInUserId<int>();
 
-            await DBContext.Projects.AddAsync(project);
-            await DBContext.SaveChangesAsync();
+            //await Repository.Projects.AddAsync(project);
+            //await Repository.SaveChangesAsync();
+
+            await Repository.AddAsync(project);
 
             return project.Id;
         }
@@ -49,53 +51,59 @@ namespace ProjectManager.BLL.Services
         [Authorize(Roles = Roles.Manager)]
         public async Task<int> EditAsync(ProjectViewModel project)
         {
-            DBContext.Projects.Update(Mapper.Map<Project>(project));
-            await DBContext.SaveChangesAsync();
+            //Repository.Projects.Update(Mapper.Map<Project>(project));
+            //await Repository.SaveChangesAsync();
+
+            await Repository.UpdateAsync(Mapper.Map<Project>(project));
 
             return project.Id;
         }
 
         [Authorize(Roles = Roles.Leader)]
         [Authorize(Roles = Roles.Manager)]
-        public async Task<IEnumerable<ProjectViewModel>> GetAll()
+        public IEnumerable<ProjectViewModel> GetAll()
         {
-            await DBContext.Projects.LoadAsync();
-
-            var list = DBContext.Projects.ToList();
-            //var employees = DBContext.Employees.ToList();
-
-            //list[0].Manager = UserManager.FindByIdAsync(1.ToString()).Result;
-
-            return DBContext.Projects
-                //.Include(x => x.Manager)
+            return Repository
+                .GetAll()
                 .Select(x => Mapper.Map<ProjectViewModel>(x));
         }
 
-        public async Task<IEnumerable<ProjectViewModel>> GetByEmployee(int employeeId)
+        public IEnumerable<ProjectViewModel> GetByEmployee(int employeeId)
         {
-            await DBContext.Projects.LoadAsync();
-            return DBContext.ProjectEmployees
-                .Where(x => x.EmployeeId == employeeId)
+            //return Repository.ProjectEmployees
+            //    .Include(x => x.Employee)
+            //    .Include(x => x.Project)
+            //    .Where(x => x.Employee.Id == employeeId)
+            //    .Select(x => Mapper.Map<ProjectViewModel>(x));
+
+            var projects = Repository.ProjectDbContext.ProjectEmployees
+                .Include(x => x.Employee)
+                .Include(x => x.Project)
+                .Where(x => x.Employee.Id == employeeId)
                 .Select(x => Mapper.Map<ProjectViewModel>(x));
+            return projects == null ? null : projects;
         }
 
         [Authorize(Roles = Roles.Leader)]
         [Authorize(Roles = Roles.Manager)]
         public async Task<bool> Remove(int id)
         {
-            DBContext.Projects
-                .Remove(DBContext.Projects
-                    .Where(x => x.Id == id)
-                    .FirstOrDefault()
-                );
-            await DBContext.SaveChangesAsync();
+            //Repository.Projects
+            //    .Remove(Repository.Projects
+            //        .Where(x => x.Id == id)
+            //        .FirstOrDefault()
+            //    );
+            //await Repository.SaveChangesAsync();
+            await Repository.RemoveAsync(id);
             return true;
         }
 
         public async Task<ProjectViewModel> Get(int id)
         {
-            await DBContext.Projects.LoadAsync();
-            var project = await DBContext.Projects.FindAsync(id);
+            //    await Repository.Projects.LoadAsync();
+            //    var project = await Repository.Projects.FindAsync(id);
+            //    return project == null ? null : Mapper.Map<ProjectViewModel>(project);
+            var project = await Repository.GetAsync(id);
             return project == null ? null : Mapper.Map<ProjectViewModel>(project);
         }
     }

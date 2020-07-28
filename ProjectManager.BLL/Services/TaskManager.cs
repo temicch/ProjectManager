@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
-using ProjectManager.BLL.Utils;
 using ProjectManager.BLL.ViewModels;
-using ProjectManager.DAL;
 using ProjectManager.DAL.Entities;
+using ProjectManager.DAL.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,12 +14,12 @@ namespace ProjectManager.BLL.Services
     public class TaskManager : ITaskManager
     {
         private IMapper Mapper { get; }
-        private ProjectDbContext DBContext { get; }
+        private BaseRepository<ProjectTask> Repository { get; }
 
-        public TaskManager(IMapper mapper, ProjectDbContext dbContext)
+        public TaskManager(IMapper mapper, BaseRepository<ProjectTask> repository)
         {
-            Mapper = mapper ?? throw new ArgumentNullException(nameof(dbContext));
-            DBContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            Mapper = mapper ?? throw new ArgumentNullException(nameof(repository));
+            Repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
         [Authorize(Roles = Roles.Leader)]
@@ -30,10 +28,7 @@ namespace ProjectManager.BLL.Services
         {
             ProjectTask task = Mapper.Map<ProjectTask>(data);
 
-            task.Author.Id = user.GetLoggedInUserId<int>();
-
-            await DBContext.Tasks.AddAsync(task);
-            await DBContext.SaveChangesAsync();
+            await Repository.AddAsync(task);
 
             return task.Id;
         }
@@ -42,39 +37,49 @@ namespace ProjectManager.BLL.Services
         [Authorize(Roles = Roles.Manager)]
         public async Task<int> EditAsync(ProjectTaskViewModel task)
         {
-            DBContext.Tasks.Update(Mapper.Map<ProjectTask>(task));
-            await DBContext.SaveChangesAsync();
+            //TaskRepository.Tasks.Update(Mapper.Map<ProjectTask>(task));
+            //await TaskRepository.SaveChangesAsync();
+
+            await Repository.UpdateAsync(Mapper.Map<ProjectTask>(task));
 
             return task.Id;
         }
 
         [Authorize(Roles = Roles.Leader)]
         [Authorize(Roles = Roles.Manager)]
-        public async Task<IEnumerable<ProjectTaskViewModel>> GetAll()
+        public IEnumerable<ProjectTaskViewModel> GetAll()
         {
-            await DBContext.Tasks.LoadAsync();
-            return DBContext.Tasks.Select(x => Mapper.Map<ProjectTaskViewModel>(x));
+            return Repository.GetAll().Select(x => Mapper.Map<ProjectTaskViewModel>(x));
         }
 
-        public async Task<IEnumerable<ProjectTaskViewModel>> GetByEmployee(int employeeId)
+        public IEnumerable<ProjectTaskViewModel> GetByEmployee(int employeeId)
         {
-            await DBContext.Tasks.LoadAsync();
-            return DBContext.Tasks.Where(x => x.Performer.Id == employeeId).Select(x => Mapper.Map<ProjectTaskViewModel>(x));
+            return Repository
+                .GetAll()
+                .Where(x => x.Performer.Id == employeeId)
+                .Select(x => Mapper.Map<ProjectTaskViewModel>(x));
         }
 
         [Authorize(Roles = Roles.Leader)]
         [Authorize(Roles = Roles.Manager)]
         public async Task<bool> Remove(int id)
         {
-            DBContext.Tasks.Remove(DBContext.Tasks.Where(x => x.Id == id).FirstOrDefault());
-            await DBContext.SaveChangesAsync();
+            //Repository.Tasks.Remove(await Repository.Tasks.Where(x => x.Id == id).FirstOrDefaultAsync());
+            //await Repository.SaveChangesAsync();
+
+            await Repository.RemoveAsync(id);
+
             return true;
         }
 
         public async Task<ProjectTaskViewModel> Get(int id)
         {
-            await DBContext.Tasks.LoadAsync();
-            return Mapper.Map<ProjectTaskViewModel>(await DBContext.Tasks.FindAsync(id));
+            var task = await Repository.GetAsync(id);
+            return task == null ? null : Mapper.Map<ProjectTaskViewModel>(task);
+
+            //return Mapper.Map<ProjectTaskViewModel>(await GetAllQuery()
+            //    .Where(x => x.Id == id)
+            //    .FirstOrDefaultAsync());
         }
     }
 }

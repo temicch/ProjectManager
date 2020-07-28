@@ -23,18 +23,25 @@ namespace ProjectManager.Controllers
             IEmployeeManager employeeManager)
         {
             TaskManager = taskManager ?? throw new ArgumentNullException(nameof(taskManager));
-            ProjectManager = projectManager ?? throw new ArgumentNullException(nameof(taskManager));
-            EmployeeManager = employeeManager;
+            ProjectManager = projectManager ?? throw new ArgumentNullException(nameof(projectManager));
+            EmployeeManager = employeeManager ?? throw new ArgumentNullException(nameof(employeeManager));
         }
 
         [HttpGet("index")]
         public async Task<IActionResult> Index(int projectId)
         {
-            var list = await EmployeeManager.Get(1);
+            //var list = await EmployeeManager.Get(1);
+            var projectsViewModels = ProjectManager.GetAll();
 
-            var projectsViewModels = (await ProjectManager.GetAll()).ToList();
-
-            //var id = await ProjectManager.CreateAsync(User, new ProjectViewModel() { CustomerCompany = "Sibers", EndDate = DateTime.Now, StartDate = DateTime.Now, PerformerCompany = "Fin Pack", Priority = 300, Title = "Make DB" });
+            var id = await ProjectManager.CreateAsync(User, new ProjectViewModel() 
+            { 
+                CustomerCompany = "Sibers", 
+                EndDate = DateTime.Now, 
+                StartDate = DateTime.Now, 
+                PerformerCompany = "Fin Pack", 
+                Priority = 300, 
+                Title = "Make DB" 
+            });
 
             return View(projectsViewModels);
         }

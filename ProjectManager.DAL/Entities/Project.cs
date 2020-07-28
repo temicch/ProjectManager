@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ProjectManager.DAL.Entities
 {
-    public class Project : IProject
+    public class Project : IProject, IBaseEntity
     {
         public int Id { get; set; }
         public string Title { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace ProjectManager.DAL.Entities
 {
-    public class ProjectTask : IProjectTask
+    public class ProjectTask : IProjectTask, IBaseEntity
     {
         public int Id { get; set; }
         public string Title { get; set; }

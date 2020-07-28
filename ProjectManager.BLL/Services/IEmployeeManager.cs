@@ -7,7 +7,7 @@ namespace ProjectManager.BLL.Services
 {
     public interface IEmployeeManager
     {
-        Task<IEnumerable<EmployeeViewModel>> GetAll();
+        IEnumerable<EmployeeViewModel> GetAll();
         Task<EmployeeViewModel> Get(int id);
         Task<int> CreateAsync(ClaimsPrincipal user, EmployeeViewModel data);
         Task<int> EditAsync(EmployeeViewModel task);
