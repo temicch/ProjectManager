@@ -11,9 +11,9 @@ namespace ProjectManager.BLL.Services
     /// <summary>
     ///     Class for initial database initialization. Roles and several stub users will be generated.
     /// </summary>
-    public class DBMigrator
+    public class DbMigrator
     {
-        public DBMigrator(ProjectDbContext dbContext, UserManager<Employee> userManager,
+        public DbMigrator(ProjectDbContext dbContext, UserManager<Employee> userManager,
             RoleManager<IdentityRole<int>> roleManager)
         {
             DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.BLL.ViewModels;
-using ProjectManager.DAL;
 using ProjectManager.DAL.Entities;
 using ProjectManager.DAL.Repositories;
 using System;
@@ -17,17 +16,14 @@ namespace ProjectManager.BLL.Services
     public class ProjectManager : IProjectManager
     {
         public ProjectManager(IMapper mapper,
-            BaseRepository<Project> repository,
-            UserManager<Employee> userManager)
+            BaseRepository<Project> repository)
         {
             Mapper = mapper ?? throw new ArgumentNullException(nameof(repository));
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
-            UserManager = userManager;
         }
 
         private IMapper Mapper { get; }
         private BaseRepository<Project> Repository { get; }
-        private UserManager<Employee> UserManager { get; }
 
         [Authorize(Roles = Roles.Leader)]
         [Authorize(Roles = Roles.Manager)]
@@ -65,7 +61,7 @@ namespace ProjectManager.BLL.Services
                 .Include(x => x.Project)
                 .Where(x => x.Employee.Id == employeeId)
                 .Select(x => Mapper.Map<ProjectViewModel>(x));
-            return projects == null ? null : projects;
+            return projects;
         }
 
         [Authorize(Roles = Roles.Leader)]

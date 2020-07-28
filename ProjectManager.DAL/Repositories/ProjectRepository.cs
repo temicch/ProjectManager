@@ -6,9 +6,9 @@ namespace ProjectManager.DAL.Repositories
 {
     public class ProjectRepository : BaseRepository<Project>
     {
-        public ProjectRepository(ProjectDbContext projectDbContext) : base(projectDbContext)
+        public ProjectRepository(ProjectDbContext projectDbContext):
+            base(projectDbContext, projectDbContext.Projects)
         {
-            DbSet = ProjectDbContext.Projects;
         }
 
         protected override IQueryable<Project> GetAllAsQuery()

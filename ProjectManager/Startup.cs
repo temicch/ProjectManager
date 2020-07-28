@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using ProjectManager.DAL.Repositories;
 using ProjectManager.Configuration;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace ProjectManager.PL
 {
@@ -58,7 +59,7 @@ namespace ProjectManager.PL
 
             services.AddAutoMapper(typeof(MappingProfile));
 
-            services.AddTransient<DBMigrator>();
+            services.AddTransient<DbMigrator>();
             services.AddTransient<ITaskManager, TaskManager>();
             services.AddTransient<IProjectManager, BLL.Services.ProjectManager>();
             services.AddTransient<IEmployeeManager, EmployeeManager>();
@@ -69,12 +70,12 @@ namespace ProjectManager.PL
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             // Auto migrate EFCore Database
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
-                var migrator = serviceScope.ServiceProvider.GetRequiredService<DBMigrator>();
+                var migrator = serviceScope.ServiceProvider.GetRequiredService<DbMigrator>();
                 using (var cancellation = new CancellationTokenSource())
                 {
                     migrator.ExecuteAsync(cancellation.Token).Wait();

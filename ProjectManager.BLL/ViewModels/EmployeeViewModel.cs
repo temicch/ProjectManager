@@ -1,5 +1,4 @@
-﻿using ProjectManager.DAL.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ProjectManager.BLL.ViewModels
 {

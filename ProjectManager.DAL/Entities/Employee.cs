@@ -9,8 +9,9 @@ namespace ProjectManager.DAL.Entities
         {
         }
 
-        public Employee(string userName) : base(userName)
+        public Employee(string email) : base(email)
         {
+            UserName = email;
         }
 
         internal ICollection<ProjectEmployees> ProjectEmployees { get; set; }

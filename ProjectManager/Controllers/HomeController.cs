@@ -16,10 +16,9 @@ namespace ProjectManager.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            if (User.Identity.IsAuthenticated)
-                return RedirectToAction("Index", "Tasks");
-            else
-                return RedirectToAction("Login", "Identity/Account");
+            return User.Identity.IsAuthenticated ? 
+                RedirectToAction("Index", "Tasks") : 
+                RedirectToAction("Login", "Identity/Account");
         }
     }
 }

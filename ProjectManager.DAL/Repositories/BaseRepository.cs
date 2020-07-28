@@ -7,9 +7,10 @@ namespace ProjectManager.DAL.Repositories
 {
     public abstract class BaseRepository<T> : IRepository<T> where T : class, IBaseEntity
     {
-        public BaseRepository(ProjectDbContext projectDbContext)
+        public BaseRepository(ProjectDbContext projectDbContext, DbSet<T> dbSet)
         {
             ProjectDbContext = projectDbContext;
+            DbSet = dbSet;
         }
 
         public ProjectDbContext ProjectDbContext { get; protected set; }
@@ -37,8 +38,7 @@ namespace ProjectManager.DAL.Repositories
         public virtual async Task RemoveAsync(int id)
         {
             var entity = DbSet
-                .Where(x => x.Id == id)
-                .FirstOrDefault();
+                .FirstOrDefault(x => x.Id == id);
             DbSet.Remove(entity);
             await ProjectDbContext.SaveChangesAsync();
         }

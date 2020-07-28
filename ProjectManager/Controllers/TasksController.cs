@@ -33,15 +33,15 @@ namespace ProjectManager.Controllers
             //var list = await EmployeeManager.Get(1);
             var projectsViewModels = ProjectManager.GetAll();
 
-            var id = await ProjectManager.CreateAsync(User, new ProjectViewModel()
-            {
-                CustomerCompany = "Sibers",
-                EndDate = DateTime.Now,
-                StartDate = DateTime.Now,
-                PerformerCompany = "Fin Pack",
-                Priority = 300,
-                Title = "Make DB"
-            });
+            //var id = await ProjectManager.CreateAsync(User, new ProjectViewModel()
+            //{
+            //    CustomerCompany = "Sibers",
+            //    EndDate = DateTime.Now,
+            //    StartDate = DateTime.Now,
+            //    PerformerCompany = "Fin Pack",
+            //    Priority = 300,
+            //    Title = "Make DB"
+            //});
 
             return View(projectsViewModels);
         }
@@ -96,31 +96,5 @@ namespace ProjectManager.Controllers
                 return View(writeData);
             }
         }
-
-        //[HttpPost("{taskId}/assign/{userId?}")]
-        //public async Task<IActionResult> Assign(string taskId, string userId)
-        //{ 
-        //    userId ??= User.GetLoggedInUserId<string>();
-
-        //    await TaskManager.Assign(User, taskId, userId);
-
-        //    return Ok();
-        //}
-
-        //[HttpPost("{taskId}/un-assign")]
-        //public async Task<IActionResult> UnAssign(string taskId)
-        //{
-        //    await TaskManager.UnAssign(User, taskId);
-
-        //    return Ok();
-        //}
-
-        //[HttpPost("{taskId}/complete")]
-        //public async Task<IActionResult> Complete(string taskId)
-        //{
-        //    await TaskManager.Complete(User, taskId);
-
-        //    return Ok();
-        //}
     }
 }
