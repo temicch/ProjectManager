@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using ProjectManager.BLL.Utils;
 using ProjectManager.BLL.ViewModels;
 using ProjectManager.DAL.Entities;
 using ProjectManager.DAL.Repositories;
@@ -47,13 +48,10 @@ namespace ProjectManager.BLL.Services
             return project.Id;
         }
 
-        [Authorize(Roles = Roles.Leader)]
-        [Authorize(Roles = Roles.Manager)]
         public async Task<IEnumerable<ProjectViewModel>> GetAllAsync(ClaimsPrincipal user)
         {
-            return Mapper.Map<IEnumerable<ProjectViewModel>>(await Repository
-                .GetAll()
-                .ToListAsync());
+            var entities = await GetAllFilteredEntities(user).ToListAsync();
+            return Mapper.Map<IEnumerable<ProjectViewModel>>(entities);
         }
 
         public async Task<IEnumerable<ProjectViewModel>> GetAllByEmployeeAsync(ClaimsPrincipal user, int employeeId)
@@ -103,6 +101,28 @@ namespace ProjectManager.BLL.Services
                 .Select(x => x.Tasks)
                 .ToListAsync());
             return tasks;
+        }
+        private IQueryable<Project> GetAllFilteredEntities(ClaimsPrincipal user)
+        {
+            if (!user.Identity.IsAuthenticated)
+                return null;
+
+            var entities = Repository.GetAll();
+            var userId = user.GetLoggedInUserId<int>();
+            // Leader can view any projects, so nothing filter to
+            if (user.IsInRole(Roles.Leader))
+            {
+            }
+            // Other roles can see only theirs projects. Filter it
+            else if (user.IsInRole(Roles.Manager) || user.IsInRole(Roles.Employee))
+            {
+                entities = entities
+                    .Where(x => x.ManagerId == userId);
+            }
+            // For other future roles
+            else
+                return null;
+            return entities;
         }
     }
 }
