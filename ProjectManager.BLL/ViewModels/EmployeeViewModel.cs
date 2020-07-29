@@ -18,7 +18,18 @@ namespace ProjectManager.BLL.ViewModels
         public string Email { get; set; }
         [Display(Name = "Tasks")]
         public ICollection<ProjectTaskViewModel> Tasks { get; set; }
-        [Display(Name = "Avatar")]
-        public string AvatarUrl { get; set; }
+        public string FullName => GetFullName();
+        public string SimplifiedName => GetSimplifiedName();
+
+        private string GetFullName()
+        {
+            return string.Join(" ", new[] { LastName ?? string.Empty, FirstName ?? string.Empty, Surname ?? string.Empty });
+        }
+        private string GetSimplifiedName()
+        {
+            var _FirstName = FirstName?.Length > 1 ? $"{FirstName.Substring(0, 1).ToUpper()}." : null;
+            var _Surname = Surname?.Length > 1 ? $"{Surname.Substring(0, 1).ToUpper()}." : null;
+            return string.Join(" ", new[] { LastName ?? string.Empty, _FirstName ?? string.Empty, _Surname ?? string.Empty });
+        }
     }
 }

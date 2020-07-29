@@ -110,7 +110,7 @@ namespace ProjectManager.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = new Employee {UserName = Input.Email, Email = Input.Email};
+                var user = new Employee(Input.Email);
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {

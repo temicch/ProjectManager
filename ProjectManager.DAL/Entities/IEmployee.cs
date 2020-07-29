@@ -38,10 +38,5 @@ namespace ProjectManager.DAL.Entities
         ///     Projects in which the employee is the manager
         /// </summary>
         ICollection<Project> ManagedProjects { get; }
-
-        /// <summary>
-        ///     Employee avatar link
-        /// </summary>
-        string AvatarUrl { get; }
     }
 }

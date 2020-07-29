@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using ProjectManager.BLL.ViewModels;
 using ProjectManager.DAL.Entities;
 using ProjectManager.DAL.Repositories;
@@ -11,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace ProjectManager.BLL.Services
 {
-    public class TaskManager : ITaskManager
+    public class TaskService : ITaskService
     {
-        public TaskManager(IMapper mapper, BaseRepository<ProjectTask> repository)
+        public TaskService(IMapper mapper, BaseRepository<ProjectTask> repository)
         {
             Mapper = mapper ?? throw new ArgumentNullException(nameof(repository));
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
@@ -35,7 +36,7 @@ namespace ProjectManager.BLL.Services
 
         [Authorize(Roles = Roles.Leader)]
         [Authorize(Roles = Roles.Manager)]
-        public async Task<int> EditAsync(ProjectTaskViewModel task)
+        public async Task<int> EditAsync(ClaimsPrincipal user, ProjectTaskViewModel task)
         {
             await Repository.UpdateAsync(Mapper.Map<ProjectTask>(task));
 
@@ -44,29 +45,31 @@ namespace ProjectManager.BLL.Services
 
         [Authorize(Roles = Roles.Leader)]
         [Authorize(Roles = Roles.Manager)]
-        public IEnumerable<ProjectTaskViewModel> GetAll()
+        public async Task<IEnumerable<ProjectTaskViewModel>> GetAllAsync(ClaimsPrincipal user)
         {
-            return Repository.GetAll().Select(x => Mapper.Map<ProjectTaskViewModel>(x));
+            return Mapper.Map<IEnumerable<ProjectTaskViewModel>>(await Repository
+                .GetAll()
+                .ToListAsync());
         }
 
-        public IEnumerable<ProjectTaskViewModel> GetByEmployee(int employeeId)
+        public async Task<IEnumerable<ProjectTaskViewModel>> GetAllByEmployeeAsync(ClaimsPrincipal user, int employeeId)
         {
-            return Repository
+            return Mapper.Map<IEnumerable<ProjectTaskViewModel>>(await Repository
                 .GetAll()
                 .Where(x => x.Performer.Id == employeeId)
-                .Select(x => Mapper.Map<ProjectTaskViewModel>(x));
+                .ToListAsync());
         }
 
         [Authorize(Roles = Roles.Leader)]
         [Authorize(Roles = Roles.Manager)]
-        public async Task<bool> Remove(int id)
+        public async Task<bool> RemoveByIdAsync(ClaimsPrincipal user, int id)
         {
-            await Repository.RemoveAsync(id);
+            var entity = await Repository.RemoveAsyncById(id);
 
-            return true;
+            return entity;
         }
 
-        public async Task<ProjectTaskViewModel> Get(int id)
+        public async Task<ProjectTaskViewModel> GetByIdAsync(ClaimsPrincipal user, int id)
         {
             var task = await Repository.GetAsync(id);
             return task == null ? null : Mapper.Map<ProjectTaskViewModel>(task);

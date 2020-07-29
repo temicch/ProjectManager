@@ -2,7 +2,12 @@ using Microsoft.EntityFrameworkCore;
 using ProjectManager.DAL;
 using ProjectManager.DAL.Entities;
 using System;
+using Moq;
 using Xunit;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using System.Net.Http;
 
 namespace ProjectManager.Test
 {
@@ -15,10 +20,12 @@ namespace ProjectManager.Test
                 .UseInMemoryDatabase(databaseName: "ProjectDB")
                 .Options;
 
+            var user = new Mock<ClaimsPrincipal>();
+
             // Insert seed data into the database using one instance of the context
             using (var context = new ProjectDbContext(options))
             {
-                var userInfos = new[]
+                var usersInfo = new[]
                 {
                     new[] { "user1@email.com", "Ильина", "Смуйдра", "Кирилловна" },
                     new[] { "user2@email.com", "Баранов", "Серафим", "Максимович" },
@@ -26,10 +33,10 @@ namespace ProjectManager.Test
                     new[] { "user4@email.com", "Данилов", "Прохор", "Георгиевич" },
                 };
 
-                Employee[] users = new Employee[userInfos.Length];
+                Employee[] users = new Employee[usersInfo.Length];
 
                 int i = 0;
-                foreach (var info in userInfos)
+                foreach (var info in usersInfo)
                 {
                     users[i++] = new Employee(info[0])
                     {
@@ -79,6 +86,34 @@ namespace ProjectManager.Test
 
             //Assert.Equal(3, movies.Count);
             //}
+
+
+
+
+        }
+
+        [Fact]
+        public async Task RegisterNewUser_ReturnsHttpStatusOK_WhenValidModelPosted()
+        {
+            //Arrange
+            var mockStore = Mock.Of<IUserStore<Employee>>();
+            await mockStore.CreateAsync(new Mock<Employee>("user").Object, new System.Threading.CancellationToken());
+            
+
+            var mockUserManager = new Mock<UserManager<Employee>>(mockStore, null, null, null, null, null, null, null, null);
+
+            mockUserManager
+                .Setup(x => x.CreateAsync(It.IsAny<Employee>(), It.IsAny<string>()))
+                .ReturnsAsync(IdentityResult.Success);
+
+            
+            //Act
+            //var actual = await sut.RegisterNewUser(input);
+
+            //Assert
+            //actual
+            //    .Should().NotBeNull()
+            //    .And.Match<HttpResponseMessage>(_ => _.IsSuccessStatusCode == true);
         }
     }
 }

@@ -55,14 +55,16 @@ namespace ProjectManager.PL
                 options.User.RequireUniqueEmail = true;
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddJsonOptions(y => y.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
             services.AddAutoMapper(typeof(MappingProfile));
 
             services.AddTransient<DbMigrator>();
-            services.AddTransient<ITaskManager, TaskManager>();
-            services.AddTransient<IProjectManager, BLL.Services.ProjectManager>();
-            services.AddTransient<IEmployeeManager, EmployeeManager>();
+            services.AddTransient<ITaskService, TaskService>();
+            services.AddTransient<IProjectService, ProjectService>();
+            services.AddTransient<IEmployeeService, EmployeeService>();
 
             services.AddTransient<BaseRepository<Employee>, EmployeeRepository>();
             services.AddTransient<BaseRepository<Project>, ProjectRepository>();

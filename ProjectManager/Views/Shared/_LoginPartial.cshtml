@@ -4,7 +4,6 @@
 
 @{
     var user = UserManager.GetUserAsync(User).Result;
-    var userAvatarUrl = user?.AvatarUrl;
 
     var userLastName = user?.LastName ?? string.Empty;
     var userFirstName = user?.FirstName ?? string.Empty;
@@ -13,10 +12,6 @@
     {
         userTitle = user?.Email ?? string.Empty;
     }
-    if (string.IsNullOrEmpty(userAvatarUrl))
-    {
-        userAvatarUrl = "https://image.flaticon.com/icons/svg/847/847969.svg";
-    }
 }
 
 <ul class="navbar-nav">
@@ -24,7 +19,7 @@
     {
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <img class="img-profile rounded-circle fas fa-cogs fa-sm fa-fw mr-2" src="@userAvatarUrl">
+                <img class="img-profile rounded-circle fas fa-cogs fa-sm fa-fw mr-2" src="https://image.flaticon.com/icons/svg/847/847969.svg">
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">@userTitle</span>
             </a>
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">

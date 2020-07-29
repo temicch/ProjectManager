@@ -49,10 +49,8 @@ namespace ProjectManager.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = new Employee
+                var user = new Employee(Input.Email)
                 {
-                    UserName = Input.Email,
-                    Email = Input.Email,
                     LastName = Input.LastName,
                     FirstName = Input.FirstName,
                     Surname = Input.Surname
@@ -66,7 +64,8 @@ namespace ProjectManager.Areas.Identity.Pages.Account
                     return LocalRedirect(returnUrl);
                 }
 
-                foreach (var error in result.Errors) ModelState.AddModelError(string.Empty, error.Description);
+                foreach (var error in result.Errors) 
+                    ModelState.AddModelError(string.Empty, error.Description);
             }
 
             // If we got this far, something failed, redisplay form

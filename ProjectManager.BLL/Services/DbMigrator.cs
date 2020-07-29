@@ -16,58 +16,18 @@ namespace ProjectManager.BLL.Services
         public DbMigrator(ProjectDbContext dbContext, UserManager<Employee> userManager,
             RoleManager<IdentityRole<int>> roleManager)
         {
-            DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             UserManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
             RoleManager = roleManager ?? throw new ArgumentNullException(nameof(roleManager));
         }
 
-        private ProjectDbContext DbContext { get; }
         private UserManager<Employee> UserManager { get; }
         private RoleManager<IdentityRole<int>> RoleManager { get; }
 
         public async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            await DbContext.Database.MigrateAsync(cancellationToken);
-
             await TryAddUserRole(Roles.Leader);
             await TryAddUserRole(Roles.Manager);
             await TryAddUserRole(Roles.Employee);
-
-            await TryAddUser(
-                new Employee("admin@email.com")
-                {
-                    Email = "admin@email.com",
-                    EmailConfirmed = true,
-                    FirstName = "Admin",
-                    LastName = "Hard"
-                },
-                "adminPassword",
-                Roles.Leader);
-            await DbContext.SaveChangesAsync(cancellationToken);
-
-            await TryAddUser(
-                new Employee("manager@email.com")
-                {
-                    Email = "manager@email.com",
-                    EmailConfirmed = true,
-                    FirstName = "Manager",
-                    LastName = "Middle"
-                },
-                "adminPassword",
-                Roles.Leader);
-            await DbContext.SaveChangesAsync(cancellationToken);
-
-            await TryAddUser(
-                new Employee("employee@email.com")
-                {
-                    Email = "employee@email.com",
-                    EmailConfirmed = true,
-                    FirstName = "Employee",
-                    LastName = "Simple"
-                },
-                "adminPassword",
-                Roles.Leader);
-            await DbContext.SaveChangesAsync(cancellationToken);
         }
 
         private async Task<IdentityRole<int>> TryAddUserRole(string role)

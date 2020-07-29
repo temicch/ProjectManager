@@ -21,13 +21,12 @@
             <thead>
                 <tr>
                     <th class="text-center">#</th>
-                    <th>@Html.DisplayNameFor(x => x.AvatarUrl)</th>
                     <th>@Html.DisplayNameFor(x => x.LastName)</th>
                     <th>@Html.DisplayNameFor(x => x.FirstName)</th>
                     <th>@Html.DisplayNameFor(x => x.Surname)</th>
                     <th>@Html.DisplayNameFor(x => x.Email)</th>
                     <th class="text-center">Tasks</th>
-                    <th class="text-right"></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -36,13 +35,12 @@
                 {
                     <tr>
                         <td class="text-center">@item.Id</td>
-                        <td><img src="@item.AvatarUrl" /></td>
                         <td>@item.LastName</td>
                         <td>@item.FirstName</td>
                         <td>@item.Surname</td>
                         <td>@item.Email</td>
                         <td class="text-center">@(item.Tasks.Count.ToString() ?? "0")</td>
-                        <td class="td-actions text-right">
+                        <td class="td-actions">
                             <div class="btn-group">
                                 <a class="btn btn-info btn-just-icon btn-sm m-1" title="Info" asp-action="Details" asp-route-id="@item.Id">
                                     <i class="fas fa-user"></i>

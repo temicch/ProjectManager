@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProjectManager.DAL.Entities;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -35,18 +36,22 @@ namespace ProjectManager.DAL.Repositories
             return GetAllAsQuery();
         }
 
-        public virtual async Task RemoveAsync(int id)
+        public virtual async Task<bool> RemoveAsyncById(int id)
         {
-            var entity = DbSet
-                .FirstOrDefault(x => x.Id == id);
+            var entity = await DbSet
+                .FirstAsync(x => x.Id == id);
+            if (entity == null)
+                return false;
             DbSet.Remove(entity);
             await ProjectDbContext.SaveChangesAsync();
+            return true;
         }
 
-        public virtual async Task UpdateAsync(T entity)
+        public virtual async Task<int> UpdateAsync(T entity)
         {
             DbSet.Update(entity);
             await ProjectDbContext.SaveChangesAsync();
+            return entity.Id;
         }
 
         protected abstract IQueryable<T> GetAllAsQuery();

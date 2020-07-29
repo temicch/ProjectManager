@@ -16,23 +16,21 @@ namespace ProjectManager.PL.Controllers
     [Authorize]
     public class EmployeesController : Controller
     {
-        private IEmployeeManager EmployeeManager { get; }
+        private IEmployeeService EmployeeManager { get; }
 
-        public EmployeesController(IEmployeeManager employeeManager)
+        public EmployeesController(IEmployeeService employeeManager)
         {
             EmployeeManager = employeeManager;
         }
 
-        // GET: Employees
         public async Task<IActionResult> Index()
         {
-            return View(EmployeeManager.GetAll());
+            return View(await EmployeeManager.GetAllAsync(User));
         }
 
-        // GET: Employees/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            var employee = await EmployeeManager.Get(id);
+            var employee = await EmployeeManager.GetByIdAsync(User, id);
             if (employee == null)
             {
                 return NotFound();
@@ -40,15 +38,11 @@ namespace ProjectManager.PL.Controllers
             return View(employee);
         }
 
-        // GET: Employees/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Employees/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(EmployeeViewModel employee)
@@ -61,10 +55,9 @@ namespace ProjectManager.PL.Controllers
             return View(employee);
         }
 
-        // GET: Employees/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            var employee = await EmployeeManager.Get(id);
+            var employee = await EmployeeManager.GetByIdAsync(User, id);
             if (employee == null)
             {
                 return NotFound();
@@ -72,9 +65,6 @@ namespace ProjectManager.PL.Controllers
             return View(employee);
         }
 
-        // POST: Employees/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EmployeeViewModel employee)
@@ -83,7 +73,7 @@ namespace ProjectManager.PL.Controllers
             {
                 try
                 {
-                    await EmployeeManager.EditAsync(employee);
+                    await EmployeeManager.EditAsync(User, employee);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -94,10 +84,9 @@ namespace ProjectManager.PL.Controllers
             return View(employee);
         }
 
-        // GET: Employees/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            var employee = await EmployeeManager.Get(id);
+            var employee = await EmployeeManager.GetByIdAsync(User, id);
             if (employee == null)
             {
                 return NotFound();
@@ -106,12 +95,11 @@ namespace ProjectManager.PL.Controllers
             return View(employee);
         }
 
-        // POST: Employees/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await EmployeeManager.Remove(id);
+            await EmployeeManager.RemoveByIdAsync(User, id);
             return RedirectToAction(nameof(Index));
         }
     }

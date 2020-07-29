@@ -8,7 +8,7 @@ namespace ProjectManager.DAL.Repositories
         Task<T> GetAsync(int id);
         IQueryable<T> GetAll();
         Task<int> AddAsync(T newEntity);
-        Task RemoveAsync(int id);
-        Task UpdateAsync(T entity);
+        Task<bool> RemoveAsyncById(int id);
+        Task<int> UpdateAsync(T entity);
     }
 }
