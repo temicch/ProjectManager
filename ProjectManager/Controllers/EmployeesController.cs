@@ -84,6 +84,7 @@ namespace ProjectManager.PL.Controllers
             return View(employee);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
             var employee = await EmployeeManager.GetAsync(User, id);
@@ -94,10 +95,9 @@ namespace ProjectManager.PL.Controllers
 
             return View(employee);
         }
-
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirm(int id)
         {
             await EmployeeManager.RemoveByIdAsync(User, id);
             return RedirectToAction(nameof(Index));

@@ -15,13 +15,13 @@ namespace ProjectManager.DAL.Entities
         ///     Task Author
         /// </summary>
         Employee Author { get; }
-        int AuthorId { get; }
+        int? AuthorId { get; }
 
         /// <summary>
         ///     Task performer employee
         /// </summary>
         Employee Performer { get; }
-        int PerformerId { get; }
+        int? PerformerId { get; }
 
         /// <summary>
         ///     Task status
@@ -42,6 +42,6 @@ namespace ProjectManager.DAL.Entities
         ///     Project task
         /// </summary>
         Project Project { get; }
-        int ProjectId { get; }
+        int? ProjectId { get; }
     }
 }

@@ -15,7 +15,7 @@ namespace ProjectManager.DAL.Entities
         public uint Priority { get; set; }
         public ICollection<ProjectTask> Tasks { get; set; }
         public Employee Manager { get; set; }
-        public int ManagerId { get; set; }
+        public int? ManagerId { get; set; }
 
     }
 }
