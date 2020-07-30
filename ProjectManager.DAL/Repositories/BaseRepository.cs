@@ -36,7 +36,7 @@ namespace ProjectManager.DAL.Repositories
             return GetAllAsQuery();
         }
 
-        public virtual async Task<bool> RemoveAsyncById(int id)
+        public virtual async Task<bool> RemoveByIdAsync(int id)
         {
             var entity = await DbSet
                 .FirstAsync(x => x.Id == id);

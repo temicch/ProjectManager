@@ -25,9 +25,11 @@ namespace ProjectManager.BLL.Services
         private BaseRepository<Employee> Repository { get; }
         private IMapper Mapper { get; }
 
-        [Authorize(Roles = Roles.Leader)]
         public async Task<int> CreateAsync(ClaimsPrincipal user, EmployeeViewModel data)
         {
+            if (!IsHavePermissionForEdit(user))
+                return 0;
+
             Employee employee = Mapper.Map<Employee>(data);
 
             await Repository.AddAsync(employee);
@@ -35,45 +37,57 @@ namespace ProjectManager.BLL.Services
             return employee.Id;
         }
 
-        //[Authorize(Roles = Roles.Leader)]
         public async Task<int> EditAsync(ClaimsPrincipal user, EmployeeViewModel employee)
         {
+            if (!IsHavePermissionForEdit(user))
+                return 0;
+
             await Repository.UpdateAsync(Mapper.Map<Employee>(employee));
 
             return employee.Id;
         }
 
-        [Authorize(Roles = Roles.Leader)]
-        [Authorize(Roles = Roles.Manager)]
         public async Task<IEnumerable<EmployeeViewModel>> GetAllAsync(ClaimsPrincipal user)
         {
+            if (!IsHavePermissionForLook(user))
+                return null;
+
             return Mapper.Map<IEnumerable<EmployeeViewModel>>(await Repository
                 .GetAll()
                 .ToListAsync());
         }
 
-        [Authorize(Roles = Roles.Leader)]
         public async Task<bool> RemoveByIdAsync(ClaimsPrincipal user, int id)
         {
-            await Repository.RemoveAsyncById(id);
-            return true;
+            if (!IsHavePermissionForEdit(user))
+                return false;
+            return await Repository.RemoveByIdAsync(id);
         }
 
-        public async Task<EmployeeViewModel> GetByIdAsync(ClaimsPrincipal user, int id)
+        public async Task<EmployeeViewModel> GetAsync(ClaimsPrincipal user, int id)
         {
+            if (!IsHavePermissionForLook(user))
+                return null;
+
             var employee = await Repository.GetAsync(id);
             return employee == null ? null : Mapper.Map<EmployeeViewModel>(employee);
         }
 
-        public async Task<IEnumerable<ProjectTaskViewModel>> GetAllTasksAsync(ClaimsPrincipal user, int employeeId)
+        public async Task<IEnumerable<ProjectTaskViewModel>> GetTasksAsync(ClaimsPrincipal user, int employeeId)
         {
+            if (!IsHavePermissionForLook(user))
+                return null;
+
             var employee = await Repository.GetAsync(employeeId);
             var tasks = employee.Tasks.ToList();
 
             return Mapper.Map<IEnumerable<ProjectTaskViewModel>>(tasks);
         }
-        public async Task<IEnumerable<ProjectTaskViewModel>> GetAllManagedTasksAsync(ClaimsPrincipal user, int employeeId)
+        public async Task<IEnumerable<ProjectTaskViewModel>> GetManagedTasksAsync(ClaimsPrincipal user, int employeeId)
         {
+            if (!IsHavePermissionForLook(user))
+                return null;
+
             var employee = await Repository.GetAsync(employeeId);
             var tasks = employee.TasksAuthor.ToList();
 
@@ -82,6 +96,9 @@ namespace ProjectManager.BLL.Services
 
         public async Task<IEnumerable<ProjectViewModel>> GetAllManagedProjectsAsync(ClaimsPrincipal user, int employeeId)
         {
+            if (!IsHavePermissionForLook(user))
+                return null;
+
             var employee = await Repository.GetAsync(employeeId);
             var projects = employee.ManagedProjects.ToList();
 
@@ -90,11 +107,23 @@ namespace ProjectManager.BLL.Services
 
         public async Task<IEnumerable<ProjectViewModel>> GetAllProjectsAsync(ClaimsPrincipal user, int employeeId)
         {
+            if (!IsHavePermissionForLook(user))
+                return null;
+
             var employee = Repository.ProjectDbContext.ProjectEmployees
                 .Where(x => x.EmployeeId == employeeId);
             var projects = await employee.ToListAsync();
 
             return Mapper.Map<IEnumerable<ProjectViewModel>>(projects);
+        }
+
+        private bool IsHavePermissionForEdit(ClaimsPrincipal user)
+        {
+            return user.IsInRole(Roles.Leader);
+        }
+        private bool IsHavePermissionForLook(ClaimsPrincipal user)
+        {
+            return user.Identity.IsAuthenticated;
         }
     }
 }

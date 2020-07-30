@@ -28,10 +28,11 @@ namespace ProjectManager.BLL.Services
         private IMapper Mapper { get; }
         private BaseRepository<Project> Repository { get; }
 
-        [Authorize(Roles = Roles.Leader)]
-        [Authorize(Roles = Roles.Manager)]
         public async Task<int> CreateAsync(ClaimsPrincipal user, ProjectViewModel data)
         {
+            if (!IsHavePermissionForCreating(user))
+                return 0;
+
             Project project = Mapper.Map<Project>(data);
 
             await Repository.AddAsync(project);
@@ -39,10 +40,11 @@ namespace ProjectManager.BLL.Services
             return project.Id;
         }
 
-        [Authorize(Roles = Roles.Leader)]
-        [Authorize(Roles = Roles.Manager)]
         public async Task<int> EditAsync(ClaimsPrincipal user, ProjectViewModel project)
         {
+            if (!IsHavePermissionForEdit(user, Mapper.Map<Project>(project)))
+                return 0;
+
             await Repository.UpdateAsync(Mapper.Map<Project>(project));
 
             return project.Id;
@@ -50,12 +52,18 @@ namespace ProjectManager.BLL.Services
 
         public async Task<IEnumerable<ProjectViewModel>> GetAllAsync(ClaimsPrincipal user)
         {
+            if (!IsHavePermissionForLook(user))
+                return null;
+
             var entities = await GetAllFilteredEntities(user).ToListAsync();
             return Mapper.Map<IEnumerable<ProjectViewModel>>(entities);
         }
 
-        public async Task<IEnumerable<ProjectViewModel>> GetAllByEmployeeAsync(ClaimsPrincipal user, int employeeId)
+        public async Task<IEnumerable<ProjectViewModel>> GetOfEmployeeAsync(ClaimsPrincipal user, int employeeId)
         {
+            if (!IsHavePermissionForLook(user))
+                return null;
+
             var projects = Mapper.Map<IEnumerable<ProjectViewModel>>(await Repository.ProjectDbContext.ProjectEmployees
                 .Include(x => x.Employee)
                 .Include(x => x.Project)
@@ -64,22 +72,34 @@ namespace ProjectManager.BLL.Services
             return projects;
         }
 
-        [Authorize(Roles = Roles.Leader)]
-        [Authorize(Roles = Roles.Manager)]
         public async Task<bool> RemoveByIdAsync(ClaimsPrincipal user, int projectId)
         {
-            var entityResult = await Repository.RemoveAsyncById(projectId);
+            var project = await Repository.GetAsync(projectId);
+
+            if (!IsHavePermissionForEdit(user, project))
+                return false;
+
+            var entityResult = await Repository.RemoveByIdAsync(projectId);
             return entityResult;
         }
 
-        public async Task<ProjectViewModel> GetByIdAsync(ClaimsPrincipal user, int projectId)
+        public async Task<ProjectViewModel> GetAsync(ClaimsPrincipal user, int projectId)
         {
             var project = await Repository.GetAsync(projectId);
+
+            if (!IsHavePermissionForEdit(user, project))
+                return null;
+
             return project == null ? null : Mapper.Map<ProjectViewModel>(project);
         }
 
         public async Task<bool> AddEmployeeAsync(ClaimsPrincipal user, int projectId, int employeeId)
         {
+            var project = await Repository.GetAsync(projectId);
+
+            if (!IsHavePermissionForEdit(user, project))
+                return false;
+
             var entity = await Repository.ProjectDbContext.ProjectEmployees
                 .AddAsync(new ProjectEmployees() { EmployeeId = employeeId, ProjectId = projectId });
             return entity.IsKeySet;
@@ -87,6 +107,14 @@ namespace ProjectManager.BLL.Services
 
         public async Task<IEnumerable<EmployeeViewModel>> GetEmployeesAsync(ClaimsPrincipal user, int projectId)
         {
+            if (!IsHavePermissionForLook(user))
+                return null;
+
+            var project = await Repository.GetAsync(projectId);
+
+            if (!IsHavePermissionForEdit(user, project))
+                return null;
+
             var employees = Mapper.Map<IEnumerable<EmployeeViewModel>>(await Repository.ProjectDbContext.ProjectEmployees
                 .Where(x => x.ProjectId == projectId)
                 .ToListAsync());
@@ -95,6 +123,11 @@ namespace ProjectManager.BLL.Services
 
         public async Task<IEnumerable<ProjectTaskViewModel>> GetTasksAsync(ClaimsPrincipal user, int projectId)
         {
+            var project = await Repository.GetAsync(projectId);
+
+            if (!IsHavePermissionForEdit(user, project))
+                return null;
+
             var tasks = Mapper.Map<IEnumerable<ProjectTaskViewModel>>(await Repository
                 .GetAll()
                 .Where(x => x.Id == projectId)
@@ -102,6 +135,29 @@ namespace ProjectManager.BLL.Services
                 .ToListAsync());
             return tasks;
         }
+
+        private bool IsHavePermissionForLook(ClaimsPrincipal user)
+        {
+            return user.Identity.IsAuthenticated;
+        }
+
+        private bool IsHavePermissionForEdit(ClaimsPrincipal user, Project project)
+        {
+            if (project == null)
+                return false;
+
+            var userId = user.GetLoggedInUserId<int>();
+
+            return project.ManagerId == userId ||
+                Repository.ProjectDbContext.ProjectEmployees
+                .Where(x => x.ProjectId == project.Id && x.EmployeeId == userId)
+                .Count() > 0;
+        }
+        private bool IsHavePermissionForCreating(ClaimsPrincipal user)
+        {
+            return user.IsInRole(Roles.Leader) || user.IsInRole(Roles.Manager);
+        }
+
         private IQueryable<Project> GetAllFilteredEntities(ClaimsPrincipal user)
         {
             if (!user.Identity.IsAuthenticated)

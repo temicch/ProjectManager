@@ -30,7 +30,7 @@ namespace ProjectManager.PL.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var employee = await EmployeeManager.GetByIdAsync(User, id);
+            var employee = await EmployeeManager.GetAsync(User, id);
             if (employee == null)
             {
                 return NotFound();
@@ -57,7 +57,7 @@ namespace ProjectManager.PL.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var employee = await EmployeeManager.GetByIdAsync(User, id);
+            var employee = await EmployeeManager.GetAsync(User, id);
             if (employee == null)
             {
                 return NotFound();
@@ -86,7 +86,7 @@ namespace ProjectManager.PL.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var employee = await EmployeeManager.GetByIdAsync(User, id);
+            var employee = await EmployeeManager.GetAsync(User, id);
             if (employee == null)
             {
                 return NotFound();

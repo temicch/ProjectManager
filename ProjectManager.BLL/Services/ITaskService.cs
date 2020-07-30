@@ -7,6 +7,6 @@ namespace ProjectManager.BLL.Services
 {
     public interface ITaskService : IService<ProjectTaskViewModel>
     {
-        Task<IEnumerable<ProjectTaskViewModel>> GetAllByEmployeeAsync(ClaimsPrincipal user, int employeeId);
+        Task<IEnumerable<ProjectTaskViewModel>> GetOfEmployeeIdAsync(ClaimsPrincipal user, int employeeId);
     }
 }

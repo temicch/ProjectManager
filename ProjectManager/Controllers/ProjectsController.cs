@@ -124,7 +124,7 @@ namespace ProjectManager.Controllers
         [HttpGet("{taskId}")]
         public IActionResult Read(int projectId)
         {
-            var readData = ProjectManager.GetByIdAsync(User, projectId).Result;
+            var readData = ProjectManager.GetAsync(User, projectId).Result;
             return PartialView("_ProjectItem", readData);
         }
 
@@ -153,7 +153,7 @@ namespace ProjectManager.Controllers
         [HttpGet("{id}/update")]
         public async Task<IActionResult> Update(int id)
         {
-            var data = await ProjectManager.GetByIdAsync(User, id);
+            var data = await ProjectManager.GetAsync(User, id);
             return View(data);
         }
 
