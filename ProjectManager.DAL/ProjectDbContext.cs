@@ -33,43 +33,31 @@ namespace ProjectManager.DAL
                 .WithMany(c => c.ProjectEmployees);
 
 
-            modelBuilder.Entity<Employee>()
-                .HasMany(c => c.Tasks)
-                .WithOne(e => e.Performer)
-                .OnDelete(DeleteBehavior.ClientSetNull);
             modelBuilder.Entity<ProjectTask>()
                 .HasOne(c => c.Performer)
                 .WithMany(e => e.Tasks)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .IsRequired(false);
 
 
-            modelBuilder.Entity<Employee>()
-                .HasMany(c => c.TasksAuthor)
-                .WithOne(e => e.Author)
-                .OnDelete(DeleteBehavior.ClientSetNull);
             modelBuilder.Entity<ProjectTask>()
                 .HasOne(c => c.Author)
                 .WithMany(e => e.TasksAuthor)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .IsRequired(false);
 
 
-            modelBuilder.Entity<Employee>()
-                .HasMany(c => c.ManagedProjects)
-                .WithOne(e => e.Manager)
-                .OnDelete(DeleteBehavior.ClientSetNull);
             modelBuilder.Entity<Project>()
                 .HasOne(c => c.Manager)
                 .WithMany(e => e.ManagedProjects)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .IsRequired(false);
 
-            modelBuilder.Entity<Project>()
-                .HasMany(c => c.Tasks)
-                .WithOne(e => e.Project)
-                .OnDelete(DeleteBehavior.ClientSetNull);
             modelBuilder.Entity<ProjectTask>()
                 .HasOne(c => c.Project)
                 .WithMany(e => e.Tasks)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .IsRequired(false);
         }
     }
 }

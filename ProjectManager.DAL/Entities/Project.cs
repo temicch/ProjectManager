@@ -14,7 +14,7 @@ namespace ProjectManager.DAL.Entities
         public DateTime EndDate { get; set; }
         public uint Priority { get; set; }
         public ICollection<ProjectTask> Tasks { get; set; }
-        public Employee Manager { get; set; }
+        public virtual Employee Manager { get; set; }
         public int? ManagerId { get; set; }
 
     }
