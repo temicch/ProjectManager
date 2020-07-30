@@ -6,9 +6,6 @@ namespace ProjectManager.DAL.Entities
     {
         int Id { get; }
 
-        /// <summary>
-        ///     Task title
-        /// </summary>
         string Title { get; }
 
         /// <summary>

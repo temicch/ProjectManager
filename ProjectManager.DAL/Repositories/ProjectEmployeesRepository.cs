@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using ProjectManager.DAL.Entities;
 using System;
 using System.Collections.Generic;
@@ -7,10 +8,14 @@ using System.Text;
 
 namespace ProjectManager.DAL.Repositories
 {
+    /// <summary>
+    /// Repository of (Project - Employees) relations
+    /// </summary>
     public class ProjectEmployeesRepository : BaseRepository<ProjectEmployees>
     {
-        public ProjectEmployeesRepository(ProjectDbContext projectDbContext) :
-            base(projectDbContext, projectDbContext.ProjectEmployees)
+        public ProjectEmployeesRepository(ProjectDbContext projectDbContext,
+            ILogger logger) :
+            base(projectDbContext, projectDbContext.ProjectEmployees, logger)
         {
         }
 

@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Threading.Tasks;
 
 namespace ProjectManager.BLL.Services
@@ -24,7 +25,7 @@ namespace ProjectManager.BLL.Services
         {
             Mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
-            PeRepository = peRepository;
+            PeRepository = peRepository ?? throw new ArgumentNullException(nameof(peRepository));
         }
 
         private IMapper Mapper { get; }

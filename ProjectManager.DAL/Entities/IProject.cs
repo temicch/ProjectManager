@@ -7,19 +7,8 @@ namespace ProjectManager.DAL.Entities
     {
         int Id { get; }
 
-        /// <summary>
-        ///     Project Title
-        /// </summary>
         string Title { get; }
-
-        /// <summary>
-        ///     Customer Company
-        /// </summary>
         string CustomerCompany { get; }
-
-        /// <summary>
-        ///     Performer Company
-        /// </summary>
         string PerformerCompany { get; }
 
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using ProjectManager.DAL.Entities;
 using System;
 using System.Linq;
@@ -6,21 +7,37 @@ using System.Threading.Tasks;
 
 namespace ProjectManager.DAL.Repositories
 {
+    /// <summary>
+    /// Facade for repositories
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class BaseRepository<T> : IRepository<T> where T : class, IBaseEntity
     {
-        public BaseRepository(ProjectDbContext projectDbContext, DbSet<T> dbSet)
+        public BaseRepository(ProjectDbContext projectDbContext, 
+            DbSet<T> dbSet,
+            ILogger logger)
         {
             ProjectDbContext = projectDbContext;
             DbSet = dbSet;
+            Logger = logger;
         }
 
         public ProjectDbContext ProjectDbContext { get; protected set; }
         protected DbSet<T> DbSet { get; set; }
+        private ILogger Logger { get; }
 
         public virtual async Task<int> AddAsync(T newEntity)
         {
-            await DbSet.AddAsync(newEntity);
-            await ProjectDbContext.SaveChangesAsync();
+            try
+            {
+                await DbSet.AddAsync(newEntity);
+                await ProjectDbContext.SaveChangesAsync();
+            }
+            catch(Exception exception)
+            {
+                Logger.LogError(exception, "Add error");
+                return 0;
+            }
             return newEntity.Id;
         }
 
@@ -42,15 +59,31 @@ namespace ProjectManager.DAL.Repositories
                 .FirstAsync(x => x.Id == id);
             if (entity == null)
                 return false;
-            DbSet.Remove(entity);
-            await ProjectDbContext.SaveChangesAsync();
+            try
+            {
+                DbSet.Remove(entity);
+                await ProjectDbContext.SaveChangesAsync();
+            }
+            catch (Exception exception)
+            {
+                Logger.LogError(exception, "RemoveById error");
+                return false;
+            }
             return true;
         }
 
         public virtual async Task<int> UpdateAsync(T entity)
         {
-            DbSet.Update(entity);
-            await ProjectDbContext.SaveChangesAsync();
+            try
+            {
+                DbSet.Update(entity);
+                await ProjectDbContext.SaveChangesAsync();
+            }
+            catch (Exception exception)
+            {
+                Logger.LogError(exception, "Update error");
+                return 0;
+            }
             return entity.Id;
         }
 
