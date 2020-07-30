@@ -16,47 +16,17 @@ namespace ProjectManager.Controllers
     public class ProjectsController : Controller
     {
         public ProjectsController(
-            IProjectService projectManager, 
-            IMapper mapper,
-            ITaskService taskService
+            IProjectService projectManager
             )
         {
             ProjectManager = projectManager ?? throw new ArgumentNullException(nameof(projectManager));
-            Mapper = mapper;
-            TaskService = taskService;
         }
 
         private IProjectService ProjectManager { get; }
-        private IMapper Mapper { get; }
-        private ITaskService TaskService { get; }
 
         [HttpGet("index")]
         public async Task<IActionResult> Index()
         {
-
-            //var id = await ProjectManager.CreateAsync(User, new ProjectViewModel()
-            //{
-            //    CustomerCompany = "Sibers",
-            //    EndDate = DateTime.Now,
-            //    StartDate = DateTime.Now,
-            //    PerformerCompany = "Fin Pack",
-            //    Priority = 300,
-            //    Title = "Make DB"
-            //});
-
-
-            //var entity = Mapper.Map<ProjectViewModel>(new Project()
-            //{
-            //    Title = "Money Pen",
-            //    StartDate = DateTime.Now.AddYears(-2),
-            //    EndDate = DateTime.Now.AddYears(-1),
-            //    PerformerCompany = "Sibers",
-            //    CustomerCompany = "Australian Company",
-            //    Priority = 4,
-            //    ManagerId = 1,
-            //});
-            //await ProjectManager.CreateAsync(User, entity);
-
             //await ProjectManager.CreateAsync(User,
             //Mapper.Map<ProjectViewModel>(new Project()
             //{
@@ -67,54 +37,6 @@ namespace ProjectManager.Controllers
             //    CustomerCompany = "Voice Analytic Company",
             //    Priority = 12,
             //    ManagerId = 2,
-            //}));
-
-            //await ProjectManager.CreateAsync(User,
-            //Mapper.Map<ProjectViewModel>(new Project()
-            //{
-            //    Title = "Radio Tuner",
-            //    StartDate = DateTime.Now.AddYears(-3),
-            //    EndDate = DateTime.Now.AddYears(-2),
-            //    PerformerCompany = "Sibers",
-            //    CustomerCompany = "PS Audio",
-            //    Priority = 10,
-            //    ManagerId = 3,
-            //}));
-
-            //await ProjectManager.CreateAsync(User,
-            //Mapper.Map<ProjectViewModel>(new Project()
-            //{
-            //    Title = "Gas Wizard",
-            //    StartDate = DateTime.Now.AddYears(-3),
-            //    EndDate = DateTime.Now.AddYears(-2),
-            //    PerformerCompany = "Sibers",
-            //    CustomerCompany = "Some company",
-            //    Priority = 124,
-            //    ManagerId = 4,
-            //}));
-
-            //await ProjectManager.CreateAsync(User,
-            //Mapper.Map<ProjectViewModel>(new Project()
-            //{
-            //    Title = "TRI-LOGG",
-            //    StartDate = DateTime.Now.AddYears(-3),
-            //    EndDate = DateTime.Now.AddYears(-1),
-            //    PerformerCompany = "Sibers",
-            //    CustomerCompany = "Another Company",
-            //    Priority = 141,
-            //    ManagerId = 5,
-            //}));
-
-            //await TaskService.CreateAsync(User,
-            //Mapper.Map<ProjectTaskViewModel>(new ProjectTask()
-            //{
-            //    AuthorId = 4,
-            //    PerformerId = 3,
-            //    Priority = 144,
-            //    Status = DAL.Entities.TaskStatus.Done,
-            //    ProjectId = 8,
-            //    Title = "Исследование",
-            //    Comment = "Оценить потребности"
             //}));
 
             var projectsViewModels = await ProjectManager.GetAllAsync(User);
