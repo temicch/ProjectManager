@@ -66,5 +66,39 @@ namespace ProjectManager.Test
         {
             Assert.False(ProjectService.RemoveByIdAsync(ClaimsPrincipal.Object, 0).Result);
         }
+
+        [Fact]
+        public void Should_Edit_Entity()
+        {
+            var entities = ProjectService.GetAllAsync(ClaimsPrincipal.Object).Result;
+
+            foreach (var entity in entities)
+            {
+                entity.Priority = 50000;
+                var result = ProjectService.EditAsync(ClaimsPrincipal.Object, entity).Result;
+                Assert.NotEqual(0, result);
+            }
+
+            entities = ProjectService.GetAllAsync(ClaimsPrincipal.Object).Result;
+            foreach (var entity in entities)
+            {
+                Assert.Equal(50000d, entity.Priority);
+            }
+        }
+
+        [Fact]
+        public void Remove_All_Entities()
+        {
+            var entities = ProjectService.GetAllAsync(ClaimsPrincipal.Object).Result;
+
+            foreach (var entity in entities)
+            {
+                var result = ProjectService.RemoveByIdAsync(ClaimsPrincipal.Object, entity.Id);
+                Assert.True(result.Result);
+            }
+
+            entities = ProjectService.GetAllAsync(ClaimsPrincipal.Object).Result;
+            Assert.Equal(0, entities.Count());
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -40,6 +41,9 @@ namespace ProjectManager.Controllers
             //}));
 
             var projectsViewModels = await ProjectService.GetAllAsync(User);
+
+            await ProjectService.EditAsync(User, projectsViewModels.First());
+
             return View(projectsViewModels);
         }
 

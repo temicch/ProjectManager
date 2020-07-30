@@ -2,9 +2,25 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.DAL.Entities;
+using System.Linq;
 
 namespace ProjectManager.DAL
 {
+    internal static class Extension
+    {
+        public static void DetachLocal<T>(this DbContext context, T t, int entryId)
+           where T : class, IBaseEntity
+        {
+            var local = context.Set<T>()
+                .Local
+                .FirstOrDefault(entry => entry.Id == entryId);
+            if (local != null)
+            {
+                context.Entry(local).State = EntityState.Detached;
+            }
+            context.Entry(t).State = EntityState.Modified;
+        }
+    }
     public class ProjectDbContext : IdentityDbContext<Employee, IdentityRole<int>, int>
     {
         public ProjectDbContext(DbContextOptions<ProjectDbContext> options)

@@ -61,7 +61,8 @@ namespace ProjectManager.DAL.Repositories
                 return false;
             try
             {
-                DbSet.Remove(entity);
+                ProjectDbContext.DetachLocal(entity, entity.Id);
+                ProjectDbContext.Remove(entity);
                 await ProjectDbContext.SaveChangesAsync();
             }
             catch (Exception exception)
@@ -76,7 +77,8 @@ namespace ProjectManager.DAL.Repositories
         {
             try
             {
-                DbSet.Update(entity);
+                ProjectDbContext.DetachLocal(entity, entity.Id);
+                ProjectDbContext.Update(entity);
                 await ProjectDbContext.SaveChangesAsync();
             }
             catch (Exception exception)
