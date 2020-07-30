@@ -18,15 +18,18 @@ namespace ProjectManager.BLL.Services
     {
         public ProjectService(
             IMapper mapper,
-            BaseRepository<Project> repository
+            BaseRepository<Project> repository,
+            BaseRepository<ProjectEmployees> peRepository
             )
         {
             Mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            PeRepository = peRepository;
         }
 
         private IMapper Mapper { get; }
         private BaseRepository<Project> Repository { get; }
+        private BaseRepository<ProjectEmployees> PeRepository { get; }
 
         public async Task<int> CreateAsync(ClaimsPrincipal user, ProjectViewModel data)
         {
@@ -55,7 +58,7 @@ namespace ProjectManager.BLL.Services
             if (!IsHavePermissionForLook(user))
                 return null;
 
-            var entities = await GetAllFilteredEntities(user).ToListAsync();
+            var entities = await GetAllFilteredEntitiesAsync(user);
             return Mapper.Map<IEnumerable<ProjectViewModel>>(entities);
         }
 
@@ -158,13 +161,14 @@ namespace ProjectManager.BLL.Services
             return user.IsInRole(Roles.Leader) || user.IsInRole(Roles.Manager);
         }
 
-        private IQueryable<Project> GetAllFilteredEntities(ClaimsPrincipal user)
+        private async Task<IEnumerable<Project>> GetAllFilteredEntitiesAsync(ClaimsPrincipal user)
         {
             if (!user.Identity.IsAuthenticated)
                 return null;
 
-            var entities = Repository.GetAll();
+            IEnumerable<Project> entities = Repository.GetAll();
             var userId = user.GetLoggedInUserId<int>();
+
             // Leader can view any projects, so nothing filter to
             if (user.IsInRole(Roles.Leader))
             {
@@ -173,7 +177,13 @@ namespace ProjectManager.BLL.Services
             else if (user.IsInRole(Roles.Manager) || user.IsInRole(Roles.Employee))
             {
                 entities = entities
-                    .Where(x => x.ManagerId == userId);
+                    .Where(x => x.ManagerId == userId)
+                    .ToList();
+
+                entities = entities.Union(await PeRepository
+                    .GetAll()
+                    .Where(x => x.EmployeeId == userId)
+                    .Select(x => x.Project).ToListAsync());
             }
             // For other future roles
             else

@@ -69,6 +69,7 @@ namespace ProjectManager.PL
             services.AddTransient<BaseRepository<Employee>, EmployeeRepository>();
             services.AddTransient<BaseRepository<Project>, ProjectRepository>();
             services.AddTransient<BaseRepository<ProjectTask>, TaskRepository>();
+            services.AddTransient<BaseRepository<ProjectEmployees>, ProjectEmployeesRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
