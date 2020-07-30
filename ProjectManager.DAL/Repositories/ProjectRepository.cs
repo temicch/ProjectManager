@@ -7,7 +7,7 @@ namespace ProjectManager.DAL.Repositories
 {
     public class ProjectRepository : BaseRepository<Project>
     {
-        public ProjectRepository(ProjectDbContext projectDbContext, ILogger logger):
+        public ProjectRepository(ProjectDbContext projectDbContext, ILogger<ProjectRepository> logger):
             base(projectDbContext, projectDbContext.Projects, logger)
         {
         }

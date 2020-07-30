@@ -19,10 +19,10 @@ namespace ProjectManager.Controllers
             IProjectService projectManager
             )
         {
-            ProjectManager = projectManager ?? throw new ArgumentNullException(nameof(projectManager));
+            ProjectService = projectManager ?? throw new ArgumentNullException(nameof(projectManager));
         }
 
-        private IProjectService ProjectManager { get; }
+        private IProjectService ProjectService { get; }
 
         [HttpGet("index")]
         public async Task<IActionResult> Index()
@@ -39,15 +39,19 @@ namespace ProjectManager.Controllers
             //    ManagerId = 2,
             //}));
 
-            var projectsViewModels = await ProjectManager.GetAllAsync(User);
+            var projectsViewModels = await ProjectService.GetAllAsync(User);
             return View(projectsViewModels);
         }
 
-        [HttpGet("{taskId}")]
-        public IActionResult Read(int projectId)
+        [HttpGet("details")]
+        public async Task<IActionResult> Details(int id)
         {
-            var readData = ProjectManager.GetAsync(User, projectId).Result;
-            return PartialView("_ProjectItem", readData);
+            var project = await ProjectService.GetAsync(User, id);
+            if (project == null)
+            {
+                return NotFound();
+            }
+            return View(project);
         }
 
         [HttpGet("create")]
@@ -62,7 +66,7 @@ namespace ProjectManager.Controllers
         {
             if (ModelState.IsValid)
             {
-                await ProjectManager.CreateAsync(User, writeData);
+                await ProjectService.CreateAsync(User, writeData);
 
                 return RedirectToAction("Index", new {writeData.Id});
             }
@@ -75,7 +79,7 @@ namespace ProjectManager.Controllers
         [HttpGet("{id}/update")]
         public async Task<IActionResult> Update(int id)
         {
-            var data = await ProjectManager.GetAsync(User, id);
+            var data = await ProjectService.GetAsync(User, id);
             return View(data);
         }
 
@@ -84,7 +88,7 @@ namespace ProjectManager.Controllers
         {
             if (ModelState.IsValid)
             {
-                await ProjectManager.EditAsync(User, writeData);
+                await ProjectService.EditAsync(User, writeData);
 
                 return RedirectToAction("Index", new {writeData.Id});
             }

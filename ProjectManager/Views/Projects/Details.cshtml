@@ -1,0 +1,54 @@
+﻿@model ProjectManager.BLL.ViewModels.ProjectViewModel
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            @*@if (User.IsInRole(ProjectManager.BLL.Roles.Leader))
+            {
+                <a class="btn btn-sm btn-success" asp-action="Edit" asp-route-id="@Model.Id"><i class="fas fa-edit"></i></a>
+                <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@Model.Id"><i class="fa fa-times"></i></a>
+            }*@
+            @Html.DisplayFor(model => model.Title)
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class=" col-md-9 col-lg-9 ">
+                <table class="table table-user-information">
+                    <tbody>
+                        <tr>
+                            <td>@Html.DisplayNameFor(model => model.CustomerCompany):</td>
+                            <td>@Html.DisplayFor(model => model.CustomerCompany)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(model => model.PerformerCompany):</td>
+                            <td>@Html.DisplayFor(model => model.PerformerCompany)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(model => model.StartDate):</td>
+                            <td>@Html.DisplayFor(model => model.StartDate)</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(model => model.EndDate):</td>
+                            <td>@Html.DisplayFor(model => model.EndDate)</td>
+                        </tr>
+                        @{
+                            var managerName = Model?.Manager?.SimplifiedName ?? string.Empty;
+                        }
+                        <tr>
+                            <td>Manager:</td>
+                            <td>@managerName</td>
+                        </tr>
+                        <tr>
+                            <td>@Html.DisplayNameFor(model => model.Priority):</td>
+                            <td>@Html.DisplayFor(model => model.Priority)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <partial name="_Tasks" model="Model.Tasks" />
+
+    </div>
+</div>

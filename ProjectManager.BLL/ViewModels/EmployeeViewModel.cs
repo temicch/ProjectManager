@@ -18,7 +18,9 @@ namespace ProjectManager.BLL.ViewModels
         public string Email { get; set; }
         [Display(Name = "Tasks")]
         public ICollection<ProjectTaskViewModel> Tasks { get; set; }
+        [Display(Name = "Name")]
         public string FullName => GetFullName();
+        [Display(Name = "Name")]
         public string SimplifiedName => GetSimplifiedName();
 
         private string GetFullName()

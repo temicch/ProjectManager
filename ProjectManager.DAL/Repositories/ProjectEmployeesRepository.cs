@@ -14,7 +14,7 @@ namespace ProjectManager.DAL.Repositories
     public class ProjectEmployeesRepository : BaseRepository<ProjectEmployees>
     {
         public ProjectEmployeesRepository(ProjectDbContext projectDbContext,
-            ILogger logger) :
+            ILogger<ProjectEmployeesRepository> logger) :
             base(projectDbContext, projectDbContext.ProjectEmployees, logger)
         {
         }

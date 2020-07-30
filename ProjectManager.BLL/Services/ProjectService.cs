@@ -152,7 +152,8 @@ namespace ProjectManager.BLL.Services
 
             var userId = user.GetLoggedInUserId<int>();
 
-            return project.ManagerId == userId ||
+            return user.IsInRole(Roles.Leader) || 
+                project.ManagerId == userId ||
                 Repository.ProjectDbContext.ProjectEmployees
                 .Where(x => x.ProjectId == project.Id && x.EmployeeId == userId)
                 .Count() > 0;

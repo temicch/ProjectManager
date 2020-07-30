@@ -1,4 +1,5 @@
 ﻿using ProjectManager.DAL.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace ProjectManager.BLL.ViewModels
 {

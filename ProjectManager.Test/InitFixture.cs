@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Castle.Core.Logging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Moq;
 using ProjectManager.BLL.Services;
 using ProjectManager.BLL.ViewModels;
@@ -31,13 +33,14 @@ namespace ProjectManager.Tests.DAL
                 .Options;
 
             ProjectDbContext = new ProjectDbContext(options);
-            Repository = new ProjectRepository(ProjectDbContext);
+            Repository = new ProjectRepository(ProjectDbContext, new Mock<ILogger<ProjectRepository>>().Object);
+            var PeRepository = new ProjectEmployeesRepository(ProjectDbContext, new Mock<ILogger<ProjectEmployeesRepository>>().Object);
 
             InitEmployees();
 
             _ = InitProjects();
 
-            ProjectService = new ProjectService(InitMapper(), Repository, null);
+            ProjectService = new ProjectService(InitMapper(), Repository, PeRepository);
 
             InitClaims();
         }

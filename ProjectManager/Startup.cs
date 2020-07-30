@@ -55,7 +55,6 @@ namespace ProjectManager.PL
 
             services.AddAutoMapper(typeof(MappingProfile));
 
-            services.AddTransient<DbMigrator>();
             services.AddTransient<ITaskService, TaskService>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IEmployeeService, EmployeeService>();

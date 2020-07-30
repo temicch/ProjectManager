@@ -29,14 +29,6 @@
             @Html.DisplayFor(model => model.Email)
         </dd>
     </dl>
-
-    @*<a class="btn btn-danger btn-icon-split" asp-action="DeleteConfirm" asp-route-id="@Model.Id">
-        <span class="icon text-white-50">
-            <i class="fas fa-trash"></i>
-        </span>
-        <span class="text">Delete</span>
-    </a>*@
-
     <form asp-action="DeleteConfirm">
             <input type="hidden" asp-for="Id" />
             <input type="submit" class="btn btn-danger btn-icon-split" value="Delete" />
