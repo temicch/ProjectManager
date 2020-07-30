@@ -1,25 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using ProjectManager.BLL.Services;
 using ProjectManager.BLL.ViewModels;
-using ProjectManager.DAL;
-using ProjectManager.DAL.Entities;
 
 namespace ProjectManager.PL.Controllers
 {
     public class TasksController : Controller
     {
-        private ITaskService TaskService { get; }
-
         public TasksController(ITaskService taskService)
         {
             TaskService = taskService;
         }
+
+        private ITaskService TaskService { get; }
 
         // GET: Tasks
         public async Task<IActionResult> Index()
@@ -32,10 +25,7 @@ namespace ProjectManager.PL.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var task = await TaskService.GetAsync(User, id);
-            if (task == null)
-            {
-                return NotFound();
-            }
+            if (task == null) return NotFound();
             return View(task);
         }
 
@@ -55,12 +45,10 @@ namespace ProjectManager.PL.Controllers
             {
                 await TaskService.CreateAsync(User, projectTask);
 
-                return RedirectToAction("Index", new { projectTask.Id });
+                return RedirectToAction("Index", new {projectTask.Id});
             }
-            else
-            {
-                return View(projectTask);
-            }
+
+            return View(projectTask);
         }
 
         // GET: Tasks/Edit/5
@@ -79,12 +67,10 @@ namespace ProjectManager.PL.Controllers
             {
                 await TaskService.EditAsync(User, projectTask);
 
-                return RedirectToAction("Index", new { projectTask.Id });
+                return RedirectToAction("Index", new {projectTask.Id});
             }
-            else
-            {
-                return View(projectTask);
-            }
+
+            return View(projectTask);
         }
     }
 }

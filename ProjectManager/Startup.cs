@@ -1,19 +1,17 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using System.Threading;
+using Newtonsoft.Json;
+using ProjectManager.BLL.Services;
+using ProjectManager.Configuration;
 using ProjectManager.DAL;
 using ProjectManager.DAL.Entities;
-using ProjectManager.BLL.Services;
-using Microsoft.AspNetCore.Mvc;
-using AutoMapper;
 using ProjectManager.DAL.Repositories;
-using ProjectManager.Configuration;
-using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace ProjectManager.PL
 {
@@ -51,19 +49,13 @@ namespace ProjectManager.PL
 
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-                .AddJsonOptions(y => y.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+                .AddJsonOptions(y => y.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 
             services.AddAutoMapper(typeof(MappingProfile));
 
-            services.AddTransient<ITaskService, TaskService>();
-            services.AddTransient<IProjectService, ProjectService>();
-            services.AddTransient<IEmployeeService, EmployeeService>();
-
-            services.AddTransient<BaseRepository<Employee>, EmployeeRepository>();
-            services.AddTransient<BaseRepository<Project>, ProjectRepository>();
-            services.AddTransient<BaseRepository<ProjectTask>, TaskRepository>();
-            services.AddTransient<BaseRepository<ProjectEmployees>, ProjectEmployeesRepository>();
+            ConfigureDependencies(services);
         }
+
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -86,9 +78,20 @@ namespace ProjectManager.PL
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    "default",
+                    "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private static void ConfigureDependencies(IServiceCollection services)
+        {
+            services.AddTransient<ITaskService, TaskService>();
+            services.AddTransient<IProjectService, ProjectService>();
+            services.AddTransient<IEmployeeService, EmployeeService>();
+            services.AddTransient<BaseRepository<Employee>, EmployeeRepository>();
+            services.AddTransient<BaseRepository<Project>, ProjectRepository>();
+            services.AddTransient<BaseRepository<ProjectTask>, TaskRepository>();
+            services.AddTransient<BaseRepository<ProjectEmployees>, ProjectEmployeesRepository>();
         }
     }
 }

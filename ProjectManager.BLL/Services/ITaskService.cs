@@ -1,15 +1,14 @@
-﻿using ProjectManager.BLL.ViewModels;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Security.Claims;
-using System.Security.Principal;
 using System.Threading.Tasks;
+using ProjectManager.BLL.ViewModels;
 
 namespace ProjectManager.BLL.Services
 {
     public interface ITaskService : IService<ProjectTaskViewModel>
     {
         /// <summary>
-        /// Get tasks of specified <seealso cref="Employee"/>
+        ///     Get tasks of specified <seealso cref="Employee" />
         /// </summary>
         /// <param name="user"></param>
         /// <param name="employeeId"></param>

@@ -1,17 +1,14 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.BLL.Utils;
 using ProjectManager.BLL.ViewModels;
 using ProjectManager.DAL.Entities;
 using ProjectManager.DAL.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Security.Principal;
-using System.Threading.Tasks;
 
 namespace ProjectManager.BLL.Services
 {
@@ -21,7 +18,7 @@ namespace ProjectManager.BLL.Services
             IMapper mapper,
             BaseRepository<Project> repository,
             BaseRepository<ProjectEmployees> peRepository
-            )
+        )
         {
             Mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
@@ -37,7 +34,7 @@ namespace ProjectManager.BLL.Services
             if (!IsHavePermissionForCreating(user))
                 return 0;
 
-            Project project = Mapper.Map<Project>(data);
+            var project = Mapper.Map<Project>(data);
 
             await Repository.AddAsync(project);
 
@@ -105,7 +102,7 @@ namespace ProjectManager.BLL.Services
                 return false;
 
             var entity = await Repository.ProjectDbContext.ProjectEmployees
-                .AddAsync(new ProjectEmployees() { EmployeeId = employeeId, ProjectId = projectId });
+                .AddAsync(new ProjectEmployees {EmployeeId = employeeId, ProjectId = projectId});
             return entity.IsKeySet;
         }
 
@@ -119,7 +116,8 @@ namespace ProjectManager.BLL.Services
             if (!IsHavePermissionForEdit(user, project))
                 return null;
 
-            var employees = Mapper.Map<IEnumerable<EmployeeViewModel>>(await Repository.ProjectDbContext.ProjectEmployees
+            var employees = Mapper.Map<IEnumerable<EmployeeViewModel>>(await Repository.ProjectDbContext
+                .ProjectEmployees
                 .Where(x => x.ProjectId == projectId)
                 .ToListAsync());
             return employees;
@@ -152,12 +150,13 @@ namespace ProjectManager.BLL.Services
 
             var userId = user.GetLoggedInUserId<int>();
 
-            return user.IsInRole(Roles.Leader) || 
-                project.ManagerId == userId ||
-                Repository.ProjectDbContext.ProjectEmployees
-                .Where(x => x.ProjectId == project.Id && x.EmployeeId == userId)
-                .Count() > 0;
+            return user.IsInRole(Roles.Leader) ||
+                   project.ManagerId == userId ||
+                   Repository.ProjectDbContext.ProjectEmployees
+                       .Where(x => x.ProjectId == project.Id && x.EmployeeId == userId)
+                       .Count() > 0;
         }
+
         private bool IsHavePermissionForCreating(ClaimsPrincipal user)
         {
             return user.IsInRole(Roles.Leader) || user.IsInRole(Roles.Manager);
@@ -189,7 +188,10 @@ namespace ProjectManager.BLL.Services
             }
             // For other future roles
             else
+            {
                 return null;
+            }
+
             return entities;
         }
     }

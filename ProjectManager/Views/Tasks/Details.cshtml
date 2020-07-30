@@ -16,34 +16,34 @@
             <div class=" col-md-9 col-lg-9 ">
                 <table class="table table-user-information">
                     <tbody>
-                        <tr>
-                            <td>@Html.DisplayNameFor(model => model.Title):</td>
-                            <td>@Html.DisplayFor(model => model.Title)</td>
-                        </tr>
-                        <tr>
-                            <td>@Html.DisplayNameFor(model => model.Author):</td>
-                            <td>@(Model?.Author?.SimplifiedName ?? string.Empty)</td>
-                        </tr>
-                        <tr>
-                            <td>@Html.DisplayNameFor(model => model.Performer):</td>
-                            <td>@(Model?.Performer?.SimplifiedName ?? string.Empty)</td>
-                        </tr>
-                        <tr>
-                            <td>@Html.DisplayNameFor(model => model.Project):</td>
-                            <td>
-                                <a asp-action="Details" asp-controller="Projects" asp-route-id="@(Model.ProjectId)">
-                                    @(Model?.Project?.Title ?? string.Empty)
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>@Html.DisplayNameFor(model => model.Status):</td>
-                            <td>@Html.DisplayFor(model => model.Status)</td>
-                        </tr>
-                        <tr>
-                            <td>@Html.DisplayNameFor(model => model.Comment):</td>
-                            <td>@Html.DisplayFor(model => model.Comment)</td>
-                        </tr>
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.Title):</td>
+                        <td>@Html.DisplayFor(model => model.Title)</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.Author):</td>
+                        <td>@(Model?.Author?.SimplifiedName ?? string.Empty)</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.Performer):</td>
+                        <td>@(Model?.Performer?.SimplifiedName ?? string.Empty)</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.Project):</td>
+                        <td>
+                            <a asp-action="Details" asp-controller="Projects" asp-route-id="@(Model.ProjectId)">
+                                @(Model?.Project?.Title ?? string.Empty)
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.Status):</td>
+                        <td>@Html.DisplayFor(model => model.Status)</td>
+                    </tr>
+                    <tr>
+                        <td>@Html.DisplayNameFor(model => model.Comment):</td>
+                        <td>@Html.DisplayFor(model => model.Comment)</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>

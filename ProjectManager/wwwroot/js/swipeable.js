@@ -10,23 +10,23 @@
  * Date: 2020-06-08T23:31Z
  */
 
-(function ($) {
+(function($) {
     var onDragMove = function(event, ui, settings) {
-        var $this = $(this);
+        const $this = $(this);
 
-        var width = parseFloat($this.css("width"));
-        var current_p = (ui.position.left / width);
-        var target_p = Math.min(Math.max(current_p, -settings.leftMax), settings.rightMax);
-        var targetLeft = Math.round(width * target_p);
+        const width = parseFloat($this.css("width"));
+        const current_p = (ui.position.left / width);
+        const target_p = Math.min(Math.max(current_p, -settings.leftMax), settings.rightMax);
+        const targetLeft = Math.round(width * target_p);
         ui.position.left = targetLeft;
-    }
+    };
 
     var onDragStop = function(event, ui, settings) {
-        var $this = $(this);
+        const $this = $(this);
         $this.removeClass("dragging");
 
-        var width = parseFloat($this.css("width"));
-        var current_p = (ui.position.left / width);
+        const width = parseFloat($this.css("width"));
+        const current_p = (ui.position.left / width);
 
         if (current_p <= -settings.leftMinTrigger) {
             settings.left(this);
@@ -35,9 +35,9 @@
             settings.right(this);
             ui.position.left = 0;
         }
-    }
+    };
 
-    var swipeable = function(settings) {
+    const swipeable = function(settings) {
         settings.axis = "x";
         settings.revert = true;
         settings.revertDuration = settings.revertDuration || 200;
@@ -45,7 +45,7 @@
         settings.stop = (event, ui) => onDragStop.call(event.target, event, ui, settings);
 
         $(this).draggable(settings);
-    }
+    };
 
     $.fn.swipeable = swipeable;
 })(jQuery);

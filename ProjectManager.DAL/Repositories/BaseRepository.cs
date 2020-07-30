@@ -1,19 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using ProjectManager.DAL.Entities;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using ProjectManager.DAL.Entities;
+using ProjectManager.DAL.Extensions;
 
 namespace ProjectManager.DAL.Repositories
 {
     /// <summary>
-    /// Facade for repositories
+    ///     Facade for repositories
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public abstract class BaseRepository<T> : IRepository<T> where T : class, IBaseEntity
     {
-        public BaseRepository(ProjectDbContext projectDbContext, 
+        public BaseRepository(ProjectDbContext projectDbContext,
             DbSet<T> dbSet,
             ILogger logger)
         {
@@ -33,11 +34,12 @@ namespace ProjectManager.DAL.Repositories
                 await DbSet.AddAsync(newEntity);
                 await ProjectDbContext.SaveChangesAsync();
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 Logger.LogError(exception, "Add error");
                 return 0;
             }
+
             return newEntity.Id;
         }
 
@@ -70,6 +72,7 @@ namespace ProjectManager.DAL.Repositories
                 Logger.LogError(exception, "RemoveById error");
                 return false;
             }
+
             return true;
         }
 
@@ -86,6 +89,7 @@ namespace ProjectManager.DAL.Repositories
                 Logger.LogError(exception, "Update error");
                 return 0;
             }
+
             return entity.Id;
         }
 

@@ -1,15 +1,14 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.BLL.ViewModels;
 using ProjectManager.DAL.Entities;
 using ProjectManager.DAL.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Security.Principal;
-using System.Threading.Tasks;
+using TaskStatus = ProjectManager.DAL.Entities.TaskStatus;
 
 namespace ProjectManager.BLL.Services
 {
@@ -29,7 +28,7 @@ namespace ProjectManager.BLL.Services
             if (!IsHavePermissionForEdit(user))
                 return 0;
 
-            ProjectTask task = Mapper.Map<ProjectTask>(data);
+            var task = Mapper.Map<ProjectTask>(data);
 
             await Repository.AddAsync(task);
 
@@ -82,7 +81,7 @@ namespace ProjectManager.BLL.Services
             return task == null ? null : Mapper.Map<ProjectTaskViewModel>(task);
         }
 
-        public async Task<bool> SetStatus(ClaimsPrincipal user, int id, DAL.Entities.TaskStatus taskStatus)
+        public async Task<bool> SetStatus(ClaimsPrincipal user, int id, TaskStatus taskStatus)
         {
             if (!IsHavePermissionForLook(user))
                 return false;
@@ -100,6 +99,7 @@ namespace ProjectManager.BLL.Services
         {
             return user.IsInRole(Roles.Leader);
         }
+
         private bool IsHavePermissionForLook(ClaimsPrincipal user)
         {
             return user.Identity.IsAuthenticated;

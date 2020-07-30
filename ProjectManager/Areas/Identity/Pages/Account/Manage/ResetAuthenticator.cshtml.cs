@@ -9,8 +9,8 @@ namespace ProjectManager.Areas.Identity.Pages.Account.Manage
 {
     public class ResetAuthenticatorModel : PageModel
     {
-        private readonly SignInManager<Employee> _signInManager;
         private readonly ILogger<ResetAuthenticatorModel> _logger;
+        private readonly SignInManager<Employee> _signInManager;
         private readonly UserManager<Employee> _userManager;
 
         public ResetAuthenticatorModel(

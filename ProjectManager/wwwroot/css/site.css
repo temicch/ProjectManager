@@ -2,84 +2,82 @@
 for details on configuring this project to bundle and minify static web assets. */
 
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+    bottom: 0;
+    line-height: 60px; /* Vertically center the text there */
+    position: absolute;
+    white-space: nowrap;
+    width: 100%;
 }
 
 body, .container {
-    width: 100%;
     min-height: 100%;
+    width: 100%;
 }
 
 .swipe-container {
-    position: relative;
     font-size: 14px;
     overflow: hidden;
+    position: relative;
 }
 
 .swipe-labels {
-    width: 100%;
-    height: 100%;
+    align-items: stretch;
     display: inline-flex;
     flex-direction: row;
+    height: 100%;
     justify-content: center;
-    align-items: stretch;
     position: absolute;
-    top: 0;
     right: 0;
+    top: 0;
+    width: 100%;
 }
 
 .swipe-left {
-    display: flex;
-    justify-content: flex-start;
     align-items: center;
-    height: 100%;
-    flex-grow: 1;
     color: white;
+    display: flex;
+    flex-grow: 1;
+    height: 100%;
+    justify-content: flex-start;
+    padding-bottom: 5px;
     padding-left: 15px;
     padding-top: 5px;
-    padding-bottom: 5px;
 }
 
 .swipe-right {
-    display: flex;
-    height: 100%;
-    flex-grow: 1;
-    display: flex;
-    justify-content: flex-end;
     align-items: center;
     color: white;
+    display: flex;
+    display: flex;
+    flex-grow: 1;
+    height: 100%;
+    justify-content: flex-end;
+    padding-bottom: 5px;
     padding-right: 15px;
     padding-top: 5px;
-    padding-bottom: 5px;
 }
 
 .swipe-bar {
-    height: 100%;
     background-color: white;
-    border-top: 1px lightgray groove;
     border-bottom: 1px lightgray groove;
+    border-top: 1px lightgray groove;
+    height: 100%;
     overflow: hidden;
 }
 
-.swipe-bar.unassigned {
-    background-color: mintcream;
-}
+.swipe-bar.unassigned { background-color: mintcream; }
 
 .swipe-bar.dragging {
-    -webkit-box-shadow: 3px 3px 5px 6px #ccc;
     -moz-box-shadow: 3px 3px 5px 6px #ccc;
+    -webkit-box-shadow: 3px 3px 5px 6px #ccc;
     box-shadow: 3px 3px 5px 6px #ccc;
 }
 
 .swipe-bar > i {
     height: 100%;
-    vertical-align: middle;
     padding-left: 10px;
     padding-right: 10px;
+    vertical-align: middle;
 }
 
 .swipe-bar > .swipe-text {

@@ -1,15 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ProjectManager.DAL.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ProjectManager.DAL.Repositories
 {
     /// <summary>
-    /// Repository of (Project - Employees) relations
+    ///     Repository of (Project - Employees) relations
     /// </summary>
     public class ProjectEmployeesRepository : BaseRepository<ProjectEmployees>
     {

@@ -1,15 +1,13 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using ProjectManager.BLL.ViewModels;
-using ProjectManager.DAL.Entities;
-using ProjectManager.DAL.Repositories;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using ProjectManager.BLL.ViewModels;
+using ProjectManager.DAL.Entities;
+using ProjectManager.DAL.Repositories;
 
 namespace ProjectManager.BLL.Services
 {
@@ -30,7 +28,7 @@ namespace ProjectManager.BLL.Services
             if (!IsHavePermissionForEdit(user))
                 return 0;
 
-            Employee employee = Mapper.Map<Employee>(data);
+            var employee = Mapper.Map<Employee>(data);
 
             await Repository.AddAsync(employee);
 
@@ -83,6 +81,7 @@ namespace ProjectManager.BLL.Services
 
             return Mapper.Map<IEnumerable<ProjectTaskViewModel>>(tasks);
         }
+
         public async Task<IEnumerable<ProjectTaskViewModel>> GetManagedTasksAsync(ClaimsPrincipal user, int employeeId)
         {
             if (!IsHavePermissionForLook(user))
@@ -94,7 +93,8 @@ namespace ProjectManager.BLL.Services
             return Mapper.Map<IEnumerable<ProjectTaskViewModel>>(tasks);
         }
 
-        public async Task<IEnumerable<ProjectViewModel>> GetAllManagedProjectsAsync(ClaimsPrincipal user, int employeeId)
+        public async Task<IEnumerable<ProjectViewModel>> GetAllManagedProjectsAsync(ClaimsPrincipal user,
+            int employeeId)
         {
             if (!IsHavePermissionForLook(user))
                 return null;
@@ -121,6 +121,7 @@ namespace ProjectManager.BLL.Services
         {
             return user.IsInRole(Roles.Leader);
         }
+
         private bool IsHavePermissionForLook(ClaimsPrincipal user)
         {
             return user.Identity.IsAuthenticated;

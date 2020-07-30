@@ -1,27 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.BLL.Services;
 using ProjectManager.BLL.ViewModels;
-using ProjectManager.DAL;
-using ProjectManager.DAL.Entities;
 
 namespace ProjectManager.PL.Controllers
 {
     [Authorize]
     public class EmployeesController : Controller
     {
-        private IEmployeeService EmployeeManager { get; }
-
         public EmployeesController(IEmployeeService employeeManager)
         {
             EmployeeManager = employeeManager;
         }
+
+        private IEmployeeService EmployeeManager { get; }
 
         public async Task<IActionResult> Index()
         {
@@ -31,10 +25,7 @@ namespace ProjectManager.PL.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var employee = await EmployeeManager.GetAsync(User, id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
+            if (employee == null) return NotFound();
             return View(employee);
         }
 
@@ -52,16 +43,14 @@ namespace ProjectManager.PL.Controllers
                 await EmployeeManager.CreateAsync(User, employee);
                 return RedirectToAction(nameof(Index));
             }
+
             return View(employee);
         }
 
         public async Task<IActionResult> Edit(int id)
         {
             var employee = await EmployeeManager.GetAsync(User, id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
+            if (employee == null) return NotFound();
             return View(employee);
         }
 
@@ -79,8 +68,10 @@ namespace ProjectManager.PL.Controllers
                 {
                     return NotFound();
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(employee);
         }
 
@@ -88,13 +79,11 @@ namespace ProjectManager.PL.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var employee = await EmployeeManager.GetAsync(User, id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
+            if (employee == null) return NotFound();
 
             return View(employee);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirm(int id)

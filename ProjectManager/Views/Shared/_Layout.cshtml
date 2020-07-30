@@ -49,17 +49,18 @@
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 
-@RenderSection("Scripts", required: false)
+@RenderSection("Scripts", false)
 </body>
 </html>
 
 <script>
     // Automatic scrolling to inputs that are selected, makes mobile entry smoother
-    document.addEventListener("DOMContentLoaded", function () {
-        $("input").focus(() => smoothSlide(document.activeElement));
-        $("textarea").focus(() => smoothSlide(document.activeElement));
-        $(".collapse").on("show.bs.collapse", (e) => smoothSlide(e.currentTarget));
-    });
+    document.addEventListener("DOMContentLoaded",
+        function() {
+            $("input").focus(() => smoothSlide(document.activeElement));
+            $("textarea").focus(() => smoothSlide(document.activeElement));
+            $(".collapse").on("show.bs.collapse", (e) => smoothSlide(e.currentTarget));
+        });
 
     function smoothSlide(element) {
         window.setTimeout(() => element.scrollIntoView({ block: "center", behavior: 'smooth' }), 400);

@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManager.BLL.Services;
 using ProjectManager.BLL.ViewModels;
-using ProjectManager.DAL.Entities;
 
 namespace ProjectManager.Controllers
 {
@@ -18,7 +13,7 @@ namespace ProjectManager.Controllers
     {
         public ProjectsController(
             IProjectService projectManager
-            )
+        )
         {
             ProjectService = projectManager ?? throw new ArgumentNullException(nameof(projectManager));
         }
@@ -28,21 +23,7 @@ namespace ProjectManager.Controllers
         [HttpGet("index")]
         public async Task<IActionResult> Index()
         {
-            //await ProjectManager.CreateAsync(User,
-            //Mapper.Map<ProjectViewModel>(new Project()
-            //{
-            //    Title = "Voice Base",
-            //    StartDate = DateTime.Now.AddYears(-7),
-            //    EndDate = DateTime.Now,
-            //    PerformerCompany = "Sibers",
-            //    CustomerCompany = "Voice Analytic Company",
-            //    Priority = 12,
-            //    ManagerId = 2,
-            //}));
-
             var projectsViewModels = await ProjectService.GetAllAsync(User);
-
-            await ProjectService.EditAsync(User, projectsViewModels.First());
 
             return View(projectsViewModels);
         }
@@ -51,10 +32,7 @@ namespace ProjectManager.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var project = await ProjectService.GetAsync(User, id);
-            if (project == null)
-            {
-                return NotFound();
-            }
+            if (project == null) return NotFound();
             return View(project);
         }
 
@@ -74,10 +52,8 @@ namespace ProjectManager.Controllers
 
                 return RedirectToAction("Index", new {writeData.Id});
             }
-            else
-            {
-                return View(writeData);
-            }
+
+            return View(writeData);
         }
 
         [HttpGet("{id}/update")]
@@ -96,10 +72,8 @@ namespace ProjectManager.Controllers
 
                 return RedirectToAction("Index", new {writeData.Id});
             }
-            else
-            {
-                return View(writeData);
-            }
+
+            return View(writeData);
         }
     }
 }

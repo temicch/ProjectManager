@@ -1,13 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ProjectManager.DAL.Entities;
-using System.Linq;
 
 namespace ProjectManager.DAL.Repositories
 {
     public class ProjectRepository : BaseRepository<Project>
     {
-        public ProjectRepository(ProjectDbContext projectDbContext, ILogger<ProjectRepository> logger):
+        public ProjectRepository(ProjectDbContext projectDbContext, ILogger<ProjectRepository> logger) :
             base(projectDbContext, projectDbContext.Projects, logger)
         {
         }

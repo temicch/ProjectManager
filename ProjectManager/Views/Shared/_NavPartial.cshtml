@@ -1,4 +1,5 @@
-﻿@if (User.Identity.IsAuthenticated)
+﻿@using ProjectManager.BLL
+@if (User.Identity.IsAuthenticated)
 {
     <a class="nav-link text-dark" id="tasks-Dropdown" role="button" asp-area="" asp-controller="Projects" asp-action="Index">
         Projects
@@ -6,7 +7,7 @@
     @*<div class="dropdown-menu" aria-labelledby="tasks-Dropdown">
         @await Component.InvokeAsync("TaskGroupList")
     </div>*@
-    @if (User.IsInRole(ProjectManager.BLL.Roles.Leader))
+    @if (User.IsInRole(Roles.Leader))
     {
         <a class="nav-link text-dark" id="tasks-Dropdown" role="button" asp-area="" asp-controller="Employees" asp-action="Index">
             Employees

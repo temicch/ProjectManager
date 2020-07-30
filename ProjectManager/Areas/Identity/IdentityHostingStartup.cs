@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
+using ProjectManager.Areas.Identity;
 
-[assembly: HostingStartup(typeof(ProjectManager.Areas.Identity.IdentityHostingStartup))]
+[assembly: HostingStartup(typeof(IdentityHostingStartup))]
 
 namespace ProjectManager.Areas.Identity
 {

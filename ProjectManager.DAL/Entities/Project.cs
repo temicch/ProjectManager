@@ -16,6 +16,5 @@ namespace ProjectManager.DAL.Entities
         public ICollection<ProjectTask> Tasks { get; set; }
         public virtual Employee Manager { get; set; }
         public int? ManagerId { get; set; }
-
     }
 }

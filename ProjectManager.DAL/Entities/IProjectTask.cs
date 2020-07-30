@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace ProjectManager.DAL.Entities
+﻿namespace ProjectManager.DAL.Entities
 {
     public interface IProjectTask
     {
@@ -12,12 +10,14 @@ namespace ProjectManager.DAL.Entities
         ///     Task Author
         /// </summary>
         Employee Author { get; }
+
         int? AuthorId { get; }
 
         /// <summary>
         ///     Task performer employee
         /// </summary>
         Employee Performer { get; }
+
         int? PerformerId { get; }
 
         /// <summary>
@@ -39,6 +39,7 @@ namespace ProjectManager.DAL.Entities
         ///     Project task
         /// </summary>
         Project Project { get; }
+
         int? ProjectId { get; }
     }
 }

@@ -17,49 +17,49 @@
     {
         <table class="table">
             <thead>
-                <tr>
-                    <th class="text-center">#</th>
-                    <th>@Html.DisplayNameFor(x => x.Author)</th>
-                    <th>@Html.DisplayNameFor(x => x.Title)</th>
-                    <th>@Html.DisplayNameFor(x => x.Performer)</th>
-                    <th>@Html.DisplayNameFor(x => x.Comment)</th>
-                    <th>@Html.DisplayNameFor(x => x.Priority)</th>
-                    <th>@Html.DisplayNameFor(x => x.Status)</th>
-                    <th></th>
-                </tr>
+            <tr>
+                <th class="text-center">#</th>
+                <th>@Html.DisplayNameFor(x => x.Author)</th>
+                <th>@Html.DisplayNameFor(x => x.Title)</th>
+                <th>@Html.DisplayNameFor(x => x.Performer)</th>
+                <th>@Html.DisplayNameFor(x => x.Comment)</th>
+                <th>@Html.DisplayNameFor(x => x.Priority)</th>
+                <th>@Html.DisplayNameFor(x => x.Status)</th>
+                <th></th>
+            </tr>
             </thead>
             <tbody>
 
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td class="text-center">@item.Id</td>
-                        <td>@(item?.Author?.SimplifiedName ?? string.Empty)</td>
-                        <td>@item.Title</td>
-                        <td>@(item?.Performer?.SimplifiedName ?? string.Empty)</td>
-                        <td>@item.Comment</td>
-                        <td>@item.Priority</td>
-                        <td>@item.Status</td>
-                        <td class="td-actions">
-                            <div class="btn-group">
-                                <a class="btn btn-info btn-just-icon btn-sm m-1" title="Info" asp-controller="Tasks" asp-action="Details" asp-route-id="@item.Id">
-                                    <i class="fas fa-user"></i>
-                                </a>
-                                @*<a class="btn btn-success btn-just-icon btn-sm m-1" title="Edit" asp-controller="Tasks" asp-action="Edit" asp-route-id="@item.Id">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-center">@item.Id</td>
+                    <td>@(item?.Author?.SimplifiedName ?? string.Empty)</td>
+                    <td>@item.Title</td>
+                    <td>@(item?.Performer?.SimplifiedName ?? string.Empty)</td>
+                    <td>@item.Comment</td>
+                    <td>@item.Priority</td>
+                    <td>@item.Status</td>
+                    <td class="td-actions">
+                        <div class="btn-group">
+                            <a class="btn btn-info btn-just-icon btn-sm m-1" title="Info" asp-controller="Tasks" asp-action="Details" asp-route-id="@item.Id">
+                                <i class="fas fa-user"></i>
+                            </a>
+                            @*<a class="btn btn-success btn-just-icon btn-sm m-1" title="Edit" asp-controller="Tasks" asp-action="Edit" asp-route-id="@item.Id">
                                     <i class="fas fa-edit"></i>
                                 </a>
                                 <a class="btn btn-danger btn-just-icon btn-sm m-1" title="Remove" asp-controller="Tasks" asp-action="Delete" asp-route-id="@item.Id">
                                     <i class="fa fa-times"></i>
                                 </a>*@
-                            </div>
-                        </td>
-                    </tr>
-                }
+                        </div>
+                    </td>
+                </tr>
+            }
             </tbody>
         </table>
     }
     else
     {
-        <partial name="_NothingToShow" />
+        <partial name="_NothingToShow"/>
     }
 </div>

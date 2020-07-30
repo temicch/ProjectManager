@@ -20,6 +20,7 @@ namespace ProjectManager.DAL.Entities
         ///     Project manager
         /// </summary>
         Employee Manager { get; }
+
         int? ManagerId { get; }
 
         /// <summary>
