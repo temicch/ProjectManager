@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -28,17 +29,18 @@ namespace ProjectManager.Controllers
         [HttpGet("index")]
         public async Task<IActionResult> Index()
         {
-            var projectsViewModels = await ProjectService.GetAllAsync(User);
+            var projects = await ProjectService.GetAllAsync(User);
 
-            return View(projectsViewModels);
+            return View(Mapper.Map<IEnumerable<ProjectViewModel>>(projects));
         }
 
         [HttpGet("details")]
         public async Task<IActionResult> Details(int id)
         {
             var project = await ProjectService.GetAsync(User, id);
-            if (project == null) return NotFound();
-            return View(project);
+            if (project == null) 
+                return NotFound();
+            return View(Mapper.Map<ProjectViewModel>(project));
         }
 
         [HttpGet("create")]
@@ -49,36 +51,36 @@ namespace ProjectManager.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> Create(ProjectViewModel writeData)
+        public async Task<IActionResult> Create(ProjectViewModel project)
         {
             if (ModelState.IsValid)
             {
-                await ProjectService.CreateAsync(User, Mapper.Map<ProjectModel>(writeData));
+                await ProjectService.CreateAsync(User, Mapper.Map<ProjectModel>(project));
 
-                return RedirectToAction("Index", new {writeData.Id});
+                return RedirectToAction("Index", new {project.Id});
             }
 
-            return View(writeData);
+            return View(project);
         }
 
         [HttpGet("{id}/update")]
         public async Task<IActionResult> Update(int id)
         {
-            var data = await ProjectService.GetAsync(User, id);
-            return View(data);
+            var project = await ProjectService.GetAsync(User, id);
+            return View(Mapper.Map<ProjectViewModel>(project));
         }
 
         [HttpPost("{id}/update")]
-        public async Task<IActionResult> Update(ProjectViewModel writeData)
+        public async Task<IActionResult> Update(ProjectViewModel project)
         {
             if (ModelState.IsValid)
             {
-                await ProjectService.EditAsync(User, Mapper.Map<ProjectModel>(writeData));
+                await ProjectService.EditAsync(User, Mapper.Map<ProjectModel>(project));
 
-                return RedirectToAction("Index", new {writeData.Id});
+                return RedirectToAction("Index", new {project.Id});
             }
 
-            return View(writeData);
+            return View(project);
         }
     }
 }
