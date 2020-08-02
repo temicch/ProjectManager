@@ -1,19 +1,22 @@
 ﻿using ProjectManager.DAL.Entities;
+using System.ComponentModel.DataAnnotations;
 
-namespace ProjectManager.BLL.ViewModels
+namespace ProjectManager.BLL.Models
 {
-    public class ProjectTaskViewModel
+    public class ProjectTaskModel
     {
         public int Id { get; private set; }
+
+        [Required]
         public string Title { get; set; }
-        public EmployeeViewModel Author { get; set; }
+        public EmployeeModel Author { get; set; }
         public int AuthorId { get; set; }
-        public EmployeeViewModel Performer { get; set; }
+        public EmployeeModel Performer { get; set; }
         public int PerformerId { get; set; }
         public TaskStatus Status { get; set; }
         public string Comment { get; set; }
         public uint Priority { get; set; }
-        public ProjectViewModel Project { get; set; }
+        public ProjectModel Project { get; set; }
         public int ProjectId { get; set; }
     }
 }

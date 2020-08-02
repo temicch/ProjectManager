@@ -1,18 +1,23 @@
 ﻿using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using ProjectManager.BLL.Models;
 using ProjectManager.BLL.Services;
-using ProjectManager.BLL.ViewModels;
+using ProjectManager.ViewModels;
 
 namespace ProjectManager.PL.Controllers
 {
     public class TasksController : Controller
     {
-        public TasksController(ITaskService taskService)
+        public TasksController(ITaskService taskService,
+            IMapper mapper)
         {
             TaskService = taskService;
+            Mapper = mapper;
         }
 
         private ITaskService TaskService { get; }
+        private IMapper Mapper { get; }
 
         // GET: Tasks
         public async Task<IActionResult> Index()
@@ -43,7 +48,7 @@ namespace ProjectManager.PL.Controllers
         {
             if (ModelState.IsValid)
             {
-                await TaskService.CreateAsync(User, projectTask);
+                await TaskService.CreateAsync(User, Mapper.Map<ProjectTaskModel>(projectTask));
 
                 return RedirectToAction("Index", new {projectTask.Id});
             }
@@ -65,7 +70,7 @@ namespace ProjectManager.PL.Controllers
         {
             if (ModelState.IsValid)
             {
-                await TaskService.EditAsync(User, projectTask);
+                await TaskService.EditAsync(User, Mapper.Map<ProjectTaskModel>(projectTask));
 
                 return RedirectToAction("Index", new {projectTask.Id});
             }

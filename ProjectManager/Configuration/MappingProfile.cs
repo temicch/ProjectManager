@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
-using ProjectManager.BLL.ViewModels;
+using ProjectManager.BLL.Models;
 using ProjectManager.DAL.Entities;
+using ProjectManager.ViewModels;
 
 namespace ProjectManager.Configuration
 {
@@ -8,9 +9,13 @@ namespace ProjectManager.Configuration
     {
         public MappingProfile()
         {
-            CreateMap<Employee, EmployeeViewModel>().ReverseMap();
-            CreateMap<ProjectViewModel, Project>().ReverseMap();
-            CreateMap<ProjectTask, ProjectTaskViewModel>().ReverseMap();
+            CreateMap<Employee, EmployeeModel>().ReverseMap();
+            CreateMap<Project, ProjectModel>().ReverseMap();
+            CreateMap<ProjectTask, ProjectTaskModel>().ReverseMap();
+
+            CreateMap<ProjectViewModel, ProjectModel>().ReverseMap();
+            CreateMap<ProjectTaskViewModel, ProjectTaskModel>().ReverseMap();
+            CreateMap<EmployeeViewModel, EmployeeModel>().ReverseMap();
         }
     }
 }

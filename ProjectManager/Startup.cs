@@ -88,6 +88,7 @@ namespace ProjectManager.PL
             services.AddTransient<ITaskService, TaskService>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IEmployeeService, EmployeeService>();
+
             services.AddTransient<BaseRepository<Employee>, EmployeeRepository>();
             services.AddTransient<BaseRepository<Project>, ProjectRepository>();
             services.AddTransient<BaseRepository<ProjectTask>, TaskRepository>();

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.DAL.Entities;
+using System.Collections.Generic;
 
 namespace ProjectManager.DAL
 {
@@ -22,42 +23,27 @@ namespace ProjectManager.DAL
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<ProjectEmployees>()
-                .HasKey(t => new {t.EmployeeId, t.ProjectId});
-
+                .HasKey(t => new { t.EmployeeId, t.ProjectId });
             modelBuilder.Entity<ProjectEmployees>()
                 .HasOne(sc => sc.Employee)
                 .WithMany(s => s.ProjectEmployees);
-
             modelBuilder.Entity<ProjectEmployees>()
                 .HasOne(sc => sc.Project)
                 .WithMany(c => c.ProjectEmployees);
 
-
             modelBuilder.Entity<ProjectTask>()
-                .HasOne(c => c.Performer)
-                .WithMany(e => e.Tasks)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .IsRequired(false);
-
-
+                .HasOne(x => x.Author)
+                .WithMany(x => x.TasksAuthor);
             modelBuilder.Entity<ProjectTask>()
-                .HasOne(c => c.Author)
-                .WithMany(e => e.TasksAuthor)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .IsRequired(false);
-
+                .HasOne(x => x.Performer)
+                .WithMany(x => x.Tasks);
+            modelBuilder.Entity<ProjectTask>()
+                .HasOne(x => x.Project)
+                .WithMany(x => x.Tasks);
 
             modelBuilder.Entity<Project>()
-                .HasOne(c => c.Manager)
-                .WithMany(e => e.ManagedProjects)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .IsRequired(false);
-
-            modelBuilder.Entity<ProjectTask>()
-                .HasOne(c => c.Project)
-                .WithMany(e => e.Tasks)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .IsRequired(false);
+                .HasOne(x => x.Manager)
+                .WithMany(x => x.ManagedProjects);
         }
     }
 }

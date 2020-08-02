@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProjectManager.BLL.Models;
 using ProjectManager.BLL.Services;
-using ProjectManager.BLL.ViewModels;
+using ProjectManager.ViewModels;
 
 namespace ProjectManager.Controllers
 {
@@ -12,13 +14,16 @@ namespace ProjectManager.Controllers
     public class ProjectsController : Controller
     {
         public ProjectsController(
-            IProjectService projectManager
+            IProjectService projectManager,
+            IMapper mapper
         )
         {
             ProjectService = projectManager ?? throw new ArgumentNullException(nameof(projectManager));
+            Mapper = mapper;
         }
 
         private IProjectService ProjectService { get; }
+        private IMapper Mapper { get; }
 
         [HttpGet("index")]
         public async Task<IActionResult> Index()
@@ -48,7 +53,7 @@ namespace ProjectManager.Controllers
         {
             if (ModelState.IsValid)
             {
-                await ProjectService.CreateAsync(User, writeData);
+                await ProjectService.CreateAsync(User, Mapper.Map<ProjectModel>(writeData));
 
                 return RedirectToAction("Index", new {writeData.Id});
             }
@@ -68,7 +73,7 @@ namespace ProjectManager.Controllers
         {
             if (ModelState.IsValid)
             {
-                await ProjectService.EditAsync(User, writeData);
+                await ProjectService.EditAsync(User, Mapper.Map<ProjectModel>(writeData));
 
                 return RedirectToAction("Index", new {writeData.Id});
             }

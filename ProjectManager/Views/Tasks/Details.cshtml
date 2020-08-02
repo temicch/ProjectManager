@@ -1,9 +1,9 @@
-﻿@model ProjectManager.BLL.ViewModels.ProjectTaskViewModel
+﻿@model ProjectManager.ViewModels.ProjectTaskViewModel
 
 <div class="panel panel-info">
     <div class="panel-heading">
         <h3 class="panel-title">
-            @*@if (User.IsInRole(ProjectManager.BLL.Roles.Leader))
+            @*@if (User.IsInRole(ProjectManager.Roles.Leader))
                 {
                     <a class="btn btn-sm btn-success" asp-action="Edit" asp-route-id="@Model.Id"><i class="fas fa-edit"></i></a>
                     <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@Model.Id"><i class="fa fa-times"></i></a>

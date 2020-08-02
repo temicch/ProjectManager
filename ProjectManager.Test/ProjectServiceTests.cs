@@ -55,7 +55,7 @@ namespace ProjectManager.Test
             }
 
             entities = ProjectService.GetAllAsync(ClaimsPrincipal.Object).Result;
-            Assert.Equal(0, entities.Count());
+            Assert.Empty(entities);
         }
 
         [Fact]

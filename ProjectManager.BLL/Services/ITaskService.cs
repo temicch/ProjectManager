@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using ProjectManager.BLL.Models;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using ProjectManager.BLL.ViewModels;
 
 namespace ProjectManager.BLL.Services
 {
-    public interface ITaskService : IService<ProjectTaskViewModel>
+    public interface ITaskService : IService<ProjectTaskModel>
     {
         /// <summary>
         ///     Get tasks of specified <seealso cref="Employee" />
@@ -13,6 +13,6 @@ namespace ProjectManager.BLL.Services
         /// <param name="user"></param>
         /// <param name="employeeId"></param>
         /// <returns></returns>
-        Task<IEnumerable<ProjectTaskViewModel>> GetOfEmployeeIdAsync(ClaimsPrincipal user, int employeeId);
+        Task<IEnumerable<ProjectTaskModel>> GetOfEmployeeIdAsync(ClaimsPrincipal user, int employeeId);
     }
 }

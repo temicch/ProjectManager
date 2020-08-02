@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace ProjectManager.BLL.ViewModels
+namespace ProjectManager.ViewModels
 {
     public class EmployeeViewModel
     {

@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using ProjectManager.BLL.ViewModels;
+using ProjectManager.BLL.Models;
 
 namespace ProjectManager.BLL.Services
 {
-    public interface IProjectService : IService<ProjectViewModel>
+    public interface IProjectService : IService<ProjectModel>
     {
         /// <summary>
         ///     Get all projects of specified employee id
@@ -13,7 +13,7 @@ namespace ProjectManager.BLL.Services
         /// <param name="user">User principal</param>
         /// <param name="employeeId">Employee id</param>
         /// <returns></returns>
-        Task<IEnumerable<ProjectViewModel>> GetOfEmployeeAsync(ClaimsPrincipal user, int employeeId);
+        Task<IEnumerable<ProjectModel>> GetOfEmployeeAsync(ClaimsPrincipal user, int employeeId);
 
         /// <summary>
         ///     Add an employee to a project
@@ -30,7 +30,7 @@ namespace ProjectManager.BLL.Services
         /// <param name="user">User principal</param>
         /// <param name="projectId">Project id</param>
         /// <returns></returns>
-        Task<IEnumerable<EmployeeViewModel>> GetEmployeesAsync(ClaimsPrincipal user, int projectId);
+        Task<IEnumerable<EmployeeModel>> GetEmployeesAsync(ClaimsPrincipal user, int projectId);
 
         /// <summary>
         ///     Get tasks of project
@@ -38,6 +38,6 @@ namespace ProjectManager.BLL.Services
         /// <param name="user">User principal</param>
         /// <param name="projectId">Project id</param>
         /// <returns></returns>
-        Task<IEnumerable<ProjectTaskViewModel>> GetTasksAsync(ClaimsPrincipal user, int projectId);
+        Task<IEnumerable<ProjectTaskModel>> GetTasksAsync(ClaimsPrincipal user, int projectId);
     }
 }

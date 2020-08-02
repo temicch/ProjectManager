@@ -1,25 +1,31 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProjectManager.BLL.Models;
 using ProjectManager.BLL.Services;
-using ProjectManager.BLL.ViewModels;
+using ProjectManager.ViewModels;
 
 namespace ProjectManager.PL.Controllers
 {
     [Authorize]
     public class EmployeesController : Controller
     {
-        public EmployeesController(IEmployeeService employeeManager)
+        public EmployeesController(IEmployeeService employeeManager,
+            IMapper mapper)
         {
             EmployeeManager = employeeManager;
+            Mapper = mapper;
         }
 
         private IEmployeeService EmployeeManager { get; }
+        private IMapper Mapper { get; }
 
         public async Task<IActionResult> Index()
         {
-            return View(await EmployeeManager.GetAllAsync(User));
+            return View(Mapper.Map<ICollection<EmployeeViewModel>>(await EmployeeManager.GetAllAsync(User)));
         }
 
         public async Task<IActionResult> Details(int id)
@@ -40,7 +46,7 @@ namespace ProjectManager.PL.Controllers
         {
             if (ModelState.IsValid)
             {
-                await EmployeeManager.CreateAsync(User, employee);
+                await EmployeeManager.CreateAsync(User, Mapper.Map<EmployeeModel>(employee));
                 return RedirectToAction(nameof(Index));
             }
 
@@ -62,7 +68,7 @@ namespace ProjectManager.PL.Controllers
             {
                 try
                 {
-                    await EmployeeManager.EditAsync(User, employee);
+                    await EmployeeManager.EditAsync(User, Mapper.Map<EmployeeModel>(employee));
                 }
                 catch (DbUpdateConcurrencyException)
                 {

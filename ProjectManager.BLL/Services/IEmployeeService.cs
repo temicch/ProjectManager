@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using ProjectManager.BLL.Models;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using ProjectManager.BLL.ViewModels;
 
 namespace ProjectManager.BLL.Services
 {
-    public interface IEmployeeService : IService<EmployeeViewModel>
+    public interface IEmployeeService : IService<EmployeeModel>
     {
         /// <summary>
         ///     Get all tasks by employee id
@@ -13,7 +13,7 @@ namespace ProjectManager.BLL.Services
         /// <param name="user">User principal</param>
         /// <param name="employeeId">Employee id</param>
         /// <returns></returns>
-        Task<IEnumerable<ProjectTaskViewModel>> GetTasksAsync(ClaimsPrincipal user, int employeeId);
+        Task<IEnumerable<ProjectTaskModel>> GetTasksAsync(ClaimsPrincipal user, int employeeId);
 
         /// <summary>
         ///     Get all the tasks of the employee for which he is the author
@@ -21,7 +21,7 @@ namespace ProjectManager.BLL.Services
         /// <param name="user">User principal</param>
         /// <param name="employeeId">Id</param>
         /// <returns></returns>
-        Task<IEnumerable<ProjectTaskViewModel>> GetManagedTasksAsync(ClaimsPrincipal user, int employeeId);
+        Task<IEnumerable<ProjectTaskModel>> GetManagedTasksAsync(ClaimsPrincipal user, int employeeId);
 
         /// <summary>
         ///     Get all projects of an employee for which he is a manager
@@ -29,7 +29,7 @@ namespace ProjectManager.BLL.Services
         /// <param name="user">User principal</param>
         /// <param name="employeeId">Id</param>
         /// <returns></returns>
-        Task<IEnumerable<ProjectViewModel>> GetAllManagedProjectsAsync(ClaimsPrincipal user, int employeeId);
+        Task<IEnumerable<ProjectModel>> GetAllManagedProjectsAsync(ClaimsPrincipal user, int employeeId);
 
         /// <summary>
         ///     Get all employee projects
@@ -37,6 +37,6 @@ namespace ProjectManager.BLL.Services
         /// <param name="user">User principal</param>
         /// <param name="employeeId">Id</param>
         /// <returns></returns>
-        Task<IEnumerable<ProjectViewModel>> GetAllProjectsAsync(ClaimsPrincipal user, int employeeId);
+        Task<IEnumerable<ProjectModel>> GetAllProjectsAsync(ClaimsPrincipal user, int employeeId);
     }
 }
