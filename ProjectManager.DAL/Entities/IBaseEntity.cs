@@ -1,7 +1,7 @@
 ﻿namespace ProjectManager.DAL.Entities
 {
-    public interface IBaseEntity
+    public interface IBaseEntity<T>
     {
-        int Id { get; set; }
+        T Id { get; set; }
     }
 }

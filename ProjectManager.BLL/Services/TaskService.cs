@@ -44,25 +44,25 @@ namespace ProjectManager.BLL.Services
             return await Repository.UpdateAsync(Mapper.Map<ProjectTask>(task));
         }
 
-        public async Task<IEnumerable<ProjectTaskModel>> GetAllAsync(ClaimsPrincipal user)
+        public IEnumerable<ProjectTaskModel> GetAll(ClaimsPrincipal user)
         {
             if (!IsHavePermissionForLook(user))
                 return null;
 
-            return Mapper.Map<IEnumerable<ProjectTaskModel>>(await Repository
+            return Mapper.Map<IEnumerable<ProjectTaskModel>>(Repository
                 .GetAll()
-                .ToListAsync());
+                .ToList());
         }
 
-        public async Task<IEnumerable<ProjectTaskModel>> GetOfEmployeeIdAsync(ClaimsPrincipal user, int employeeId)
+        public IEnumerable<ProjectTaskModel> GetOfEmployee(ClaimsPrincipal user, int employeeId)
         {
             if (!IsHavePermissionForLook(user))
                 return null;
 
-            return Mapper.Map<IEnumerable<ProjectTaskModel>>(await Repository
+            return Mapper.Map<IEnumerable<ProjectTaskModel>>(Repository
                 .GetAll()
                 .Where(x => x.Performer.Id == employeeId)
-                .ToListAsync());
+                .ToList());
         }
 
         public async Task<bool> RemoveByIdAsync(ClaimsPrincipal user, int id)
@@ -78,7 +78,7 @@ namespace ProjectManager.BLL.Services
             if (!IsHavePermissionForLook(user))
                 return null;
 
-            var task = await Repository.GetAsync(id);
+            var task = await Repository.GetByIdAsync(id);
             return task == null ? null : Mapper.Map<ProjectTaskModel>(task);
         }
 
@@ -87,7 +87,7 @@ namespace ProjectManager.BLL.Services
             if (!IsHavePermissionForLook(user))
                 return false;
 
-            var task = await Repository.GetAsync(id);
+            var task = (await Repository.GetByIdAsync(id)).FirstOrDefault();
 
             if (task == null)
                 return false;

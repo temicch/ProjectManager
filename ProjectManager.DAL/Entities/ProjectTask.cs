@@ -2,10 +2,9 @@
 
 namespace ProjectManager.DAL.Entities
 {
-    public class ProjectTask: IBaseEntity
+    public class ProjectTask: IBaseEntity<int>
     {
         public int Id { get; set; }
-        [Required]
         public string Title { get; set; }
         /// <summary>
         ///     Task status
@@ -23,7 +22,7 @@ namespace ProjectManager.DAL.Entities
         /// <summary>
         ///     Task Author
         /// </summary>
-        public virtual Employee Author { get; set; }
+        public Employee Author { get; set; }
         public int AuthorId { get; set; }
 
         /// <summary>

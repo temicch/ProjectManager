@@ -23,9 +23,9 @@ namespace ProjectManager.PL.Controllers
         private IEmployeeService EmployeeManager { get; }
         private IMapper Mapper { get; }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(Mapper.Map<ICollection<EmployeeViewModel>>(await EmployeeManager.GetAllAsync(User)));
+            return View(Mapper.Map<ICollection<EmployeeViewModel>>(EmployeeManager.GetAll(User)));
         }
 
         public async Task<IActionResult> Details(int id)

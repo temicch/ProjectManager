@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace ProjectManager.DAL.Repositories
@@ -10,13 +13,20 @@ namespace ProjectManager.DAL.Repositories
         /// </summary>
         /// <param name="id">Id</param>
         /// <returns></returns>
-        Task<T> GetAsync(int id);
+        Task<IEnumerable<T>> GetByIdAsync(int id);
 
         /// <summary>
-        ///     Get all entities as <seealso cref="IQueryable" />
+        /// Get entity by specified condition
+        /// </summary>
+        /// <param name="selector">Selector</param>
+        /// <returns></returns>
+        Task<IEnumerable<T>> GetAsync(Expression<Func<T, bool>> selector);
+
+        /// <summary>
+        ///     Get all entities
         /// </summary>
         /// <returns></returns>
-        IQueryable<T> GetAll();
+        IEnumerable<T> GetAll();
 
         /// <summary>
         ///     Add new entity

@@ -5,13 +5,7 @@
 @{
     var user = UserManager.GetUserAsync(User).Result;
 
-    var userLastName = user?.LastName ?? string.Empty;
-    var userFirstName = user?.FirstName ?? string.Empty;
-    var userTitle = $"{userLastName} {userFirstName}".Trim();
-    if (string.IsNullOrEmpty(userTitle))
-    {
-        userTitle = user?.Email ?? string.Empty;
-    }
+    var userTitle = user?.ToString() ?? user?.Email ?? string.Empty;
 }
 
 <ul class="navbar-nav">

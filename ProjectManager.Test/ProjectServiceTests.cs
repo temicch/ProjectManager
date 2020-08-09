@@ -26,13 +26,13 @@ namespace ProjectManager.Test
         [Fact]
         public void Get_Should_Return_Null()
         {
-            Assert.Null(Repository.GetAsync(-1).Result);
+            Assert.Null(Repository.GetByIdAsync(-1).Result);
         }
 
         [Fact]
         public void Get_Should_Return_Value()
         {
-            for (var i = 0; i < Projects.Count; i++) Assert.NotNull(Repository.GetAsync(i + 1).Result);
+            for (var i = 0; i < Projects.Count; i++) Assert.NotNull(Repository.GetByIdAsync(i + 1).Result);
         }
 
 
@@ -46,7 +46,7 @@ namespace ProjectManager.Test
         [Fact]
         public void Remove_All_Entities()
         {
-            var entities = ProjectService.GetAllAsync(ClaimsPrincipal.Object).Result;
+            var entities = ProjectService.GetAll(ClaimsPrincipal.Object);
 
             foreach (var entity in entities)
             {
@@ -54,20 +54,20 @@ namespace ProjectManager.Test
                 Assert.True(result.Result);
             }
 
-            entities = ProjectService.GetAllAsync(ClaimsPrincipal.Object).Result;
+            entities = ProjectService.GetAll(ClaimsPrincipal.Object);
             Assert.Empty(entities);
         }
 
         [Fact]
         public void Service_Should_Return_All_Entities()
         {
-            Assert.Equal(ProjectService.GetAllAsync(ClaimsPrincipal.Object).Result.Count(), Projects.Count());
+            Assert.Equal(ProjectService.GetAll(ClaimsPrincipal.Object).Count(), Projects.Count());
         }
 
         [Fact]
         public void Should_Edit_Entity()
         {
-            var entities = ProjectService.GetAllAsync(ClaimsPrincipal.Object).Result;
+            var entities = ProjectService.GetAll(ClaimsPrincipal.Object);
 
             foreach (var entity in entities)
             {
@@ -76,7 +76,7 @@ namespace ProjectManager.Test
                 Assert.NotEqual(0, result);
             }
 
-            entities = ProjectService.GetAllAsync(ClaimsPrincipal.Object).Result;
+            entities = ProjectService.GetAll(ClaimsPrincipal.Object);
             foreach (var entity in entities) Assert.Equal(50000d, entity.Priority);
         }
 

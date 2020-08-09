@@ -7,7 +7,7 @@ namespace ProjectManager.DAL.Extensions
     internal static class DbContextExtension
     {
         public static void DetachLocal<T>(this DbContext context, T t, int entryId)
-            where T : class, IBaseEntity
+            where T : class, IBaseEntity<int>
         {
             var local = context.Set<T>()
                 .Local

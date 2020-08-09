@@ -51,12 +51,12 @@ namespace ProjectManager.BLL.Services
             return project.Id;
         }
 
-        public async Task<IEnumerable<ProjectModel>> GetAllAsync(ClaimsPrincipal user)
+        public IEnumerable<ProjectModel> GetAll(ClaimsPrincipal user)
         {
             if (!IsHavePermissionForLook(user))
                 return null;
 
-            var entities = await GetAllFilteredEntitiesAsync(user);
+            var entities = GetAllFilteredEntities(user);
             return Mapper.Map<IEnumerable<ProjectModel>>(entities);
         }
 
@@ -75,7 +75,7 @@ namespace ProjectManager.BLL.Services
 
         public async Task<bool> RemoveByIdAsync(ClaimsPrincipal user, int projectId)
         {
-            var project = await Repository.GetAsync(projectId);
+            var project = (await Repository.GetByIdAsync(projectId)).FirstOrDefault();
 
             if (!IsHavePermissionForEdit(user, project))
                 return false;
@@ -86,7 +86,7 @@ namespace ProjectManager.BLL.Services
 
         public async Task<ProjectModel> GetAsync(ClaimsPrincipal user, int projectId)
         {
-            var project = await Repository.GetAsync(projectId);
+            var project = (await Repository.GetByIdAsync(projectId)).FirstOrDefault();
 
             if (!IsHavePermissionForEdit(user, project))
                 return null;
@@ -96,7 +96,7 @@ namespace ProjectManager.BLL.Services
 
         public async Task<bool> AddEmployeeAsync(ClaimsPrincipal user, int projectId, int employeeId)
         {
-            var project = await Repository.GetAsync(projectId);
+            var project = (await Repository.GetByIdAsync(projectId)).FirstOrDefault();
 
             if (!IsHavePermissionForEdit(user, project))
                 return false;
@@ -111,7 +111,7 @@ namespace ProjectManager.BLL.Services
             if (!IsHavePermissionForLook(user))
                 return null;
 
-            var project = await Repository.GetAsync(projectId);
+            var project = (await Repository.GetByIdAsync(projectId)).FirstOrDefault();
 
             if (!IsHavePermissionForEdit(user, project))
                 return null;
@@ -125,16 +125,16 @@ namespace ProjectManager.BLL.Services
 
         public async Task<IEnumerable<ProjectTaskModel>> GetTasksAsync(ClaimsPrincipal user, int projectId)
         {
-            var project = await Repository.GetAsync(projectId);
+            var project = (await Repository.GetByIdAsync(projectId)).FirstOrDefault();
 
             if (!IsHavePermissionForEdit(user, project))
                 return null;
 
-            var tasks = Mapper.Map<IEnumerable<ProjectTaskModel>>(await Repository
+            var tasks = Mapper.Map<IEnumerable<ProjectTaskModel>>(Repository
                 .GetAll()
                 .Where(x => x.Id == projectId)
                 .Select(x => x.Tasks)
-                .ToListAsync());
+                .ToList());
             return tasks;
         }
 
@@ -152,7 +152,9 @@ namespace ProjectManager.BLL.Services
 
             return user.IsInRole(Roles.Leader) ||
                    project.ManagerId == userId ||
-                   Repository.ProjectDbContext.ProjectEmployees.Any(x => x.ProjectId == project.Id && x.EmployeeId == userId);
+                   PeRepository
+                        .GetAll()
+                        .Any(x => x.ProjectId == project.Id && x.EmployeeId == userId);
         }
 
         private bool IsHavePermissionForCreating(ClaimsPrincipal user)
@@ -160,7 +162,7 @@ namespace ProjectManager.BLL.Services
             return user.IsInRole(Roles.Leader) || user.IsInRole(Roles.Manager);
         }
 
-        private async Task<IEnumerable<Project>> GetAllFilteredEntitiesAsync(ClaimsPrincipal user)
+        private IEnumerable<Project> GetAllFilteredEntities(ClaimsPrincipal user)
         {
             if (!user.Identity.IsAuthenticated)
                 return null;
@@ -179,10 +181,10 @@ namespace ProjectManager.BLL.Services
                     .Where(x => x.ManagerId == userId)
                     .ToList();
 
-                entities = entities.Union(await PeRepository
+                entities = entities.Union(PeRepository
                     .GetAll()
                     .Where(x => x.EmployeeId == userId)
-                    .Select(x => x.Project).ToListAsync());
+                    .Select(x => x.Project).ToList());
             }
             // For other future roles
             else

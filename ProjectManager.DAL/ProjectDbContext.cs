@@ -22,28 +22,8 @@ namespace ProjectManager.DAL
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<ProjectEmployees>()
-                .HasKey(t => new { t.EmployeeId, t.ProjectId });
-            modelBuilder.Entity<ProjectEmployees>()
-                .HasOne(sc => sc.Employee)
-                .WithMany(s => s.ProjectEmployees);
-            modelBuilder.Entity<ProjectEmployees>()
-                .HasOne(sc => sc.Project)
-                .WithMany(c => c.ProjectEmployees);
-
-            modelBuilder.Entity<ProjectTask>()
-                .HasOne(x => x.Author)
-                .WithMany(x => x.TasksAuthor);
-            modelBuilder.Entity<ProjectTask>()
-                .HasOne(x => x.Performer)
-                .WithMany(x => x.Tasks);
-            modelBuilder.Entity<ProjectTask>()
-                .HasOne(x => x.Project)
-                .WithMany(x => x.Tasks);
-
-            modelBuilder.Entity<Project>()
-                .HasOne(x => x.Manager)
-                .WithMany(x => x.ManagedProjects);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ProjectDbContext).Assembly);
         }
+
     }
 }

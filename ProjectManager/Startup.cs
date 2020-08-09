@@ -1,16 +1,15 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using ProjectManager.BLL.Services;
-using ProjectManager.Configuration;
+using Microsoft.Extensions.Hosting;
 using ProjectManager.DAL;
 using ProjectManager.DAL.Entities;
+using AutoMapper;
+using ProjectManager.Configuration;
+using ProjectManager.BLL.Services;
 using ProjectManager.DAL.Repositories;
 
 namespace ProjectManager.PL
@@ -47,52 +46,56 @@ namespace ProjectManager.PL
                 options.User.RequireUniqueEmail = true;
             });
 
-            services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-                .AddJsonOptions(y => y.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+            services.AddControllersWithViews();
+            services.AddRazorPages();
 
             services.AddAutoMapper(typeof(MappingProfile));
 
             ConfigureDependencies(services);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                //app.UseDatabaseErrorPage();
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
+
+            app.UseRouting();
+            //app.UseCookiePolicy();
 
             app.UseAuthentication();
+            app.UseAuthorization();
 
-            app.UseMvc(routes =>
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
-                    "default",
-                    "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
         }
 
         private static void ConfigureDependencies(IServiceCollection services)
         {
-            services.AddTransient<ITaskService, TaskService>();
-            services.AddTransient<IProjectService, ProjectService>();
-            services.AddTransient<IEmployeeService, EmployeeService>();
+            services.AddScoped<ITaskService, TaskService>();
+            services.AddScoped<IProjectService, ProjectService>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
 
-            services.AddTransient<BaseRepository<Employee>, EmployeeRepository>();
-            services.AddTransient<BaseRepository<Project>, ProjectRepository>();
-            services.AddTransient<BaseRepository<ProjectTask>, TaskRepository>();
-            services.AddTransient<BaseRepository<ProjectEmployees>, ProjectEmployeesRepository>();
+            services.AddScoped<BaseRepository<Employee>, EmployeeRepository>();
+            services.AddScoped<BaseRepository<Project>, ProjectRepository>();
+            services.AddScoped<BaseRepository<ProjectTask>, TaskRepository>();
+            services.AddScoped<BaseRepository<ProjectEmployees>, ProjectEmployeesRepository>();
         }
     }
 }

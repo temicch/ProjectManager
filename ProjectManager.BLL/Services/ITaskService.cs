@@ -13,6 +13,6 @@ namespace ProjectManager.BLL.Services
         /// <param name="user"></param>
         /// <param name="employeeId"></param>
         /// <returns></returns>
-        Task<IEnumerable<ProjectTaskModel>> GetOfEmployeeIdAsync(ClaimsPrincipal user, int employeeId);
+        IEnumerable<ProjectTaskModel> GetOfEmployee(ClaimsPrincipal user, int employeeId);
     }
 }

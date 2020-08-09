@@ -2,7 +2,7 @@
 
 namespace ProjectManager.DAL.Entities
 {
-    public class ProjectEmployees : IBaseEntity
+    public class ProjectEmployees : IBaseEntity<int>
     {
         public int EmployeeId { get; set; }
         public Employee Employee { get; set; }

@@ -4,10 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ProjectManager.DAL.Entities
 {
-    public class Project : IBaseEntity
+    public class Project : IBaseEntity<int>
     {
         public int Id { get; set; }
-        [Required]
         public string Title { get; set; }
         public string CustomerCompany { get; set; }
         public string PerformerCompany { get; set; }
@@ -35,5 +34,11 @@ namespace ProjectManager.DAL.Entities
         public int? ManagerId { get; set; }
 
         public ICollection<ProjectEmployees> ProjectEmployees { get; set; }
+
+        public Project()
+        {
+            ProjectEmployees = new HashSet<ProjectEmployees>();
+            Tasks = new HashSet<ProjectTask>();
+        }
     }
 }

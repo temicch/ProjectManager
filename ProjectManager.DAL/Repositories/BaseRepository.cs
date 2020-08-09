@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -12,7 +14,7 @@ namespace ProjectManager.DAL.Repositories
     ///     Facade for repositories
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class BaseRepository<T> : IRepository<T> where T : class, IBaseEntity
+    public abstract class BaseRepository<T> : IRepository<T> where T : class, IBaseEntity<int>
     {
         public BaseRepository(ProjectDbContext projectDbContext,
             DbSet<T> dbSet,
@@ -43,14 +45,20 @@ namespace ProjectManager.DAL.Repositories
             return newEntity.Id;
         }
 
-        public virtual async Task<T> GetAsync(int id)
+        public virtual async Task<IEnumerable<T>> GetByIdAsync(int id)
         {
             return await GetAllAsQuery()
                 .Where(x => x.Id == id)
-                .FirstOrDefaultAsync();
+                .ToListAsync();
+        }
+        public async Task<IEnumerable<T>> GetAsync(Expression<Func<T, bool>> selector)
+        {
+            return await GetAllAsQuery()
+                .Where(selector)
+                .ToListAsync();
         }
 
-        public virtual IQueryable<T> GetAll()
+        public virtual IEnumerable<T> GetAll()
         {
             return GetAllAsQuery();
         }
@@ -94,5 +102,6 @@ namespace ProjectManager.DAL.Repositories
         }
 
         protected abstract IQueryable<T> GetAllAsQuery();
+
     }
 }

@@ -45,14 +45,14 @@ namespace ProjectManager.BLL.Services
             return employee.Id;
         }
 
-        public async Task<IEnumerable<EmployeeModel>> GetAllAsync(ClaimsPrincipal user)
+        public IEnumerable<EmployeeModel> GetAll(ClaimsPrincipal user)
         {
             if (!IsHavePermissionForLook(user))
                 return null;
 
-            return Mapper.Map<IEnumerable<EmployeeModel>>(await Repository
+            return Mapper.Map<IEnumerable<EmployeeModel>>(Repository
                 .GetAll()
-                .ToListAsync());
+                .ToList());
         }
 
         public async Task<bool> RemoveByIdAsync(ClaimsPrincipal user, int id)
@@ -67,7 +67,7 @@ namespace ProjectManager.BLL.Services
             if (!IsHavePermissionForLook(user))
                 return null;
 
-            var employee = await Repository.GetAsync(id);
+            var employee = await Repository.GetByIdAsync(id);
             return employee == null ? null : Mapper.Map<EmployeeModel>(employee);
         }
 
@@ -76,7 +76,7 @@ namespace ProjectManager.BLL.Services
             if (!IsHavePermissionForLook(user))
                 return null;
 
-            var employee = await Repository.GetAsync(employeeId);
+            var employee = (await Repository.GetByIdAsync(employeeId)).FirstOrDefault();
             var tasks = employee.Tasks.ToList();
 
             return Mapper.Map<IEnumerable<ProjectTaskModel>>(tasks);
@@ -87,7 +87,7 @@ namespace ProjectManager.BLL.Services
             if (!IsHavePermissionForLook(user))
                 return null;
 
-            var employee = await Repository.GetAsync(employeeId);
+            var employee = (await Repository.GetByIdAsync(employeeId)).FirstOrDefault();
             var tasks = employee.TasksAuthor.ToList();
 
             return Mapper.Map<IEnumerable<ProjectTaskModel>>(tasks);
@@ -99,7 +99,7 @@ namespace ProjectManager.BLL.Services
             if (!IsHavePermissionForLook(user))
                 return null;
 
-            var employee = await Repository.GetAsync(employeeId);
+            var employee = (await Repository.GetByIdAsync(employeeId)).FirstOrDefault();
             var projects = employee.ManagedProjects.ToList();
 
             return Mapper.Map<IEnumerable<ProjectModel>>(projects);
