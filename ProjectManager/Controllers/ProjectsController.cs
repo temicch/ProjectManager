@@ -29,7 +29,7 @@ namespace ProjectManager.Controllers
         [HttpGet("index")]
         public IActionResult Index()
         {
-            var projects = ProjectService.GetAll(User);
+            var projects = ProjectService.GetAllAsync(User);
 
             return View(Mapper.Map<IEnumerable<ProjectViewModel>>(projects));
         }

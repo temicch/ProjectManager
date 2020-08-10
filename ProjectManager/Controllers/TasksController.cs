@@ -23,7 +23,7 @@ namespace ProjectManager.PL.Controllers
         // GET: Tasks
         public IActionResult Index()
         {
-            var tasks = TaskService.GetAll(User);
+            var tasks = TaskService.GetAllAsync(User);
             return View(Mapper.Map<IEnumerable<ProjectTaskViewModel>>(tasks));
         }
 

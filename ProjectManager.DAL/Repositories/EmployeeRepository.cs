@@ -17,7 +17,6 @@ namespace ProjectManager.DAL.Repositories
         {
             return DbSet
                 .Include(x => x.Tasks)
-                    //.ThenInclude(x => x.)
                 .Include(x => x.ManagedProjects)
                 .Include(x => x.TasksAuthor);
         }

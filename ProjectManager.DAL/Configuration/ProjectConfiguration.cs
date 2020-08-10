@@ -27,7 +27,8 @@ namespace ProjectManager.DAL.Configuration
                 .IsRequired();
             modelBuilder
                 .Property(x => x.EndDate)
-                .HasColumnType("Date");
+                .HasColumnType("Date")
+                .IsRequired();
         }
     }
 }

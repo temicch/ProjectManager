@@ -17,7 +17,7 @@ namespace ProjectManager.DAL.Entities
         /// <summary>
         ///     Project completion date
         /// </summary>
-        public DateTime? EndDate { get; set; }
+        public DateTime EndDate { get; set; }
         /// <summary>
         ///     Project priority
         /// </summary>

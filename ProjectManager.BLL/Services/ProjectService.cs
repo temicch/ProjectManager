@@ -4,9 +4,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+using ProjectManager.BLL.Extensions;
 using ProjectManager.BLL.Models;
-using ProjectManager.BLL.Utils;
 using ProjectManager.DAL.Entities;
 using ProjectManager.DAL.Repositories;
 
@@ -31,168 +30,107 @@ namespace ProjectManager.BLL.Services
 
         public async Task<int> CreateAsync(ClaimsPrincipal user, ProjectModel data)
         {
-            if (!IsHavePermissionForCreating(user))
+            if (!user.CanCreateProject())
                 return 0;
 
             var project = Mapper.Map<Project>(data);
 
-            await Repository.AddAsync(project);
+            var result = await Repository.AddAsync(project);
 
-            return project.Id;
+            return result;
         }
 
         public async Task<int> EditAsync(ClaimsPrincipal user, ProjectModel project)
         {
-            if (!IsHavePermissionForEdit(user, Mapper.Map<Project>(project)))
+            if (!user.CanEditProject(project))
                 return 0;
 
-            await Repository.UpdateAsync(Mapper.Map<Project>(project));
+            var result = await Repository.UpdateAsync(Mapper.Map<Project>(project));
 
-            return project.Id;
+            return result;
         }
 
-        public IEnumerable<ProjectModel> GetAll(ClaimsPrincipal user)
+        public async Task<IEnumerable<ProjectModel>> GetAllAsync(ClaimsPrincipal user)
         {
-            if (!IsHavePermissionForLook(user))
+            if (!user.CanLookAllProjects())
                 return null;
 
-            var entities = GetAllFilteredEntities(user);
-            return Mapper.Map<IEnumerable<ProjectModel>>(entities);
+            var projects = await Repository.GetAllAsync();
+
+            return Mapper.Map<IEnumerable<ProjectModel>>(projects);
         }
 
         public async Task<IEnumerable<ProjectModel>> GetOfEmployeeAsync(ClaimsPrincipal user, int employeeId)
         {
-            if (!IsHavePermissionForLook(user))
+            if (!user.CanLookProject())
                 return null;
 
-            var projects = Mapper.Map<IEnumerable<ProjectModel>>(await Repository.ProjectDbContext.ProjectEmployees
-                .Include(x => x.Employee)
-                .Include(x => x.Project)
-                .Where(x => x.Employee.Id == employeeId)
-                .ToListAsync());
-            return projects;
+            var projects = await PeRepository.GetAsync(x => x.Employee.Id == employeeId);
+
+            return Mapper.Map<IEnumerable<ProjectModel>>(projects.ToList());
         }
 
         public async Task<bool> RemoveByIdAsync(ClaimsPrincipal user, int projectId)
         {
-            var project = (await Repository.GetByIdAsync(projectId)).FirstOrDefault();
+            var project = (await Repository
+                .GetByIdAsync(projectId))
+                .FirstOrDefault();
 
-            if (!IsHavePermissionForEdit(user, project))
+            if (!user.CanRemoveProject(Mapper.Map<ProjectModel>(project)))
                 return false;
 
-            var entityResult = await Repository.RemoveByIdAsync(projectId);
-            return entityResult;
+            var result = await Repository.RemoveByIdAsync(projectId);
+
+            return result;
         }
 
         public async Task<ProjectModel> GetAsync(ClaimsPrincipal user, int projectId)
         {
-            var project = (await Repository.GetByIdAsync(projectId)).FirstOrDefault();
-
-            if (!IsHavePermissionForEdit(user, project))
+            if (user.CanLookProject())
                 return null;
 
-            return project == null ? null : Mapper.Map<ProjectModel>(project);
+            var project = (await Repository.GetByIdAsync(projectId)).FirstOrDefault();
+
+            return Mapper.Map<ProjectModel>(project);
         }
 
         public async Task<bool> AddEmployeeAsync(ClaimsPrincipal user, int projectId, int employeeId)
         {
-            var project = (await Repository.GetByIdAsync(projectId)).FirstOrDefault();
+            var project = Mapper.Map<ProjectModel>((await Repository
+                .GetByIdAsync(projectId))
+                .FirstOrDefault());
 
-            if (!IsHavePermissionForEdit(user, project))
+            if (!user.CanEditProject(project))
                 return false;
 
-            var entity = await Repository.ProjectDbContext.ProjectEmployees
+            var entity = await PeRepository
                 .AddAsync(new ProjectEmployees {EmployeeId = employeeId, ProjectId = projectId});
-            return entity.IsKeySet;
+            return entity > 0;
         }
 
         public async Task<IEnumerable<EmployeeModel>> GetEmployeesAsync(ClaimsPrincipal user, int projectId)
         {
-            if (!IsHavePermissionForLook(user))
+            if (!user.CanLookProject())
                 return null;
 
-            var project = (await Repository.GetByIdAsync(projectId)).FirstOrDefault();
+            var entities = await PeRepository.GetAsync(x => x.ProjectId == projectId);
 
-            if (!IsHavePermissionForEdit(user, project))
-                return null;
+            var employees = Mapper.Map<IEnumerable<EmployeeModel>>(entities.Select(x => x.Employee));
 
-            var employees = Mapper.Map<IEnumerable<EmployeeModel>>(await Repository.ProjectDbContext
-                .ProjectEmployees
-                .Where(x => x.ProjectId == projectId)
-                .ToListAsync());
             return employees;
         }
 
         public async Task<IEnumerable<ProjectTaskModel>> GetTasksAsync(ClaimsPrincipal user, int projectId)
         {
-            var project = (await Repository.GetByIdAsync(projectId)).FirstOrDefault();
-
-            if (!IsHavePermissionForEdit(user, project))
+            if (!user.CanLookProject())
                 return null;
 
-            var tasks = Mapper.Map<IEnumerable<ProjectTaskModel>>(Repository
-                .GetAll()
-                .Where(x => x.Id == projectId)
-                .Select(x => x.Tasks)
-                .ToList());
+            var entities = await Repository.GetAsync(x => x.Id == projectId);
+
+            var tasks = Mapper.Map<IEnumerable<ProjectTaskModel>>(entities
+                .Select(x => x.Tasks));
+
             return tasks;
-        }
-
-        private bool IsHavePermissionForLook(ClaimsPrincipal user)
-        {
-            return user.Identity.IsAuthenticated;
-        }
-
-        private bool IsHavePermissionForEdit(ClaimsPrincipal user, Project project)
-        {
-            if (project == null)
-                return false;
-
-            var userId = user.GetLoggedInUserId<int>();
-
-            return user.IsInRole(Roles.Leader) ||
-                   project.ManagerId == userId ||
-                   PeRepository
-                        .GetAll()
-                        .Any(x => x.ProjectId == project.Id && x.EmployeeId == userId);
-        }
-
-        private bool IsHavePermissionForCreating(ClaimsPrincipal user)
-        {
-            return user.IsInRole(Roles.Leader) || user.IsInRole(Roles.Manager);
-        }
-
-        private IEnumerable<Project> GetAllFilteredEntities(ClaimsPrincipal user)
-        {
-            if (!user.Identity.IsAuthenticated)
-                return null;
-
-            IEnumerable<Project> entities = Repository.GetAll();
-            var userId = user.GetLoggedInUserId<int>();
-
-            // Leader can view any projects, so nothing filter to
-            if (user.IsInRole(Roles.Leader))
-            {
-            }
-            // Other roles can see only theirs projects. Filter it
-            else if (user.IsInRole(Roles.Manager) || user.IsInRole(Roles.Employee))
-            {
-                entities = entities
-                    .Where(x => x.ManagerId == userId)
-                    .ToList();
-
-                entities = entities.Union(PeRepository
-                    .GetAll()
-                    .Where(x => x.EmployeeId == userId)
-                    .Select(x => x.Project).ToList());
-            }
-            // For other future roles
-            else
-            {
-                return null;
-            }
-
-            return entities;
         }
     }
 }

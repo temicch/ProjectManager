@@ -25,7 +25,7 @@ namespace ProjectManager.PL.Controllers
 
         public IActionResult Index()
         {
-            return View(Mapper.Map<ICollection<EmployeeViewModel>>(EmployeeManager.GetAll(User)));
+            return View(Mapper.Map<ICollection<EmployeeViewModel>>(EmployeeManager.GetAllAsync(User)));
         }
 
         public async Task<IActionResult> Details(int id)

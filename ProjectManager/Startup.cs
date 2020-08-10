@@ -11,6 +11,10 @@ using AutoMapper;
 using ProjectManager.Configuration;
 using ProjectManager.BLL.Services;
 using ProjectManager.DAL.Repositories;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using ProjectManager.PL.ViewModels.Validators;
+using ProjectManager.ViewModels;
 
 namespace ProjectManager.PL
 {
@@ -51,6 +55,10 @@ namespace ProjectManager.PL
 
             services.AddAutoMapper(typeof(MappingProfile));
 
+            services
+                .AddMvc()
+                .AddFluentValidation();
+
             ConfigureDependencies(services);
         }
 
@@ -59,12 +67,10 @@ namespace ProjectManager.PL
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                //app.UseDatabaseErrorPage();
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -72,7 +78,7 @@ namespace ProjectManager.PL
             app.UseStaticFiles();
 
             app.UseRouting();
-            //app.UseCookiePolicy();
+            app.UseCookiePolicy();
 
             app.UseAuthentication();
             app.UseAuthorization();
@@ -96,6 +102,10 @@ namespace ProjectManager.PL
             services.AddScoped<BaseRepository<Project>, ProjectRepository>();
             services.AddScoped<BaseRepository<ProjectTask>, TaskRepository>();
             services.AddScoped<BaseRepository<ProjectEmployees>, ProjectEmployeesRepository>();
+
+            services.AddTransient<IValidator<EmployeeViewModel>, EmployeeVMValidator>();
+            services.AddTransient<IValidator<ProjectViewModel>, ProjectVMValidator>();
+            services.AddTransient<IValidator<ProjectTaskViewModel>, ProjectTaskVMValidator>();
         }
     }
 }

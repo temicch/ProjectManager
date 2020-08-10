@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+using ProjectManager.BLL.Extensions;
 using ProjectManager.BLL.Models;
 using ProjectManager.DAL.Entities;
 using ProjectManager.DAL.Repositories;
@@ -24,12 +24,12 @@ namespace ProjectManager.BLL.Services
         private IMapper Mapper { get; }
         private BaseRepository<ProjectTask> Repository { get; }
 
-        public async Task<int> CreateAsync(ClaimsPrincipal user, ProjectTaskModel data)
+        public async Task<int> CreateAsync(ClaimsPrincipal user, ProjectTaskModel project)
         {
-            if (!IsHavePermissionForEdit(user))
+            if (!user.CanCreateTask(project))
                 return 0;
 
-            var task = Mapper.Map<ProjectTask>(data);
+            var task = Mapper.Map<ProjectTask>(project);
 
             await Repository.AddAsync(task);
 
@@ -38,72 +38,66 @@ namespace ProjectManager.BLL.Services
 
         public async Task<int> EditAsync(ClaimsPrincipal user, ProjectTaskModel task)
         {
-            if (!IsHavePermissionForEdit(user))
+            if (!user.CanEditTask(task))
                 return 0;
 
             return await Repository.UpdateAsync(Mapper.Map<ProjectTask>(task));
         }
 
-        public IEnumerable<ProjectTaskModel> GetAll(ClaimsPrincipal user)
+        public async Task<IEnumerable<ProjectTaskModel>> GetAllAsync(ClaimsPrincipal user)
         {
-            if (!IsHavePermissionForLook(user))
+            if (!user.CanLookAllTasks())
                 return null;
 
-            return Mapper.Map<IEnumerable<ProjectTaskModel>>(Repository
-                .GetAll()
-                .ToList());
+            var tasks = await Repository.GetAllAsync();
+
+            return Mapper.Map<IEnumerable<ProjectTaskModel>>(tasks);
         }
 
-        public IEnumerable<ProjectTaskModel> GetOfEmployee(ClaimsPrincipal user, int employeeId)
+        public async Task<IEnumerable<ProjectTaskModel>> GetOfEmployeeAsync(ClaimsPrincipal user, int employeeId)
         {
-            if (!IsHavePermissionForLook(user))
+            if (!user.CanLookTask())
                 return null;
 
-            return Mapper.Map<IEnumerable<ProjectTaskModel>>(Repository
-                .GetAll()
-                .Where(x => x.Performer.Id == employeeId)
-                .ToList());
+            var tasks = await Repository.GetAsync(x => x.PerformerId == employeeId);
+
+            return Mapper.Map<IEnumerable<ProjectTaskModel>>(tasks);
         }
 
-        public async Task<bool> RemoveByIdAsync(ClaimsPrincipal user, int id)
+        public async Task<bool> RemoveByIdAsync(ClaimsPrincipal user, int taskId)
         {
-            if (!IsHavePermissionForEdit(user))
+            var task = Mapper.Map<ProjectTaskModel>((await Repository
+                .GetByIdAsync(taskId))
+                .FirstOrDefault());
+
+            if (!user.CanRemoveTask(task))
                 return false;
 
-            return await Repository.RemoveByIdAsync(id);
+            return await Repository.RemoveByIdAsync(taskId);
         }
 
         public async Task<ProjectTaskModel> GetAsync(ClaimsPrincipal user, int id)
         {
-            if (!IsHavePermissionForLook(user))
+            if (!user.CanLookTask())
                 return null;
 
             var task = await Repository.GetByIdAsync(id);
-            return task == null ? null : Mapper.Map<ProjectTaskModel>(task);
+
+            return Mapper.Map<ProjectTaskModel>(task);
         }
 
-        public async Task<bool> SetStatus(ClaimsPrincipal user, int id, TaskStatus taskStatus)
+        public async Task<bool> SetStatus(ClaimsPrincipal user, int taskId, TaskStatus taskStatus)
         {
-            if (!IsHavePermissionForLook(user))
-                return false;
+            var task = (await Repository
+                .GetByIdAsync(taskId))
+                .FirstOrDefault();
 
-            var task = (await Repository.GetByIdAsync(id)).FirstOrDefault();
-
-            if (task == null)
+            if (!user.CanChangeTaskStatus(Mapper.Map<ProjectTaskModel>(task)))
                 return false;
 
             task.Status = taskStatus;
+
             return await Repository.UpdateAsync(task) != 0;
-        }
-
-        private bool IsHavePermissionForEdit(ClaimsPrincipal user)
-        {
-            return user.IsInRole(Roles.Leader);
-        }
-
-        private bool IsHavePermissionForLook(ClaimsPrincipal user)
-        {
-            return user.Identity.IsAuthenticated;
         }
     }
 }

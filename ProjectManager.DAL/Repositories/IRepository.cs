@@ -26,7 +26,7 @@ namespace ProjectManager.DAL.Repositories
         ///     Get all entities
         /// </summary>
         /// <returns></returns>
-        IEnumerable<T> GetAll();
+        Task<IEnumerable<T>> GetAllAsync();
 
         /// <summary>
         ///     Add new entity
@@ -39,7 +39,7 @@ namespace ProjectManager.DAL.Repositories
         ///     Remove specified by Id entity
         /// </summary>
         /// <param name="id">Id</param>
-        /// <returns></returns>
+        /// <returns><paramref name="true"/> if entity was successfully removed, <paramref name="false"/> otherwise</returns>
         Task<bool> RemoveByIdAsync(int id);
 
         /// <summary>

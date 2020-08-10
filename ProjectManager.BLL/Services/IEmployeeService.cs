@@ -21,7 +21,7 @@ namespace ProjectManager.BLL.Services
         /// <param name="user">User principal</param>
         /// <param name="employeeId">Id</param>
         /// <returns></returns>
-        Task<IEnumerable<ProjectTaskModel>> GetManagedTasksAsync(ClaimsPrincipal user, int employeeId);
+        Task<IEnumerable<ProjectTaskModel>> GetAllManagedTasksAsync(ClaimsPrincipal user, int employeeId);
 
         /// <summary>
         ///     Get all projects of an employee for which he is a manager

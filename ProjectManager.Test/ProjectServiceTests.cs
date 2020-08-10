@@ -12,9 +12,9 @@ namespace ProjectManager.Test
 {
     public class ProjectServiceTests : IClassFixture<InitFixture>
     {
-        public ProjectServiceTests(InitFixture dbFixture)
+        public ProjectServiceTests(InitFixture initFixture)
         {
-            DBFixture = dbFixture;
+            DBFixture = initFixture;
         }
 
         private InitFixture DBFixture { get; }
@@ -24,29 +24,31 @@ namespace ProjectManager.Test
         private Mock<ClaimsPrincipal> ClaimsPrincipal => DBFixture.ClaimsPrincipal;
 
         [Fact]
-        public void Get_Should_Return_Null()
+        public void Get_Should_Return_Empty_Collection()
         {
-            Assert.Null(Repository.GetByIdAsync(-1).Result);
+            Assert.Empty(Repository.GetByIdAsync(-1).Result);
         }
 
         [Fact]
         public void Get_Should_Return_Value()
         {
-            for (var i = 0; i < Projects.Count; i++) Assert.NotNull(Repository.GetByIdAsync(i + 1).Result);
+            for (var i = 0; i < Projects.Count; i++) 
+                Assert.NotEmpty(Repository.GetByIdAsync(i + 1).Result);
         }
 
 
         [Fact]
-        public void GetAll_Should_Be_Projects_Count()
+        public async void GetAll_Should_Be_Equal_To_Projects_Count()
         {
-            var repoCount = Repository.GetAll().Count();
-            Assert.Equal(repoCount, Projects.Count);
+            var repo = await Repository.GetAllAsync();
+            
+            Assert.Equal(Projects.Count, repo.Count());
         }
 
         [Fact]
-        public void Remove_All_Entities()
+        public void Remove_All_Entities_Must_Return_Empty_Collection()
         {
-            var entities = ProjectService.GetAll(ClaimsPrincipal.Object);
+            var entities = ProjectService.GetAllAsync(ClaimsPrincipal.Object).Result;
 
             foreach (var entity in entities)
             {
@@ -54,20 +56,20 @@ namespace ProjectManager.Test
                 Assert.True(result.Result);
             }
 
-            entities = ProjectService.GetAll(ClaimsPrincipal.Object);
+            entities = ProjectService.GetAllAsync(ClaimsPrincipal.Object).Result;
             Assert.Empty(entities);
         }
 
         [Fact]
         public void Service_Should_Return_All_Entities()
         {
-            Assert.Equal(ProjectService.GetAll(ClaimsPrincipal.Object).Count(), Projects.Count());
+            Assert.Equal(ProjectService.GetAllAsync(ClaimsPrincipal.Object).Result.Count(), Projects.Count());
         }
 
         [Fact]
         public void Should_Edit_Entity()
         {
-            var entities = ProjectService.GetAll(ClaimsPrincipal.Object);
+            var entities = ProjectService.GetAllAsync(ClaimsPrincipal.Object).Result;
 
             foreach (var entity in entities)
             {
@@ -76,7 +78,7 @@ namespace ProjectManager.Test
                 Assert.NotEqual(0, result);
             }
 
-            entities = ProjectService.GetAll(ClaimsPrincipal.Object);
+            entities = ProjectService.GetAllAsync(ClaimsPrincipal.Object).Result;
             foreach (var entity in entities) Assert.Equal(50000d, entity.Priority);
         }
 

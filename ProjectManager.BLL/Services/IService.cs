@@ -11,7 +11,7 @@ namespace ProjectManager.BLL.Services
         /// </summary>
         /// <param name="user">User principal</param>
         /// <returns><typeparamref name="TEntity" /> enumerable</returns>
-        IEnumerable<TEntity> GetAll(ClaimsPrincipal user);
+        Task<IEnumerable<TEntity>> GetAllAsync(ClaimsPrincipal user);
 
         /// <summary>
         ///     Get an entity by its ID

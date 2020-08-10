@@ -58,9 +58,9 @@ namespace ProjectManager.DAL.Repositories
                 .ToListAsync();
         }
 
-        public virtual IEnumerable<T> GetAll()
+        public virtual async Task<IEnumerable<T>> GetAllAsync()
         {
-            return GetAllAsQuery();
+            return await GetAllAsQuery().ToListAsync();
         }
 
         public virtual async Task<bool> RemoveByIdAsync(int id)

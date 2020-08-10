@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Claims;
 
-namespace ProjectManager.BLL.Utils
+namespace ProjectManager.BLL.Extensions
 {
     internal static class ClaimsPrincipalExtension
     {
