@@ -6,7 +6,7 @@ namespace ProjectManager.PL.Controllers
     {
         public IActionResult Login()
         {
-            return RedirectToAction("Login", "Identity/Account");
+            return RedirectToAction("Login", "Account", new {area = "Identity"});
         }
     }
 }
