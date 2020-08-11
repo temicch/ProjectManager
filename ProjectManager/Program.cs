@@ -8,21 +8,22 @@ namespace ProjectManager.PL
 {
     public class Program
     {
+        public static NLog.Logger Logger = NLogBuilder
+            .ConfigureNLog("nlog.config")
+            .GetCurrentClassLogger();
+
         public static void Main(string[] args)
         {
-            var logger = NLog.Web.NLogBuilder
-                .ConfigureNLog("nlog.config")
-                .GetCurrentClassLogger();
             try
             {
-                logger.Debug("init main");
+                Logger.Debug("Launch...");
                 CreateWebHostBuilder(args)
                     .Build()
                     .Run();
             }
             catch (Exception exception)
             {
-                logger.Error(exception, "Stopped program because of exception");
+                Logger.Error(exception, "Stopped program because of exception");
                 throw;
             }
             finally
@@ -37,7 +38,7 @@ namespace ProjectManager.PL
                 .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
-                    logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+                    logging.SetMinimumLevel(LogLevel.Trace);
                 })
                 .UseNLog();
     }
