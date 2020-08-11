@@ -1,49 +1,44 @@
-﻿using System;
-using System.IO;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Serilog;
+using Microsoft.Extensions.Logging;
+using NLog.Web;
+using System;
 
 namespace ProjectManager.PL
 {
     public class Program
     {
-        public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", false, true)
-            .AddJsonFile(
-                $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json",
-                true)
-            .AddEnvironmentVariables()
-            .Build();
-
         public static void Main(string[] args)
         {
-            Log.Logger = new LoggerConfiguration()
-                .ReadFrom
-                .Configuration(Configuration)
-                .CreateLogger();
+            var logger = NLog.Web.NLogBuilder
+                .ConfigureNLog("nlog.config")
+                .GetCurrentClassLogger();
             try
             {
-                Log.Information("Application start...");
-                CreateWebHostBuilder(args).Build().Run();
+                logger.Debug("init main");
+                CreateWebHostBuilder(args)
+                    .Build()
+                    .Run();
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                Log.Fatal(e, "Startup failed.");
+                logger.Error(exception, "Stopped program because of exception");
+                throw;
             }
             finally
             {
-                Log.CloseAndFlush();
+                NLog.LogManager.Shutdown();
             }
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args)
-        {
-            return WebHost.CreateDefaultBuilder(args)
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseSerilog();
-        }
+                .ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+                })
+                .UseNLog();
     }
 }
