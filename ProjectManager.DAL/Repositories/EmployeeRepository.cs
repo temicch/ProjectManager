@@ -12,13 +12,5 @@ namespace ProjectManager.DAL.Repositories
             base(projectDbContext, projectDbContext.Employees, logger)
         {
         }
-
-        protected override IQueryable<Employee> GetAllAsQuery()
-        {
-            return DbSet
-                .Include(x => x.Tasks)
-                .Include(x => x.ManagedProjects)
-                .Include(x => x.TasksAuthor);
-        }
     }
 }

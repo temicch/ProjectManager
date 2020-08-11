@@ -23,16 +23,19 @@ namespace ProjectManager.PL.Controllers
         private IEmployeeService EmployeeManager { get; }
         private IMapper Mapper { get; }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(Mapper.Map<ICollection<EmployeeViewModel>>(EmployeeManager.GetAllAsync(User)));
+            var employees = await EmployeeManager.GetAllAsync(User);
+            return View(Mapper.Map<ICollection<EmployeeViewModel>>(employees));
         }
 
         public async Task<IActionResult> Details(int id)
         {
             var employee = await EmployeeManager.GetAsync(User, id);
+
             if (employee == null) 
                 return NotFound();
+
             return View(Mapper.Map<EmployeeViewModel>(employee));
         }
 
@@ -57,8 +60,10 @@ namespace ProjectManager.PL.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var employee = await EmployeeManager.GetAsync(User, id);
+
             if (employee == null) 
                 return NotFound();
+
             return View(Mapper.Map<EmployeeViewModel>(employee));
         }
 
@@ -87,6 +92,7 @@ namespace ProjectManager.PL.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var employee = await EmployeeManager.GetAsync(User, id);
+
             if (employee == null) 
                 return NotFound();
 

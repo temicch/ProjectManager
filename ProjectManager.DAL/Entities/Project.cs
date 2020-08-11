@@ -25,15 +25,15 @@ namespace ProjectManager.DAL.Entities
         /// <summary>
         ///     Project tasks
         /// </summary>
-        public ICollection<ProjectTask> Tasks { get; set; }
+        public virtual ICollection<ProjectTask> Tasks { get; set; }
 
         /// <summary>
         ///     Project manager
         /// </summary>
-        public Employee Manager { get; set; }
+        public virtual Employee Manager { get; set; }
         public int? ManagerId { get; set; }
 
-        public ICollection<ProjectEmployees> ProjectEmployees { get; set; }
+        public virtual ICollection<ProjectEmployees> ProjectEmployees { get; set; }
 
         public Project()
         {

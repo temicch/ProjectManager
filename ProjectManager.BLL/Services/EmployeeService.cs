@@ -68,7 +68,7 @@ namespace ProjectManager.BLL.Services
                 return null;
 
             var employee = await Repository.GetByIdAsync(id);
-            return employee == null ? null : Mapper.Map<EmployeeModel>(employee);
+            return Mapper.Map<EmployeeModel>(employee.FirstOrDefault());
         }
 
         public async Task<IEnumerable<ProjectTaskModel>> GetTasksAsync(ClaimsPrincipal user, int employeeId)

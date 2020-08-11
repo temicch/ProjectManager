@@ -47,20 +47,20 @@ namespace ProjectManager.DAL.Repositories
 
         public virtual async Task<IEnumerable<T>> GetByIdAsync(int id)
         {
-            return await GetAllAsQuery()
+            return await DbSet
                 .Where(x => x.Id == id)
                 .ToListAsync();
         }
         public async Task<IEnumerable<T>> GetAsync(Expression<Func<T, bool>> selector)
         {
-            return await GetAllAsQuery()
+            return await DbSet
                 .Where(selector)
                 .ToListAsync();
         }
 
         public virtual async Task<IEnumerable<T>> GetAllAsync()
         {
-            return await GetAllAsQuery().ToListAsync();
+            return await DbSet.ToListAsync();
         }
 
         public virtual async Task<bool> RemoveByIdAsync(int id)
@@ -100,8 +100,6 @@ namespace ProjectManager.DAL.Repositories
 
             return entity.Id;
         }
-
-        protected abstract IQueryable<T> GetAllAsQuery();
 
     }
 }

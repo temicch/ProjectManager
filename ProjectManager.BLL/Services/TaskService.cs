@@ -83,7 +83,7 @@ namespace ProjectManager.BLL.Services
 
             var task = await Repository.GetByIdAsync(id);
 
-            return Mapper.Map<ProjectTaskModel>(task);
+            return Mapper.Map<ProjectTaskModel>(task.FirstOrDefault());
         }
 
         public async Task<bool> SetStatus(ClaimsPrincipal user, int taskId, TaskStatus taskStatus)

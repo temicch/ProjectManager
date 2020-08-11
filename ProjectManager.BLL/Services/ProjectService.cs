@@ -86,7 +86,7 @@ namespace ProjectManager.BLL.Services
 
         public async Task<ProjectModel> GetAsync(ClaimsPrincipal user, int projectId)
         {
-            if (user.CanLookProject())
+            if (!user.CanLookProject())
                 return null;
 
             var project = (await Repository.GetByIdAsync(projectId)).FirstOrDefault();

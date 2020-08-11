@@ -22,19 +22,19 @@ namespace ProjectManager.DAL.Entities
         /// <summary>
         ///     Task Author
         /// </summary>
-        public Employee Author { get; set; }
+        public virtual Employee Author { get; set; }
         public int AuthorId { get; set; }
 
         /// <summary>
         ///     Task performer employee
         /// </summary>
-        public Employee Performer { get; set; }
+        public virtual Employee Performer { get; set; }
         public int? PerformerId { get; set; }
 
         /// <summary>
         ///     Project task
         /// </summary>
-        public Project Project { get; set; }
+        public virtual Project Project { get; set; }
         public int ProjectId { get; set; }
     }
 }

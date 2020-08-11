@@ -9,6 +9,7 @@ namespace ProjectManager.DAL.Entities
         public Employee(string email) : base(email)
         {
             Email = email;
+            EmailConfirmed = true;
 
             ProjectEmployees = new HashSet<ProjectEmployees>();
             Tasks = new HashSet<ProjectTask>();
@@ -24,19 +25,19 @@ namespace ProjectManager.DAL.Entities
         public string LastName { get; set; }
         public string Surname { get; set; }
 
-        public ICollection<ProjectEmployees> ProjectEmployees { get; set; }
+        public virtual ICollection<ProjectEmployees> ProjectEmployees { get; set; }
         /// <summary>
         ///     Employee tasks
         /// </summary>
-        public ICollection<ProjectTask> Tasks { get; set; }
+        public virtual ICollection<ProjectTask> Tasks { get; set; }
         /// <summary>
         ///     Projects in which the employee is the manager
         /// </summary>
-        public ICollection<Project> ManagedProjects { get; set; }
+        public virtual ICollection<Project> ManagedProjects { get; set; }
         /// <summary>
         ///     Tasks in which the employee is the author
         /// </summary>
-        public ICollection<ProjectTask> TasksAuthor { get; set; }
+        public virtual ICollection<ProjectTask> TasksAuthor { get; set; }
         public override string ToString()
         {
             return string.Join(' ', LastName, FirstName, Surname);

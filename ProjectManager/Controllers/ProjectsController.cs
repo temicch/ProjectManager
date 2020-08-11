@@ -27,9 +27,9 @@ namespace ProjectManager.Controllers
         private IMapper Mapper { get; }
 
         [HttpGet("index")]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var projects = ProjectService.GetAllAsync(User);
+            var projects = await ProjectService.GetAllAsync(User);
 
             return View(Mapper.Map<IEnumerable<ProjectViewModel>>(projects));
         }
@@ -38,8 +38,10 @@ namespace ProjectManager.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var project = await ProjectService.GetAsync(User, id);
+
             if (project == null) 
                 return NotFound();
+
             return View(Mapper.Map<ProjectViewModel>(project));
         }
 
