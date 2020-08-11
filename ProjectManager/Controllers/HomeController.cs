@@ -9,7 +9,7 @@ namespace ProjectManager.Controllers
         {
             return User.Identity.IsAuthenticated
                 ? RedirectToAction("Index", "Projects")
-                : RedirectToAction("Login", "Account");
+                : RedirectToAction("Login", "Identity/Account");
         }
     }
 }
