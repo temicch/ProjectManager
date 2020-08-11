@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManager.BLL.Models;
 using ProjectManager.BLL.Services;
-using ProjectManager.ViewModels;
+using ProjectManager.PL.ViewModels;
 
-namespace ProjectManager.Controllers
+namespace ProjectManager.PL.Controllers
 {
     [Authorize]
     [Route("projects")]

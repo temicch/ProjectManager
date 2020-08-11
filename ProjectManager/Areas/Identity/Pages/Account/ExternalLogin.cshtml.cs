@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using ProjectManager.DAL.Entities;
 
-namespace ProjectManager.Areas.Identity.Pages.Account
+namespace ProjectManager.PL.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ExternalLoginModel : PageModel

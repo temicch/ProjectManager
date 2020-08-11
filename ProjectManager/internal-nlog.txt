@@ -13,3 +13,13 @@
 2020-08-12 02:09:09.9646 Info Adding target FileTarget(Name=allfile)
 2020-08-12 02:09:09.9710 Info Adding target FileTarget(Name=ownFile-web)
 2020-08-12 02:09:10.0059 Info Validating config: TargetNames=allfile, ownFile-web, ConfigItems=45, FilePath=C:\Users\Home\source\repos\ProjectManager\ProjectManager\bin\Debug\netcoreapp3.1\nlog.config
+2020-08-12 03:01:35.8383 Info Message Template Auto Format enabled
+2020-08-12 03:01:35.8630 Info Loading assembly: NLog.Web.AspNetCore
+2020-08-12 03:01:35.9610 Info Adding target FileTarget(Name=allfile)
+2020-08-12 03:01:35.9711 Info Adding target FileTarget(Name=ownFile-web)
+2020-08-12 03:01:36.0256 Info Validating config: TargetNames=allfile, ownFile-web, ConfigItems=45, FilePath=C:\Users\Home\source\repos\ProjectManager\ProjectManager\bin\Debug\netcoreapp3.1\nlog.config
+2020-08-12 03:05:13.8963 Info Message Template Auto Format enabled
+2020-08-12 03:05:13.9281 Info Loading assembly: NLog.Web.AspNetCore
+2020-08-12 03:05:14.0147 Info Adding target FileTarget(Name=allfile)
+2020-08-12 03:05:14.0310 Info Adding target FileTarget(Name=ownFile-web)
+2020-08-12 03:05:14.0787 Info Validating config: TargetNames=allfile, ownFile-web, ConfigItems=45, FilePath=C:\Users\Home\source\repos\ProjectManager\ProjectManager\bin\Debug\netcoreapp3.1\nlog.config

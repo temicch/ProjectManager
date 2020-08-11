@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.BLL.Models;
 using ProjectManager.BLL.Services;
-using ProjectManager.ViewModels;
+using ProjectManager.PL.ViewModels;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ProjectManager.PL.Controllers
 {

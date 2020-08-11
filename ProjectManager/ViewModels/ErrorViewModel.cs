@@ -1,4 +1,4 @@
-namespace ProjectManager.Models
+namespace ProjectManager.PL.ViewModels
 {
     public class ErrorViewModel
     {

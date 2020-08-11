@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using ProjectManager.BLL.Services;
-using ProjectManager.Configuration;
 using ProjectManager.DAL;
 using ProjectManager.DAL.Entities;
 using ProjectManager.DAL.Repositories;
+using ProjectManager.PL.Configuration;
 
 namespace ProjectManager.Tests.DAL
 {

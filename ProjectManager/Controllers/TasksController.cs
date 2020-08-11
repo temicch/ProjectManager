@@ -4,7 +4,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManager.BLL.Models;
 using ProjectManager.BLL.Services;
-using ProjectManager.ViewModels;
+using ProjectManager.PL.ViewModels;
 
 namespace ProjectManager.PL.Controllers
 {

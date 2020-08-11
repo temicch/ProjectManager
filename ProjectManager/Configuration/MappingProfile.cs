@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using ProjectManager.BLL.Models;
 using ProjectManager.DAL.Entities;
-using ProjectManager.ViewModels;
+using ProjectManager.PL.ViewModels;
 
-namespace ProjectManager.Configuration
+namespace ProjectManager.PL.Configuration
 {
     public class MappingProfile : Profile
     {

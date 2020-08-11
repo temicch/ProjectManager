@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Localization;
-using ProjectManager.ViewModels;
 
 namespace ProjectManager.PL.ViewModels.Validators
 {

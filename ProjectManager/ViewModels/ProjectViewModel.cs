@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace ProjectManager.ViewModels
+namespace ProjectManager.PL.ViewModels
 {
     public class ProjectViewModel
     {

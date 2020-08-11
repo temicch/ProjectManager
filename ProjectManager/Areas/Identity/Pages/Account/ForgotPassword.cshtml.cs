@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using ProjectManager.DAL.Entities;
 
-namespace ProjectManager.Areas.Identity.Pages.Account
+namespace ProjectManager.PL.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ForgotPasswordModel : PageModel

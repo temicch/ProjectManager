@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using ProjectManager.DAL.Entities;
 
-namespace ProjectManager.Areas.Identity.Pages.Account
+namespace ProjectManager.PL.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class LoginWithRecoveryCodeModel : PageModel

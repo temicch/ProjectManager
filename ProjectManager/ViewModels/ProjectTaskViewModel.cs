@@ -1,6 +1,6 @@
 ﻿using ProjectManager.DAL.Entities;
 
-namespace ProjectManager.ViewModels
+namespace ProjectManager.PL.ViewModels
 {
     public class ProjectTaskViewModel
     {

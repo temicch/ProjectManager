@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using ProjectManager.Models;
+using ProjectManager.PL.ViewModels;
 
-namespace ProjectManager.Controllers
+namespace ProjectManager.PL.Controllers
 {
     public class SharedController : Controller
     {

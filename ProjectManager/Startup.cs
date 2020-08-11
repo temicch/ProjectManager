@@ -9,12 +9,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ProjectManager.BLL.Services;
-using ProjectManager.Configuration;
 using ProjectManager.DAL;
 using ProjectManager.DAL.Entities;
 using ProjectManager.DAL.Repositories;
+using ProjectManager.PL.Configuration;
+using ProjectManager.PL.ViewModels;
 using ProjectManager.PL.ViewModels.Validators;
-using ProjectManager.ViewModels;
 
 namespace ProjectManager.PL
 {
