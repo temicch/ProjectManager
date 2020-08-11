@@ -1,18 +1,18 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ProjectManager.BLL.Services;
+using ProjectManager.Configuration;
 using ProjectManager.DAL;
 using ProjectManager.DAL.Entities;
-using AutoMapper;
-using ProjectManager.Configuration;
-using ProjectManager.BLL.Services;
 using ProjectManager.DAL.Repositories;
-using FluentValidation;
-using FluentValidation.AspNetCore;
 using ProjectManager.PL.ViewModels.Validators;
 using ProjectManager.ViewModels;
 
@@ -85,6 +85,9 @@ namespace ProjectManager.PL
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    name: "area",
+                    pattern: "{area}/{controller}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
