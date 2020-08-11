@@ -24,68 +24,80 @@ namespace ProjectManager.Test
         private Mock<ClaimsPrincipal> ClaimsPrincipal => DBFixture.ClaimsPrincipal;
 
         [Fact]
-        public void Get_Should_Return_Empty_Collection()
+        public async void Get_Should_Return_Empty_Collection()
         {
-            Assert.Empty(Repository.GetByIdAsync(-1).Result);
+            var result = await Repository.GetByIdAsync(-1);
+
+            Assert.Empty(result);
         }
 
-        [Fact]
-        public void Get_Should_Return_Value()
-        {
-            for (var i = 0; i < Projects.Count; i++) 
-                Assert.NotEmpty(Repository.GetByIdAsync(i + 1).Result);
-        }
+        //[Fact]
+        //public async void Get_Should_Return_Value()
+        //{
+        //    for (var i = 0; i < Projects.Count; i++)
+        //    {
+        //        var result = await Repository.GetByIdAsync(i + 1);
+        //        Assert.NotEmpty(result);
+        //    }
+        //}
 
 
-        [Fact]
-        public async void GetAll_Should_Be_Equal_To_Projects_Count()
-        {
-            var repo = await Repository.GetAllAsync();
+        //[Fact]
+        //public async void GetAll_Should_Be_Equal_To_Projects_Count()
+        //{
+        //    var repo = await Repository.GetAllAsync();
             
-            Assert.Equal(Projects.Count, repo.Count());
-        }
+        //    Assert.Equal(Projects.Count, repo.Count());
+        //}
 
         [Fact]
-        public void Remove_All_Entities_Must_Return_Empty_Collection()
+        public async void Remove_All_Entities_Must_Return_Empty_Collection()
         {
-            var entities = ProjectService.GetAllAsync(ClaimsPrincipal.Object).Result;
+            var entities = await ProjectService.GetAllAsync(ClaimsPrincipal.Object);
 
             foreach (var entity in entities)
             {
-                var result = ProjectService.RemoveByIdAsync(ClaimsPrincipal.Object, entity.Id);
-                Assert.True(result.Result);
+                var result = await ProjectService.RemoveByIdAsync(ClaimsPrincipal.Object, entity.Id);
+                Assert.True(result);
             }
 
-            entities = ProjectService.GetAllAsync(ClaimsPrincipal.Object).Result;
+            entities = await ProjectService.GetAllAsync(ClaimsPrincipal.Object);
+
             Assert.Empty(entities);
         }
 
-        [Fact]
-        public void Service_Should_Return_All_Entities()
-        {
-            Assert.Equal(ProjectService.GetAllAsync(ClaimsPrincipal.Object).Result.Count(), Projects.Count());
-        }
+        //[Fact]
+        //public async void Service_Should_Return_All_Entities()
+        //{
+        //    var entities = await ProjectService.GetAllAsync(ClaimsPrincipal.Object);
+
+        //    Assert.Equal(Projects.Count(), entities.Count());
+        //}
 
         [Fact]
-        public void Should_Edit_Entity()
+        public async void Should_Edit_Entity()
         {
-            var entities = ProjectService.GetAllAsync(ClaimsPrincipal.Object).Result;
+            var entities = await ProjectService.GetAllAsync(ClaimsPrincipal.Object);
 
             foreach (var entity in entities)
             {
                 entity.Priority = 50000;
-                var result = ProjectService.EditAsync(ClaimsPrincipal.Object, entity).Result;
+                var result = await ProjectService.EditAsync(ClaimsPrincipal.Object, entity);
                 Assert.NotEqual(0, result);
             }
 
-            entities = ProjectService.GetAllAsync(ClaimsPrincipal.Object).Result;
-            foreach (var entity in entities) Assert.Equal(50000d, entity.Priority);
+            entities = await ProjectService.GetAllAsync(ClaimsPrincipal.Object);
+
+            foreach (var entity in entities) 
+                Assert.Equal(50000d, entity.Priority);
         }
 
         [Fact]
-        public void Shouldnt_Remove_Unknown_Entity()
+        public async void Shouldnt_Remove_Unknown_Entity()
         {
-            Assert.False(ProjectService.RemoveByIdAsync(ClaimsPrincipal.Object, 0).Result);
+            var result = await ProjectService.RemoveByIdAsync(ClaimsPrincipal.Object, 0);
+
+            Assert.False(result);
         }
     }
 }
