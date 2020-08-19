@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using ProjectManager.BLL.Extensions;
 using ProjectManager.BLL.Models;
 using ProjectManager.DAL.Entities;
 using ProjectManager.DAL.Repositories;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ProjectManager.BLL.Services
 {
@@ -36,6 +36,7 @@ namespace ProjectManager.BLL.Services
             var project = Mapper.Map<Project>(data);
 
             var result = await Repository.AddAsync(project);
+            await Repository.SaveChangesAsync();
 
             return result;
         }
@@ -45,7 +46,8 @@ namespace ProjectManager.BLL.Services
             if (!user.CanEditProject(project))
                 return 0;
 
-            var result = await Repository.UpdateAsync(Mapper.Map<Project>(project));
+            var result = Repository.Update(Mapper.Map<Project>(project));
+            await Repository.SaveChangesAsync();
 
             return result;
         }
@@ -105,6 +107,9 @@ namespace ProjectManager.BLL.Services
 
             var entity = await PeRepository
                 .AddAsync(new ProjectEmployees {EmployeeId = employeeId, ProjectId = projectId});
+
+            await Repository.SaveChangesAsync();
+
             return entity > 0;
         }
 

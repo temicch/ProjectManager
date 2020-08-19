@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -11,6 +7,10 @@ using ProjectManager.DAL;
 using ProjectManager.DAL.Entities;
 using ProjectManager.DAL.Repositories;
 using ProjectManager.PL.Configuration;
+using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ProjectManager.Tests.DAL
 {
@@ -23,9 +23,11 @@ namespace ProjectManager.Tests.DAL
                 .Options;
 
             ProjectDbContext = new ProjectDbContext(options);
-            Repository = new ProjectRepository(ProjectDbContext, new Mock<ILogger<ProjectRepository>>().Object);
-            var PeRepository = new ProjectEmployeesRepository(ProjectDbContext,
-                new Mock<ILogger<ProjectEmployeesRepository>>().Object);
+
+            Repository = new BaseRepository<Project>(ProjectDbContext, new Mock<ILogger<BaseRepository<Project>>>().Object);
+
+            var PeRepository = new BaseRepository<ProjectEmployees>(ProjectDbContext,
+                new Mock<ILogger<BaseRepository<ProjectEmployees>>>().Object);
 
             InitEmployees();
 
@@ -45,6 +47,7 @@ namespace ProjectManager.Tests.DAL
 
         public void Dispose()
         {
+            ProjectDbContext.Dispose();
         }
 
         private void InitClaims()

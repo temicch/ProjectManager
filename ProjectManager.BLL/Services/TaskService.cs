@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using ProjectManager.BLL.Extensions;
 using ProjectManager.BLL.Models;
 using ProjectManager.DAL.Entities;
 using ProjectManager.DAL.Repositories;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using TaskStatus = ProjectManager.DAL.Entities.TaskStatus;
 
 namespace ProjectManager.BLL.Services
@@ -32,6 +32,7 @@ namespace ProjectManager.BLL.Services
             var task = Mapper.Map<ProjectTask>(project);
 
             await Repository.AddAsync(task);
+            await Repository.SaveChangesAsync();
 
             return task.Id;
         }
@@ -41,7 +42,10 @@ namespace ProjectManager.BLL.Services
             if (!user.CanEditTask(task))
                 return 0;
 
-            return await Repository.UpdateAsync(Mapper.Map<ProjectTask>(task));
+            var result = Repository.Update(Mapper.Map<ProjectTask>(task));
+            await Repository.SaveChangesAsync();
+
+            return result;
         }
 
         public async Task<IEnumerable<ProjectTaskModel>> GetAllAsync(ClaimsPrincipal user)
@@ -73,7 +77,10 @@ namespace ProjectManager.BLL.Services
             if (!user.CanRemoveTask(task))
                 return false;
 
-            return await Repository.RemoveByIdAsync(taskId);
+            var result = await Repository.RemoveByIdAsync(taskId);
+            await Repository.SaveChangesAsync();
+
+            return result;
         }
 
         public async Task<ProjectTaskModel> GetAsync(ClaimsPrincipal user, int id)
@@ -97,7 +104,10 @@ namespace ProjectManager.BLL.Services
 
             task.Status = taskStatus;
 
-            return await Repository.UpdateAsync(task) != 0;
+            var result = Repository.Update(task) != 0;
+            await Repository.SaveChangesAsync();
+
+            return result;
         }
     }
 }

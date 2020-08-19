@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.BLL.Extensions;
 using ProjectManager.BLL.Models;
 using ProjectManager.DAL.Entities;
 using ProjectManager.DAL.Repositories;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ProjectManager.BLL.Services
 {
@@ -32,6 +32,7 @@ namespace ProjectManager.BLL.Services
             var employee = Mapper.Map<Employee>(data);
 
             await Repository.AddAsync(employee);
+            await Repository.SaveChangesAsync();
 
             return employee.Id;
         }
@@ -41,7 +42,8 @@ namespace ProjectManager.BLL.Services
             if (!user.CanEditEmployee())
                 return 0;
 
-            await Repository.UpdateAsync(Mapper.Map<Employee>(employee));
+            Repository.Update(Mapper.Map<Employee>(employee));
+            await Repository.SaveChangesAsync();
 
             return employee.Id;
         }
@@ -59,7 +61,11 @@ namespace ProjectManager.BLL.Services
         {
             if (!user.CanRemoveEmployee())
                 return false;
-            return await Repository.RemoveByIdAsync(id);
+
+            var result = await Repository.RemoveByIdAsync(id);
+            await Repository.SaveChangesAsync();
+
+            return result;
         }
 
         public async Task<EmployeeModel> GetAsync(ClaimsPrincipal user, int id)

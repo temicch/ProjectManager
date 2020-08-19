@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.DAL.Entities;
-using System.Collections.Generic;
 
 namespace ProjectManager.DAL
 {

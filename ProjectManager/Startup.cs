@@ -101,10 +101,10 @@ namespace ProjectManager.PL
             services.AddScoped<IProjectService, ProjectService>();
             services.AddScoped<IEmployeeService, EmployeeService>();
 
-            services.AddScoped<BaseRepository<Employee>, EmployeeRepository>();
-            services.AddScoped<BaseRepository<Project>, ProjectRepository>();
-            services.AddScoped<BaseRepository<ProjectTask>, TaskRepository>();
-            services.AddScoped<BaseRepository<ProjectEmployees>, ProjectEmployeesRepository>();
+            services.AddScoped<BaseRepository<Employee>>();
+            services.AddScoped<BaseRepository<ProjectTask>>();
+            services.AddScoped<BaseRepository<Project>>();
+            services.AddScoped<BaseRepository<ProjectEmployees>>();
 
             services.AddTransient<IValidator<EmployeeViewModel>, EmployeeVMValidator>();
             services.AddTransient<IValidator<ProjectViewModel>, ProjectVMValidator>();

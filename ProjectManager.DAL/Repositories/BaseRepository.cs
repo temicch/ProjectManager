@@ -1,40 +1,36 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using ProjectManager.DAL.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using ProjectManager.DAL.Entities;
-using ProjectManager.DAL.Extensions;
 
 namespace ProjectManager.DAL.Repositories
 {
     /// <summary>
-    ///     Facade for repositories
+    ///     Main repository
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public abstract class BaseRepository<T> : IRepository<T> where T : class, IBaseEntity<int>
+    /// <typeparam name="TEntity">Entity for manipulate</typeparam>
+    public class BaseRepository<TEntity> : IRepository<int, TEntity> where TEntity : class, IBaseEntity<int>
     {
         public BaseRepository(ProjectDbContext projectDbContext,
-            DbSet<T> dbSet,
-            ILogger logger)
+            ILogger<BaseRepository<TEntity>> logger)
         {
             ProjectDbContext = projectDbContext;
-            DbSet = dbSet;
             Logger = logger;
         }
 
         public ProjectDbContext ProjectDbContext { get; protected set; }
-        protected DbSet<T> DbSet { get; set; }
-        private ILogger Logger { get; }
+        protected DbSet<TEntity> DbSet => ProjectDbContext.Set<TEntity>();
+        private ILogger<BaseRepository<TEntity>> Logger { get; }
 
-        public virtual async Task<int> AddAsync(T newEntity)
+        public async Task<int> AddAsync(TEntity newEntity)
         {
             try
             {
                 await DbSet.AddAsync(newEntity);
-                await ProjectDbContext.SaveChangesAsync();
             }
             catch (Exception exception)
             {
@@ -45,25 +41,25 @@ namespace ProjectManager.DAL.Repositories
             return newEntity.Id;
         }
 
-        public virtual async Task<IEnumerable<T>> GetByIdAsync(int id)
+        public async Task<IEnumerable<TEntity>> GetByIdAsync(int id)
         {
             return await DbSet
                 .Where(x => x.Id == id)
                 .ToListAsync();
         }
-        public async Task<IEnumerable<T>> GetAsync(Expression<Func<T, bool>> selector)
+        public async Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> selector)
         {
             return await DbSet
                 .Where(selector)
                 .ToListAsync();
         }
 
-        public virtual async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
             return await DbSet.ToListAsync();
         }
 
-        public virtual async Task<bool> RemoveByIdAsync(int id)
+        public async Task<bool> RemoveByIdAsync(int id)
         {
             var entity = await DbSet
                 .FirstAsync(x => x.Id == id);
@@ -71,9 +67,7 @@ namespace ProjectManager.DAL.Repositories
                 return false;
             try
             {
-                ProjectDbContext.DetachLocal(entity, entity.Id);
-                ProjectDbContext.Remove(entity);
-                await ProjectDbContext.SaveChangesAsync();
+                DbSet.Remove(entity);
             }
             catch (Exception exception)
             {
@@ -84,13 +78,11 @@ namespace ProjectManager.DAL.Repositories
             return true;
         }
 
-        public virtual async Task<int> UpdateAsync(T entity)
+        public int Update(TEntity entity)
         {
             try
             {
-                ProjectDbContext.DetachLocal(entity, entity.Id);
-                ProjectDbContext.Update(entity);
-                await ProjectDbContext.SaveChangesAsync();
+                DbSet.Update(entity);
             }
             catch (Exception exception)
             {
@@ -101,5 +93,18 @@ namespace ProjectManager.DAL.Repositories
             return entity.Id;
         }
 
+        public async Task<bool> SaveChangesAsync()
+        {
+            try
+            {
+                await ProjectDbContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message);
+                return false;
+            }
+        }
     }
 }
