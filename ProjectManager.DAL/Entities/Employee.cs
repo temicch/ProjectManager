@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System;
 using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 
 namespace ProjectManager.DAL.Entities
 {
-    public class Employee : IdentityUser<int>, IBaseEntity<int>
+    public class Employee : IdentityUser<Guid>, IBaseEntity<Guid>
     {
         public Employee(string email) : base(email)
         {

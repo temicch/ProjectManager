@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -14,22 +15,22 @@ namespace ProjectManager.BLL.Services
         Task<IEnumerable<TEntity>> GetAllAsync(ClaimsPrincipal user);
 
         /// <summary>
-        ///     Get an entity by its ID
+        ///     Get an entity by its Id
         /// </summary>
         /// <param name="user">User principal</param>
-        /// <param name="id">Id of entity</param>
+        /// <param name="Id">Id of entity</param>
         /// <returns>
         ///     <typeparamref name="TEntity" />
         /// </returns>
-        Task<TEntity> GetAsync(ClaimsPrincipal user, int id);
+        Task<TEntity> GetAsync(ClaimsPrincipal user, Guid Id);
 
         /// <summary>
         ///     Create entity
         /// </summary>
         /// <param name="user">User principal</param>
-        /// <param name="id">Id of entity</param>
+        /// <param name="Id">Id of entity</param>
         /// <returns><paramref name="Id" /> of successfully created entity, 0 otherwise</returns>
-        Task<int> CreateAsync(ClaimsPrincipal user, TEntity entity);
+        Task<Guid> CreateAsync(ClaimsPrincipal user, TEntity entity);
 
         /// <summary>
         ///     Edit entity
@@ -37,14 +38,14 @@ namespace ProjectManager.BLL.Services
         /// <param name="user">User principal</param>
         /// <param name="entity">Entity to edit</param>
         /// <returns><paramref name="Id" /> of successfully edited entity, 0 otherwise</returns>
-        Task<int> EditAsync(ClaimsPrincipal user, TEntity entity);
+        Task<Guid> EditAsync(ClaimsPrincipal user, TEntity entity);
 
         /// <summary>
-        ///     Remove entity by its id
+        ///     Remove entity by its Id
         /// </summary>
         /// <param name="user">User principal</param>
-        /// <param name="id">Id of entity</param>
+        /// <param name="Id">Id of entity</param>
         /// <returns><paramref name="True" /> if its removed, <paramref name="False" /> otherwise</returns>
-        Task<bool> RemoveByIdAsync(ClaimsPrincipal user, int id);
+        Task<bool> RemoveByIdAsync(ClaimsPrincipal user, Guid Id);
     }
 }

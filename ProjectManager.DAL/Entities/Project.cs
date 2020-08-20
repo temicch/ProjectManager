@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace ProjectManager.DAL.Entities
 {
-    public class Project : IBaseEntity<int>
+    public class Project : IBaseEntity<Guid>
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Title { get; set; }
         public string CustomerCompany { get; set; }
         public string PerformerCompany { get; set; }
@@ -31,7 +30,7 @@ namespace ProjectManager.DAL.Entities
         ///     Project manager
         /// </summary>
         public virtual Employee Manager { get; set; }
-        public int? ManagerId { get; set; }
+        public Guid? ManagerId { get; set; }
 
         public virtual ICollection<ProjectEmployees> ProjectEmployees { get; set; }
 

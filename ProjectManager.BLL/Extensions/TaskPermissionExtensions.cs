@@ -10,7 +10,7 @@ namespace ProjectManager.BLL.Extensions
     {
         public static bool CanCreateTask(this ClaimsPrincipal user, ProjectTaskModel projectTask)
         {
-            var userId = user.GetLoggedInUserId<int>();
+            var userId = user.GetLoggedInUserId<Guid>();
 
             return user.IsInRole(Roles.Leader) || projectTask.Project.ManagerId == userId;
         }
@@ -19,7 +19,7 @@ namespace ProjectManager.BLL.Extensions
             if (task == null)
                 return false;
 
-            var userId = user.GetLoggedInUserId<int>();
+            var userId = user.GetLoggedInUserId<Guid>();
 
             return user.IsInRole(Roles.Leader) || task.AuthorId == userId;
         }
@@ -28,7 +28,7 @@ namespace ProjectManager.BLL.Extensions
             if (task == null)
                 return false;
 
-            var userId = user.GetLoggedInUserId<int>();
+            var userId = user.GetLoggedInUserId<Guid>();
 
             return user.IsInRole(Roles.Leader) || task.AuthorId == userId || task.PerformerId == userId;
         }

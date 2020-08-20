@@ -1,4 +1,5 @@
-﻿using ProjectManager.BLL.Models;
+﻿using System;
+using ProjectManager.BLL.Models;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -13,6 +14,6 @@ namespace ProjectManager.BLL.Services
         /// <param name="user"></param>
         /// <param name="employeeId"></param>
         /// <returns></returns>
-        Task<IEnumerable<ProjectTaskModel>> GetOfEmployeeAsync(ClaimsPrincipal user, int employeeId);
+        Task<IEnumerable<ProjectTaskModel>> GetOfEmployeeAsync(ClaimsPrincipal user, Guid employeeId);
     }
 }

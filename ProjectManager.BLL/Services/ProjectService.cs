@@ -28,10 +28,10 @@ namespace ProjectManager.BLL.Services
         private BaseRepository<Project> Repository { get; }
         private BaseRepository<ProjectEmployees> PeRepository { get; }
 
-        public async Task<int> CreateAsync(ClaimsPrincipal user, ProjectModel data)
+        public async Task<Guid> CreateAsync(ClaimsPrincipal user, ProjectModel data)
         {
             if (!user.CanCreateProject())
-                return 0;
+                return default;
 
             var project = Mapper.Map<Project>(data);
 
@@ -41,12 +41,16 @@ namespace ProjectManager.BLL.Services
             return result;
         }
 
-        public async Task<int> EditAsync(ClaimsPrincipal user, ProjectModel project)
+        public async Task<Guid> EditAsync(ClaimsPrincipal user, ProjectModel project)
         {
             if (!user.CanEditProject(project))
-                return 0;
+                return default;
 
-            var result = Repository.Update(Mapper.Map<Project>(project));
+            var entities = await Repository.GetByIdAsync(project.Id);
+            var entityToUpdate = entities.First();
+            Mapper.Map(project, entityToUpdate);
+
+            var result = Repository.Update(entityToUpdate);
             await Repository.SaveChangesAsync();
 
             return result;
@@ -62,7 +66,7 @@ namespace ProjectManager.BLL.Services
             return Mapper.Map<IEnumerable<ProjectModel>>(projects);
         }
 
-        public async Task<IEnumerable<ProjectModel>> GetOfEmployeeAsync(ClaimsPrincipal user, int employeeId)
+        public async Task<IEnumerable<ProjectModel>> GetOfEmployeeAsync(ClaimsPrincipal user, Guid employeeId)
         {
             if (!user.CanLookProject())
                 return null;
@@ -72,7 +76,7 @@ namespace ProjectManager.BLL.Services
             return Mapper.Map<IEnumerable<ProjectModel>>(projects.ToList());
         }
 
-        public async Task<bool> RemoveByIdAsync(ClaimsPrincipal user, int projectId)
+        public async Task<bool> RemoveByIdAsync(ClaimsPrincipal user, Guid projectId)
         {
             var project = (await Repository
                 .GetByIdAsync(projectId))
@@ -82,11 +86,12 @@ namespace ProjectManager.BLL.Services
                 return false;
 
             var result = await Repository.RemoveByIdAsync(projectId);
+            await Repository.SaveChangesAsync();
 
             return result;
         }
 
-        public async Task<ProjectModel> GetAsync(ClaimsPrincipal user, int projectId)
+        public async Task<ProjectModel> GetAsync(ClaimsPrincipal user, Guid projectId)
         {
             if (!user.CanLookProject())
                 return null;
@@ -96,7 +101,7 @@ namespace ProjectManager.BLL.Services
             return Mapper.Map<ProjectModel>(project);
         }
 
-        public async Task<bool> AddEmployeeAsync(ClaimsPrincipal user, int projectId, int employeeId)
+        public async Task<bool> AddEmployeeAsync(ClaimsPrincipal user, Guid projectId, Guid employeeId)
         {
             var project = Mapper.Map<ProjectModel>((await Repository
                 .GetByIdAsync(projectId))
@@ -110,10 +115,10 @@ namespace ProjectManager.BLL.Services
 
             await Repository.SaveChangesAsync();
 
-            return entity > 0;
+            return default(Guid).CompareTo(entity) != 0;
         }
 
-        public async Task<IEnumerable<EmployeeModel>> GetEmployeesAsync(ClaimsPrincipal user, int projectId)
+        public async Task<IEnumerable<EmployeeModel>> GetEmployeesAsync(ClaimsPrincipal user, Guid projectId)
         {
             if (!user.CanLookProject())
                 return null;
@@ -125,7 +130,7 @@ namespace ProjectManager.BLL.Services
             return employees;
         }
 
-        public async Task<IEnumerable<ProjectTaskModel>> GetTasksAsync(ClaimsPrincipal user, int projectId)
+        public async Task<IEnumerable<ProjectTaskModel>> GetTasksAsync(ClaimsPrincipal user, Guid projectId)
         {
             if (!user.CanLookProject())
                 return null;

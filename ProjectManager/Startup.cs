@@ -15,6 +15,7 @@ using ProjectManager.DAL.Repositories;
 using ProjectManager.PL.Configuration;
 using ProjectManager.PL.ViewModels;
 using ProjectManager.PL.ViewModels.Validators;
+using System;
 
 namespace ProjectManager.PL
 {
@@ -34,8 +35,8 @@ namespace ProjectManager.PL
             services.AddDbContext<ProjectDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<Employee, IdentityRole<int>>()
-                .AddRoles<IdentityRole<int>>()
+            services.AddIdentity<Employee, IdentityRole<Guid>>()
+                .AddRoles<IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<ProjectDbContext>()
                 .AddDefaultTokenProviders();
 

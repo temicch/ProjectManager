@@ -13,7 +13,7 @@ namespace ProjectManager.DAL.Repositories
     ///     Main repository
     /// </summary>
     /// <typeparam name="TEntity">Entity for manipulate</typeparam>
-    public class BaseRepository<TEntity> : IRepository<int, TEntity> where TEntity : class, IBaseEntity<int>
+    public class BaseRepository<TEntity> : IRepository<Guid, TEntity> where TEntity : class, IBaseEntity<Guid>
     {
         public BaseRepository(ProjectDbContext projectDbContext,
             ILogger<BaseRepository<TEntity>> logger)
@@ -26,7 +26,7 @@ namespace ProjectManager.DAL.Repositories
         protected DbSet<TEntity> DbSet => ProjectDbContext.Set<TEntity>();
         private ILogger<BaseRepository<TEntity>> Logger { get; }
 
-        public async Task<int> AddAsync(TEntity newEntity)
+        public async Task<Guid> AddAsync(TEntity newEntity)
         {
             try
             {
@@ -35,16 +35,16 @@ namespace ProjectManager.DAL.Repositories
             catch (Exception exception)
             {
                 Logger.LogError(exception, "Add error");
-                return 0;
+                return default;
             }
 
             return newEntity.Id;
         }
 
-        public async Task<IEnumerable<TEntity>> GetByIdAsync(int id)
+        public async Task<IEnumerable<TEntity>> GetByIdAsync(Guid Id)
         {
             return await DbSet
-                .Where(x => x.Id == id)
+                .Where(x => x.Id == Id)
                 .ToListAsync();
         }
         public async Task<IEnumerable<TEntity>> GetAsync(Expression<Func<TEntity, bool>> selector)
@@ -59,10 +59,10 @@ namespace ProjectManager.DAL.Repositories
             return await DbSet.ToListAsync();
         }
 
-        public async Task<bool> RemoveByIdAsync(int id)
+        public async Task<bool> RemoveByIdAsync(Guid Id)
         {
             var entity = await DbSet
-                .FirstAsync(x => x.Id == id);
+                .FirstAsync(x => x.Id == Id);
             if (entity == null)
                 return false;
             try
@@ -78,7 +78,7 @@ namespace ProjectManager.DAL.Repositories
             return true;
         }
 
-        public int Update(TEntity entity)
+        public Guid Update(TEntity entity)
         {
             try
             {
@@ -87,7 +87,7 @@ namespace ProjectManager.DAL.Repositories
             catch (Exception exception)
             {
                 Logger.LogError(exception, "Update error");
-                return 0;
+                return default;
             }
 
             return entity.Id;

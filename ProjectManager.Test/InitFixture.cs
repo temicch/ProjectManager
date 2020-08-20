@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using ProjectManager.BLL;
 
 namespace ProjectManager.Tests.DAL
 {
@@ -43,7 +44,7 @@ namespace ProjectManager.Tests.DAL
         public ProjectDbContext ProjectDbContext { get; set; }
         public BaseRepository<Project> Repository { get; set; }
         public ProjectService ProjectService { get; set; }
-        public Mock<ClaimsPrincipal> ClaimsPrincipal { get; set; }
+        public ClaimsPrincipal UserLeader { get; set; }
 
         public void Dispose()
         {
@@ -52,17 +53,15 @@ namespace ProjectManager.Tests.DAL
 
         private void InitClaims()
         {
-            ClaimsPrincipal = new Mock<ClaimsPrincipal>();
-
-            ClaimsPrincipal.Setup(x => x.IsInRole(It.IsAny<string>()))
-                .Returns(true);
-
-            var identityMock = new Mock<ClaimsIdentity>();
-            identityMock.Setup(x => x.IsAuthenticated).Returns(true);
-            ClaimsPrincipal.Setup(m => m.Identity).Returns(identityMock.Object);
+            UserLeader = new ClaimsPrincipal(new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.Name, "Example name"),
+                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString(), nameof(Guid)),
+                new Claim(ClaimTypes.Role, Roles.Leader),
+            }, "mock"));
         }
 
-        private static IMapper InitMapper()
+        public static IMapper InitMapper()
         {
             var myProfile = new MappingProfile();
             var configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
@@ -118,6 +117,7 @@ namespace ProjectManager.Tests.DAL
             };
             foreach (var project in Projects)
                 await Repository.AddAsync(project);
+            await Repository.SaveChangesAsync();
         }
     }
 }

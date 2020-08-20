@@ -8,11 +8,11 @@ namespace ProjectManager.DAL.Repositories
     public interface IRepository<TKey, TEntity>
     {
         /// <summary>
-        ///     Get entity by id
+        ///     Get entity by Id
         /// </summary>
-        /// <param name="id">Id</param>
+        /// <param name="Id">Id</param>
         /// <returns></returns>
-        Task<IEnumerable<TEntity>> GetByIdAsync(TKey id);
+        Task<IEnumerable<TEntity>> GetByIdAsync(TKey Id);
 
         /// <summary>
         /// Get entity by specified condition
@@ -37,9 +37,9 @@ namespace ProjectManager.DAL.Repositories
         /// <summary>
         ///     Remove specified by Id entity
         /// </summary>
-        /// <param name="id">Id</param>
+        /// <param name="Id">Id</param>
         /// <returns><paramref name="true"/> if entity was successfully removed, <paramref name="false"/> otherwise</returns>
-        Task<bool> RemoveByIdAsync(TKey id);
+        Task<bool> RemoveByIdAsync(TKey Id);
 
         /// <summary>
         ///     Edit entity

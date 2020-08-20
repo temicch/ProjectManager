@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -29,7 +30,7 @@ namespace ProjectManager.PL.Controllers
             return View(Mapper.Map<ICollection<EmployeeViewModel>>(employees));
         }
 
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(Guid id)
         {
             var employee = await EmployeeManager.GetAsync(User, id);
 
@@ -57,7 +58,7 @@ namespace ProjectManager.PL.Controllers
             return View(employee);
         }
 
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(Guid id)
         {
             var employee = await EmployeeManager.GetAsync(User, id);
 
@@ -89,7 +90,7 @@ namespace ProjectManager.PL.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             var employee = await EmployeeManager.GetAsync(User, id);
 
@@ -101,7 +102,7 @@ namespace ProjectManager.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirm(int id)
+        public async Task<IActionResult> DeleteConfirm(Guid id)
         {
             await EmployeeManager.RemoveByIdAsync(User, id);
             return RedirectToAction(nameof(Index));

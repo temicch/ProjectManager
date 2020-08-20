@@ -1,11 +1,12 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
 using Moq;
 using ProjectManager.BLL.Services;
 using ProjectManager.DAL.Entities;
 using ProjectManager.DAL.Repositories;
 using ProjectManager.Tests.DAL;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using Xunit;
 
 namespace ProjectManager.Test
@@ -21,83 +22,72 @@ namespace ProjectManager.Test
         private BaseRepository<Project> Repository => DBFixture.Repository;
         private IList<Project> Projects => DBFixture.Projects;
         private ProjectService ProjectService => DBFixture.ProjectService;
-        private Mock<ClaimsPrincipal> ClaimsPrincipal => DBFixture.ClaimsPrincipal;
+        private ClaimsPrincipal ClaimsPrincipal => DBFixture.UserLeader;
 
         [Fact]
         public async void Get_Should_Return_Empty_Collection()
         {
-            var result = await Repository.GetByIdAsync(-1);
+            Assert.False(IsEmptyRepository());
+
+            var result = await Repository.GetByIdAsync(Guid.Empty);
 
             Assert.Empty(result);
         }
-
-        //[Fact]
-        //public async void Get_Should_Return_Value()
-        //{
-        //    for (var i = 0; i < Projects.Count; i++)
-        //    {
-        //        var result = await Repository.GetByIdAsync(i + 1);
-        //        Assert.NotEmpty(result);
-        //    }
-        //}
-
-
-        //[Fact]
-        //public async void GetAll_Should_Be_Equal_To_Projects_Count()
-        //{
-        //    var repo = await Repository.GetAllAsync();
-            
-        //    Assert.Equal(Projects.Count, repo.Count());
-        //}
-
+        
         [Fact]
-        public async void Remove_All_Entities_Must_Return_Empty_Collection()
+        public async void Correct_Remove_Entity()
         {
-            var entities = await ProjectService.GetAllAsync(ClaimsPrincipal.Object);
+            Assert.False(IsEmptyRepository());
 
-            foreach (var entity in entities)
-            {
-                var result = await ProjectService.RemoveByIdAsync(ClaimsPrincipal.Object, entity.Id);
-                Assert.True(result);
-            }
+            var entities = await ProjectService.GetAllAsync(ClaimsPrincipal);
 
-            entities = await ProjectService.GetAllAsync(ClaimsPrincipal.Object);
+            var entityId = entities.First().Id;
 
-            Assert.Empty(entities);
+            await ProjectService.RemoveByIdAsync(ClaimsPrincipal, entityId);
+            await Repository.SaveChangesAsync();
+
+            var serviceEntity = await ProjectService.GetAsync(ClaimsPrincipal, entityId);
+            
+            Assert.Null(serviceEntity);
+
+            var repoEntity = await Repository.GetByIdAsync(entityId);
+
+            Assert.Empty(repoEntity);
         }
-
-        //[Fact]
-        //public async void Service_Should_Return_All_Entities()
-        //{
-        //    var entities = await ProjectService.GetAllAsync(ClaimsPrincipal.Object);
-
-        //    Assert.Equal(Projects.Count(), entities.Count());
-        //}
 
         [Fact]
         public async void Should_Edit_Entity()
         {
-            var entities = await ProjectService.GetAllAsync(ClaimsPrincipal.Object);
+            Assert.False(IsEmptyRepository());
+
+            var entities = await ProjectService.GetAllAsync(ClaimsPrincipal);
 
             foreach (var entity in entities)
             {
                 entity.Priority = 50000;
-                var result = await ProjectService.EditAsync(ClaimsPrincipal.Object, entity);
-                Assert.NotEqual(0, result);
+
+                var result = await ProjectService.EditAsync(ClaimsPrincipal, entity);
+                Assert.NotEqual(Guid.Empty, result);
             }
 
-            entities = await ProjectService.GetAllAsync(ClaimsPrincipal.Object);
+            entities = await ProjectService.GetAllAsync(ClaimsPrincipal);
 
             foreach (var entity in entities) 
                 Assert.Equal(50000d, entity.Priority);
         }
 
         [Fact]
-        public async void Shouldnt_Remove_Unknown_Entity()
+        public async void Should_Not_Remove_Unknown_Entity()
         {
-            var result = await ProjectService.RemoveByIdAsync(ClaimsPrincipal.Object, 0);
+            var result = await ProjectService.RemoveByIdAsync(ClaimsPrincipal, Guid.Empty);
 
             Assert.False(result);
+        }
+
+        private bool IsEmptyRepository()
+        {
+            var entities = ProjectService.GetAllAsync(ClaimsPrincipal).Result;
+            return !entities.Any();
         }
     }
 }

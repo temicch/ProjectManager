@@ -24,10 +24,10 @@ namespace ProjectManager.BLL.Services
         private BaseRepository<Employee> Repository { get; }
         private IMapper Mapper { get; }
 
-        public async Task<int> CreateAsync(ClaimsPrincipal user, EmployeeModel data)
+        public async Task<Guid> CreateAsync(ClaimsPrincipal user, EmployeeModel data)
         {
             if (!user.CanCreateEmployee())
-                return 0;
+                return default;
 
             var employee = Mapper.Map<Employee>(data);
 
@@ -37,15 +37,19 @@ namespace ProjectManager.BLL.Services
             return employee.Id;
         }
 
-        public async Task<int> EditAsync(ClaimsPrincipal user, EmployeeModel employee)
+        public async Task<Guid> EditAsync(ClaimsPrincipal user, EmployeeModel employee)
         {
             if (!user.CanEditEmployee())
-                return 0;
+                return default;
 
-            Repository.Update(Mapper.Map<Employee>(employee));
+            var entities = await Repository.GetByIdAsync(employee.Id);
+            var entityToUpdate = entities.First();
+            Mapper.Map(employee, entityToUpdate);
+
+            var result = Repository.Update(entityToUpdate);
             await Repository.SaveChangesAsync();
 
-            return employee.Id;
+            return result;
         }
 
         public async Task<IEnumerable<EmployeeModel>> GetAllAsync(ClaimsPrincipal user)
@@ -57,27 +61,27 @@ namespace ProjectManager.BLL.Services
                 .GetAllAsync());
         }
 
-        public async Task<bool> RemoveByIdAsync(ClaimsPrincipal user, int id)
+        public async Task<bool> RemoveByIdAsync(ClaimsPrincipal user, Guid Id)
         {
             if (!user.CanRemoveEmployee())
                 return false;
 
-            var result = await Repository.RemoveByIdAsync(id);
+            var result = await Repository.RemoveByIdAsync(Id);
             await Repository.SaveChangesAsync();
 
             return result;
         }
 
-        public async Task<EmployeeModel> GetAsync(ClaimsPrincipal user, int id)
+        public async Task<EmployeeModel> GetAsync(ClaimsPrincipal user, Guid Id)
         {
             if (!user.CanLookEmployee())
                 return null;
 
-            var employee = await Repository.GetByIdAsync(id);
+            var employee = await Repository.GetByIdAsync(Id);
             return Mapper.Map<EmployeeModel>(employee.FirstOrDefault());
         }
 
-        public async Task<IEnumerable<ProjectTaskModel>> GetTasksAsync(ClaimsPrincipal user, int employeeId)
+        public async Task<IEnumerable<ProjectTaskModel>> GetTasksAsync(ClaimsPrincipal user, Guid employeeId)
         {
             if (!user.CanLookEmployee())
                 return null;
@@ -88,7 +92,7 @@ namespace ProjectManager.BLL.Services
             return Mapper.Map<IEnumerable<ProjectTaskModel>>(tasks);
         }
 
-        public async Task<IEnumerable<ProjectTaskModel>> GetAllManagedTasksAsync(ClaimsPrincipal user, int employeeId)
+        public async Task<IEnumerable<ProjectTaskModel>> GetAllManagedTasksAsync(ClaimsPrincipal user, Guid employeeId)
         {
             if (!user.CanLookEmployee())
                 return null;
@@ -99,7 +103,7 @@ namespace ProjectManager.BLL.Services
             return Mapper.Map<IEnumerable<ProjectTaskModel>>(tasks);
         }
 
-        public async Task<IEnumerable<ProjectModel>> GetAllManagedProjectsAsync(ClaimsPrincipal user, int employeeId)
+        public async Task<IEnumerable<ProjectModel>> GetAllManagedProjectsAsync(ClaimsPrincipal user, Guid employeeId)
         {
             if (!user.CanLookEmployee())
                 return null;
@@ -110,7 +114,7 @@ namespace ProjectManager.BLL.Services
             return Mapper.Map<IEnumerable<ProjectModel>>(projects);
         }
 
-        public async Task<IEnumerable<ProjectModel>> GetAllProjectsAsync(ClaimsPrincipal user, int employeeId)
+        public async Task<IEnumerable<ProjectModel>> GetAllProjectsAsync(ClaimsPrincipal user, Guid employeeId)
         {
             if (!user.CanLookEmployee())
                 return null;

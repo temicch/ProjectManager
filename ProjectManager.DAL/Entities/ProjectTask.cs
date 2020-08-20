@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
 
 namespace ProjectManager.DAL.Entities
 {
-    public class ProjectTask: IBaseEntity<int>
+    public class ProjectTask: IBaseEntity<Guid>
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Title { get; set; }
         /// <summary>
         ///     Task status
@@ -23,18 +23,18 @@ namespace ProjectManager.DAL.Entities
         ///     Task Author
         /// </summary>
         public virtual Employee Author { get; set; }
-        public int AuthorId { get; set; }
+        public Guid AuthorId { get; set; }
 
         /// <summary>
         ///     Task performer employee
         /// </summary>
         public virtual Employee Performer { get; set; }
-        public int? PerformerId { get; set; }
+        public Guid? PerformerId { get; set; }
 
         /// <summary>
         ///     Project task
         /// </summary>
         public virtual Project Project { get; set; }
-        public int ProjectId { get; set; }
+        public Guid ProjectId { get; set; }
     }
 }

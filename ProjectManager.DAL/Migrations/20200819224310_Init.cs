@@ -1,10 +1,9 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ProjectManager.DAL.Migrations
 {
-    public partial class init1 : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,8 +11,7 @@ namespace ProjectManager.DAL.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<Guid>(nullable: false),
                     Name = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(nullable: true)
@@ -27,11 +25,10 @@ namespace ProjectManager.DAL.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<Guid>(nullable: false),
                     UserName = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
-                    Email = table.Column<string>(maxLength: 256, nullable: true),
+                    Email = table.Column<string>(maxLength: 256, nullable: false),
                     NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(nullable: false),
                     PasswordHash = table.Column<string>(nullable: true),
@@ -43,9 +40,9 @@ namespace ProjectManager.DAL.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    FirstName = table.Column<string>(nullable: true),
-                    LastName = table.Column<string>(nullable: true),
-                    Surname = table.Column<string>(nullable: true)
+                    FirstName = table.Column<string>(maxLength: 24, nullable: false),
+                    LastName = table.Column<string>(maxLength: 24, nullable: false),
+                    Surname = table.Column<string>(maxLength: 24, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -57,8 +54,8 @@ namespace ProjectManager.DAL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    RoleId = table.Column<int>(nullable: false),
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoleId = table.Column<Guid>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
                 },
@@ -78,8 +75,8 @@ namespace ProjectManager.DAL.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    UserId = table.Column<int>(nullable: false),
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<Guid>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
                 },
@@ -101,7 +98,7 @@ namespace ProjectManager.DAL.Migrations
                     LoginProvider = table.Column<string>(nullable: false),
                     ProviderKey = table.Column<string>(nullable: false),
                     ProviderDisplayName = table.Column<string>(nullable: true),
-                    UserId = table.Column<int>(nullable: false)
+                    UserId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -118,8 +115,8 @@ namespace ProjectManager.DAL.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(nullable: false),
-                    RoleId = table.Column<int>(nullable: false)
+                    UserId = table.Column<Guid>(nullable: false),
+                    RoleId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -142,7 +139,7 @@ namespace ProjectManager.DAL.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: false),
                     LoginProvider = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: false),
                     Value = table.Column<string>(nullable: true)
@@ -162,15 +159,14 @@ namespace ProjectManager.DAL.Migrations
                 name: "Projects",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Title = table.Column<string>(nullable: true),
-                    CustomerCompany = table.Column<string>(nullable: true),
-                    PerformerCompany = table.Column<string>(nullable: true),
-                    StartDate = table.Column<DateTime>(nullable: false),
-                    EndDate = table.Column<DateTime>(nullable: true),
+                    Id = table.Column<Guid>(nullable: false),
+                    Title = table.Column<string>(maxLength: 100, nullable: false),
+                    CustomerCompany = table.Column<string>(maxLength: 100, nullable: true),
+                    PerformerCompany = table.Column<string>(maxLength: 100, nullable: true),
+                    StartDate = table.Column<DateTime>(type: "Date", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "Date", nullable: false),
                     Priority = table.Column<int>(nullable: false),
-                    ManagerId = table.Column<int>(nullable: true)
+                    ManagerId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -187,8 +183,8 @@ namespace ProjectManager.DAL.Migrations
                 name: "ProjectEmployees",
                 columns: table => new
                 {
-                    EmployeeId = table.Column<int>(nullable: false),
-                    ProjectId = table.Column<int>(nullable: false)
+                    EmployeeId = table.Column<Guid>(nullable: false),
+                    ProjectId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -211,15 +207,14 @@ namespace ProjectManager.DAL.Migrations
                 name: "Tasks",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Title = table.Column<string>(nullable: true),
+                    Id = table.Column<Guid>(nullable: false),
+                    Title = table.Column<string>(maxLength: 100, nullable: false),
                     Status = table.Column<int>(nullable: false),
-                    Comment = table.Column<string>(nullable: true),
+                    Comment = table.Column<string>(maxLength: 512, nullable: true),
                     Priority = table.Column<int>(nullable: false),
-                    AuthorId = table.Column<int>(nullable: false),
-                    PerformerId = table.Column<int>(nullable: true),
-                    ProjectId = table.Column<int>(nullable: false)
+                    AuthorId = table.Column<Guid>(nullable: false),
+                    PerformerId = table.Column<Guid>(nullable: true),
+                    ProjectId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {

@@ -12,7 +12,12 @@ namespace ProjectManager.BLL.Extensions
 
             var loggedInUserId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (typeof(T) == typeof(string))
+            if (loggedInUserId == null)
+                return default;
+
+            if (typeof(T) == typeof(Guid))
+                return (T) Convert.ChangeType(Guid.Parse(loggedInUserId), typeof(T));
+            if (typeof(T) == typeof(string) || typeof(T) == typeof(Guid))
                 return (T) Convert.ChangeType(loggedInUserId, typeof(T));
             if (typeof(T) == typeof(int) || typeof(T) == typeof(long))
                 return loggedInUserId != null

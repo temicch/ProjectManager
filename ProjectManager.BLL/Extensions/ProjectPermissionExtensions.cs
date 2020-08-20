@@ -18,7 +18,7 @@ namespace ProjectManager.BLL.Extensions
             if (project == null)
                 return false;
 
-            var userId = user.GetLoggedInUserId<int>();
+            var userId = user.GetLoggedInUserId<Guid>();
 
             return user.IsInRole(Roles.Leader) || project.ManagerId == userId;
         }

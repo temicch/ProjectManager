@@ -7,7 +7,7 @@ namespace ProjectManager.BLL.Models
     public class ProjectModel
     {
         public ICollection<ProjectTaskModel> TasksViewModels { get; set; }
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         public string Title { get; set; }
@@ -27,6 +27,6 @@ namespace ProjectManager.BLL.Models
         public uint Priority { get; set; }
         public ICollection<ProjectTaskModel> Tasks { get; set; }
         public EmployeeModel Manager { get; set; }
-        public int? ManagerId { get; set; }
+        public Guid? ManagerId { get; set; }
     }
 }

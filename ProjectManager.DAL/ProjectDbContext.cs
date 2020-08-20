@@ -2,10 +2,11 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.DAL.Entities;
+using System;
 
 namespace ProjectManager.DAL
 {
-    public class ProjectDbContext : IdentityDbContext<Employee, IdentityRole<int>, int>
+    public class ProjectDbContext : IdentityDbContext<Employee, IdentityRole<Guid>, Guid>
     {
         public ProjectDbContext(DbContextOptions<ProjectDbContext> options)
             : base(options)

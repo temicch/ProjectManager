@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +29,7 @@ namespace ProjectManager.PL.Controllers
         }
 
         // GET: Tasks/Details/5
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(Guid id)
         {
             var task = await TaskService.GetAsync(User, id);
 
@@ -60,7 +61,7 @@ namespace ProjectManager.PL.Controllers
         }
 
         // GET: Tasks/Edit/5
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(Guid id)
         {
             var task = await TaskService.GetAsync(User, id);
             return View(Mapper.Map<ProjectTaskViewModel>(task));

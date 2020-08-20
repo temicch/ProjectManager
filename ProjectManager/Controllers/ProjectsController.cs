@@ -35,7 +35,7 @@ namespace ProjectManager.PL.Controllers
         }
 
         [HttpGet("details")]
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(Guid id)
         {
             var project = await ProjectService.GetAsync(User, id);
 
@@ -66,7 +66,7 @@ namespace ProjectManager.PL.Controllers
         }
 
         [HttpGet("{id}/update")]
-        public async Task<IActionResult> Update(int id)
+        public async Task<IActionResult> Update(Guid id)
         {
             var project = await ProjectService.GetAsync(User, id);
             return View(Mapper.Map<ProjectViewModel>(project));
