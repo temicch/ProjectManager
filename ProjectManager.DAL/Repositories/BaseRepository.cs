@@ -15,17 +15,17 @@ namespace ProjectManager.DAL.Repositories
     /// <typeparam name="TEntity">Entity for manipulate</typeparam>
     public class BaseRepository<TEntity> : IRepository<Guid, TEntity> where TEntity : class, IBaseEntity<Guid>
     {
+        private readonly ProjectDbContext _projectDbContext;
+        private DbSet<TEntity> DbSet => _projectDbContext.Set<TEntity>();
+        private readonly ILogger<BaseRepository<TEntity>> _logger;
+
         public BaseRepository(ProjectDbContext projectDbContext,
             ILogger<BaseRepository<TEntity>> logger)
         {
-            ProjectDbContext = projectDbContext;
-            Logger = logger;
+            _projectDbContext = projectDbContext;
+            _logger = logger;
         }
-
-        public ProjectDbContext ProjectDbContext { get; protected set; }
-        protected DbSet<TEntity> DbSet => ProjectDbContext.Set<TEntity>();
-        private ILogger<BaseRepository<TEntity>> Logger { get; }
-
+        
         public async Task<Guid> AddAsync(TEntity newEntity)
         {
             try
@@ -34,7 +34,7 @@ namespace ProjectManager.DAL.Repositories
             }
             catch (Exception exception)
             {
-                Logger.LogError(exception, "Add error");
+                _logger.LogError(exception, "Add error");
                 return default;
             }
 
@@ -59,10 +59,10 @@ namespace ProjectManager.DAL.Repositories
             return await DbSet.ToListAsync();
         }
 
-        public async Task<bool> RemoveByIdAsync(Guid Id)
+        public async Task<bool> RemoveByIdAsync(Guid id)
         {
             var entity = await DbSet
-                .FirstAsync(x => x.Id == Id);
+                .FirstAsync(x => x.Id == id);
             if (entity == null)
                 return false;
             try
@@ -71,7 +71,7 @@ namespace ProjectManager.DAL.Repositories
             }
             catch (Exception exception)
             {
-                Logger.LogError(exception, "RemoveById error");
+                _logger.LogError(exception, "RemoveById error");
                 return false;
             }
 
@@ -86,7 +86,7 @@ namespace ProjectManager.DAL.Repositories
             }
             catch (Exception exception)
             {
-                Logger.LogError(exception, "Update error");
+                _logger.LogError(exception, "Update error");
                 return default;
             }
 
@@ -97,12 +97,12 @@ namespace ProjectManager.DAL.Repositories
         {
             try
             {
-                await ProjectDbContext.SaveChangesAsync();
+                await _projectDbContext.SaveChangesAsync();
                 return true;
             }
             catch (Exception e)
             {
-                Logger.LogError(e.Message);
+                _logger.LogError(e.Message);
                 return false;
             }
         }

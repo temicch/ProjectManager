@@ -14,15 +14,19 @@ namespace ProjectManager.BLL.Services
 {
     public class EmployeeService : IEmployeeService
     {
-        public EmployeeService(IMapper mapper
-            , BaseRepository<Employee> repository)
+        private BaseRepository<Employee> Repository { get; }
+        public BaseRepository<ProjectEmployees> PRepository { get; }
+        private IMapper Mapper { get; }
+
+        public EmployeeService(IMapper mapper, 
+            BaseRepository<Employee> repository,
+            BaseRepository<ProjectEmployees> pRepository)
         {
             Repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            PRepository = pRepository;
             Mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        private BaseRepository<Employee> Repository { get; }
-        private IMapper Mapper { get; }
 
         public async Task<Guid> CreateAsync(ClaimsPrincipal user, EmployeeModel data)
         {
@@ -119,9 +123,9 @@ namespace ProjectManager.BLL.Services
             if (!user.CanLookEmployee())
                 return null;
 
-            var employee = Repository.ProjectDbContext.ProjectEmployees
-                .Where(x => x.EmployeeId == employeeId);
-            var projects = await employee.ToListAsync();
+            var employee = await PRepository
+                .GetAsync(x => x.EmployeeId == employeeId);
+            var projects = employee.ToList();
 
             return Mapper.Map<IEnumerable<ProjectModel>>(projects);
         }

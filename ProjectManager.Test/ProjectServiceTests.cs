@@ -1,15 +1,13 @@
-using Moq;
-using ProjectManager.BLL.Services;
-using ProjectManager.DAL.Entities;
-using ProjectManager.DAL.Repositories;
-using ProjectManager.Tests.DAL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using ProjectManager.BLL.Services;
+using ProjectManager.DAL.Entities;
+using ProjectManager.DAL.Repositories;
 using Xunit;
 
-namespace ProjectManager.Test
+namespace ProjectManager.Tests.BLL
 {
     public class ProjectServiceTests : IClassFixture<InitFixture>
     {

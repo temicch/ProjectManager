@@ -16,6 +16,8 @@ using ProjectManager.PL.Configuration;
 using ProjectManager.PL.ViewModels;
 using ProjectManager.PL.ViewModels.Validators;
 using System;
+using System.Threading;
+using ProjectManager.BLL;
 
 namespace ProjectManager.PL
 {
@@ -58,13 +60,25 @@ namespace ProjectManager.PL
 
             services
                 .AddMvc()
-                .AddFluentValidation();
+                .AddFluentValidation(cfg =>
+                {
+                    cfg.RegisterValidatorsFromAssemblyContaining<Startup>();
+                });
 
             ConfigureDependencies(services);
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, 
+            IWebHostEnvironment env,
+            ProjectDbContext context)
         {
+            // Auto migrate EFCore Database
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var migrator = serviceScope.ServiceProvider.GetRequiredService<DbMigrator>();
+                migrator.SeedEverything();
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -107,9 +121,13 @@ namespace ProjectManager.PL
             services.AddScoped<BaseRepository<Project>>();
             services.AddScoped<BaseRepository<ProjectEmployees>>();
 
+            services.AddScoped<BaseRepository<ProjectEmployees>>();
+
             services.AddTransient<IValidator<EmployeeViewModel>, EmployeeVMValidator>();
             services.AddTransient<IValidator<ProjectViewModel>, ProjectVMValidator>();
             services.AddTransient<IValidator<ProjectTaskViewModel>, ProjectTaskVMValidator>();
+
+            services.AddTransient<DbMigrator>();
         }
     }
 }

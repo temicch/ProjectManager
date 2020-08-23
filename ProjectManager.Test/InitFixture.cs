@@ -1,19 +1,19 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
+using ProjectManager.BLL;
 using ProjectManager.BLL.Services;
 using ProjectManager.DAL;
 using ProjectManager.DAL.Entities;
 using ProjectManager.DAL.Repositories;
 using ProjectManager.PL.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using ProjectManager.BLL;
 
-namespace ProjectManager.Tests.DAL
+namespace ProjectManager.Tests.BLL
 {
     public class InitFixture : IDisposable
     {

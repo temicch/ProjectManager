@@ -7,7 +7,7 @@ namespace ProjectManager.PL.ViewModels
     public class ProjectViewModel
     {
         public ICollection<ProjectTaskViewModel> TasksViewModels { get; set; }
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Title { get; set; }
 
         [Display(Name = "Customer Company")] 
@@ -25,6 +25,6 @@ namespace ProjectManager.PL.ViewModels
         public uint Priority { get; set; }
         public ICollection<ProjectTaskViewModel> Tasks { get; set; }
         public EmployeeViewModel Manager { get; set; }
-        public int ManagerId { get; set; }
+        public Guid ManagerId { get; set; }
     }
 }

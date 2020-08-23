@@ -1,9 +1,6 @@
 ﻿using ProjectManager.BLL.Models;
-using ProjectManager.DAL.Entities;
 using System;
-using System.Collections.Generic;
 using System.Security.Claims;
-using System.Text;
 
 namespace ProjectManager.BLL.Extensions
 {
