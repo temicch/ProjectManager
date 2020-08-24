@@ -20,7 +20,7 @@ namespace ProjectManager.PL.Controllers
         )
         {
             ProjectService = projectManager ?? throw new ArgumentNullException(nameof(projectManager));
-            Mapper = mapper;
+            Mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         private IProjectService ProjectService { get; }

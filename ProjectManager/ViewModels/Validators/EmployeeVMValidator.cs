@@ -5,10 +5,8 @@ namespace ProjectManager.PL.ViewModels.Validators
 {
     public class EmployeeVMValidator: AbstractValidator<EmployeeViewModel>
     {
-        public EmployeeVMValidator(IStringLocalizer<EmployeeViewModel> stringLocalizer)
+        public EmployeeVMValidator()
         {
-            StringLocalizer = stringLocalizer;
-
             RuleFor(x => x.FirstName)
                 .NotEmpty();
             RuleFor(x => x.LastName)
@@ -16,6 +14,5 @@ namespace ProjectManager.PL.ViewModels.Validators
             RuleFor(x => x.Email)
                 .EmailAddress();
         }
-        public IStringLocalizer<EmployeeViewModel> StringLocalizer { get; }
     }
 }

@@ -1,19 +1,18 @@
 ﻿using FluentValidation;
-using Microsoft.Extensions.Localization;
 
 namespace ProjectManager.PL.ViewModels.Validators
 {
     public class ProjectVMValidator : AbstractValidator<ProjectViewModel>
     {
-        public ProjectVMValidator(IStringLocalizer<ProjectViewModel> stringLocalizer)
+        public ProjectVMValidator()
         {
-            StringLocalizer = stringLocalizer;
-
             RuleFor(x => x.Title)
                 .NotEmpty();
             RuleFor(x => x.CustomerCompany)
-                .NotEmpty();
+                .NotEmpty()
+                .MinimumLength(3);
             RuleFor(x => x.PerformerCompany)
+                .NotEmpty()
                 .MinimumLength(3);
             RuleFor(x => x.StartDate)
                 .NotEmpty();
@@ -21,7 +20,5 @@ namespace ProjectManager.PL.ViewModels.Validators
                 .NotEmpty()
                 .GreaterThan(x => x.StartDate);
         }
-
-        public IStringLocalizer<ProjectViewModel> StringLocalizer { get; }
     }
 }

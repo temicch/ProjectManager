@@ -5,15 +5,79 @@
 }
 
 <h2>@ViewBag.Title</h2>
+<div id="projects">
+    <form v-on:submit.prevent="onSubmit">
+        <form-wizard shape="square"
+                     color="#3498db">
+            <tab-content title="Project description"
+                         icon="ti-user">
+                <div class="form-group">
+                    <label asp-for="Title"></label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="StartDate"></label> - <label asp-for="EndDate"> - </label>
+                    <date-picker v-model="value1" type="date" range placeholder="Select date range"></date-picker>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Priority"></label>
+                    <input asp-for="Priority" class="form-control" />
+                    <span asp-validation-for="Priority" class="text-danger"></span>
+                </div>
+            </tab-content>
+            <tab-content title="Customer / Performer"
+                         icon="ti-settings">
+                <div class="form-group">
+                    <label asp-for="CustomerCompany"></label>
+                    <input asp-for="CustomerCompany" class="form-control" />
+                    <span asp-validation-for="CustomerCompany" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PerformerCompany"></label>
+                    <input asp-for="PerformerCompany" class="form-control" />
+                    <span asp-validation-for="PerformerCompany" class="text-danger"></span>
+                </div>
+            </tab-content>
+            <tab-content title="Manager"
+                         icon="ti-check">
+                <div class="form-group">
+                    <label asp-for="ManagerId"></label>
+                    <input asp-for="ManagerId" class="form-control" />
+                    <span asp-validation-for="ManagerId" class="text-danger"></span>
+                </div>
+            </tab-content>
+            <tab-content title="Performers"
+                         icon="ti-check">
+            </tab-content>
+            <tab-content title="Last step"
+                         icon="ti-check">
+                <div class="d-inline-flex justify-content-end w-100">
+                    <button type="submit" class="btn btn-success mr-3">Create</button>
+                </div>
+            </tab-content>
+        </form-wizard>
+    </form>
+</div>
 
-<form asp-action="Create" method="post">
-
-    @Html.EditorForModel("ProjectEdit")
-
-    <div class="d-inline-flex justify-content-end w-100">
-        <button type="submit" class="btn btn-success mr-3">Create</button>
-        <a asp-action="Index" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
-    </div>
-    <br/>
-    <br/>
-</form>
+@section Scripts
+{
+    <script>
+        new Vue({
+            el: '#projects',
+            components: {},
+            data() {
+                return {
+                    value1: []
+                };
+            },
+            computed: {
+            },
+            methods: {
+                onSubmit() {
+                    console.log("F");
+                }
+            }
+        });
+    </script>
+}

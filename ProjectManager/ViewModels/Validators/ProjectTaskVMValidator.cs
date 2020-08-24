@@ -5,16 +5,12 @@ namespace ProjectManager.PL.ViewModels.Validators
 {
     public class ProjectTaskVMValidator : AbstractValidator<ProjectTaskViewModel>
     {
-        public ProjectTaskVMValidator(IStringLocalizer<ProjectTaskViewModel> stringLocalizer)
+        public ProjectTaskVMValidator()
         {
-            StringLocalizer = stringLocalizer;
-
             RuleFor(x => x.Title)
                 .NotEmpty();
             RuleFor(x => x.Comment)
                 .MaximumLength(512);
         }
-
-        public IStringLocalizer<ProjectTaskViewModel> StringLocalizer { get; }
     }
 }
